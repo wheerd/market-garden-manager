@@ -1,0 +1,20 @@
+name: Deploy React App to Github Pages
+on:
+  push:
+    branches: [ main ]
+permissions:
+  contents: write
+jobs:
+  build_react:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup node
+      uses: actions/setup-node@v2
+      with:
+        node-version: v16.17.0
+    - name: Deploy
+      run: |
+        npm ci
+        npm run deploy
