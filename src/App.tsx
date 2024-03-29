@@ -1,32 +1,35 @@
 import React from 'react';
-import { Routes, Route, Link } from "react-router-dom";
-import logo from './logo.svg';
+import { Routes, Route, NavLink } from "react-router-dom";
 import './App.css';
 import About from './About';
 import Home from './Home';
+import Setup from './Setup';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <nav>
+    <>
+      <header className="header">
+        <nav role="navigation">
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <NavLink to="/setup">Setup</NavLink>
             </li>
             <li>
-              <Link to="/about">About</Link>
+              <NavLink to="/crops">Crops</NavLink>
+            </li>
+            <li>
+              <NavLink to="/seeds">Seeds</NavLink>
             </li>
           </ul>
         </nav>
       </header>
 
       <Routes>
-        <Route path="/about" element={<About />} />
-        <Route path="/" element={<Home />} />
+        <Route path="/setup/*" element={<Setup />} />
+        <Route path="/crops" element={<About />} />
+        <Route path="/seeds" element={<Home />} />
       </Routes>
-    </div>
+    </>
   );
 }
 
