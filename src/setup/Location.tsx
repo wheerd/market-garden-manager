@@ -15,6 +15,7 @@ const Location: React.FC = () => {
             Location
             <p>Lat: {viewState.latitude} | Lon: {viewState.longitude} | Zoom: {viewState.zoom}</p>
             <Map
+                mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
                 reuseMaps
                 {...viewState}
                 onMove={evt => setViewState(evt.viewState)}
