@@ -11,19 +11,19 @@ const Setup: React.FC = () =>
                     <NavLink to="location">Location</NavLink>
                 </li>
                 <li>
-                    <a href="#">Beds</a>
+                    <a href="#beds">Beds</a>
                 </li>
                 <li>
-                    <a href="#">Crops</a>
+                    <a href="#crops">Crops</a>
                 </li>
                 <li>
-                    <a href="#">Target Plan</a>
+                    <a href="#plan">Target Plan</a>
                 </li>
                 <li>
-                    <a href="#">CSA</a>
+                    <a href="#csa">CSA</a>
                 </li>
                 <li>
-                    <a href="#">Tasks</a>
+                    <a href="#tasks">Tasks</a>
                 </li>
             </ul>
         </nav>
