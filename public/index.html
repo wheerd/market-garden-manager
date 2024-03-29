@@ -9,6 +9,16 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Market Garden Manager</title>
+    <script type="text/javascript">
+      // Restore state in Github Pages for dynamic routing
+      (function() {
+        if (window.location.search[1] === '/' ) {
+          var decoded = decodeURIComponent(window.location.search.slice(1));
+          var newState = window.location.pathname.slice(0, -1) + decoded
+          window.history.replaceState(null, null, newState);
+        }
+      }())
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
