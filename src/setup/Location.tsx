@@ -12,6 +12,7 @@ interface LocationData {
     latitude: number,
     zoom: number,
     bearing: number,
+    totalSizeInMeters?: number,
 }
 
 const Location: React.FC = () => {
@@ -19,15 +20,15 @@ const Location: React.FC = () => {
         longitude: -100,
         latitude: 40,
         zoom: 3.5,
-        bearing: 0,
+        bearing: 0
     }), [])
 
     const [location, setLocation] = usePersistedState<LocationData>("location", defaultLocation);
     const [locationImage, setLocationImage] = usePersistedState<string>("locationImage", "");
     const [pickerOpen, setPickerOpen] = useState(false)
 
-    function updateLocation(newLocation: LocationData, locationImage: string) {
-        setLocation(newLocation);
+    function updateLocation(newLocation: LocationData, locationImage: string, totalSizeInMeters: number) {
+        setLocation({ ...newLocation, totalSizeInMeters });
         setLocationImage(locationImage);
     }
 
@@ -36,7 +37,9 @@ const Location: React.FC = () => {
             <h1>Location</h1>
             <div className="locationImage" onClick={() => setPickerOpen(true)}>
                 <div style={({ backgroundImage: locationImage ? `url(${locationImage})` : undefined })}>
-                    <span>Change Location</span>
+                    {location && <span className="coordinates">{location.longitude.toFixed(6)} {location.latitude.toFixed(6)}</span>}
+                    <span className="prompt">Change Location</span>
+                    {location.totalSizeInMeters && <span className="size">{location.totalSizeInMeters.toFixed(2)}x{location.totalSizeInMeters.toFixed(2)}m</span>}
                 </div>
             </div>
             <LocationDialog

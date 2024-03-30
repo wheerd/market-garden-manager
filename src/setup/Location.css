@@ -13,13 +13,23 @@
     background-size: contain;
     background-repeat: no-repeat;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: stretch;
+    justify-content: space-between;
     align-content: center;
+    flex-direction: column;
+    color: white;
 }
 
 .locationImage span {
+    background: #00000088;
+    display: block;
+    text-align: center;
+}
+
+.locationImage span.prompt {
     display: none;
+    font-weight: bold;
+    background: none;
 }
 
 .locationImage:hover {
@@ -33,6 +43,4 @@
 .locationImage:hover span {
     display: block;
     margin: 0;
-    color: white;
-    font-weight: bold;
 }

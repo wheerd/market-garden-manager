@@ -25,13 +25,13 @@ interface LocationData {
 
 interface LocationDialogParams {
     initialLocation: LocationData,
-    onPickLocation: (l: LocationData, imageString: string) => void,
+    onPickLocation: (l: LocationData, imageString: string, totalSizeInMeters: number) => void,
     isOpen: boolean,
     onHide: () => void,
 }
 
 export const convertBlobToBase64 = (blob: Blob) => new Promise<string>((resolve, reject) => {
-    const reader = new FileReader;
+    const reader = new FileReader();
     reader.onerror = reject;
     reader.onload = () => {
         resolve(reader.result as string);
@@ -48,14 +48,16 @@ const LocationDialog: React.FC<LocationDialogParams> =
 
         const geocoderRef = useRef<MapboxGeocoder | null>();
         function onMapLoad(e: MapboxEvent): void {
+            const map = e.target;
+
             if (!geocoderRef.current) {
                 geocoderRef.current = new MapboxGeocoder({
                     accessToken: MAPBOX_ACCESS_TOKEN || "",
                     mapboxgl: mapboxgl
                 });
             }
-            if (!e.target.hasControl(geocoderRef.current)) {
-                e.target.addControl(geocoderRef.current);
+            if (!map.hasControl(geocoderRef.current)) {
+                map.addControl(geocoderRef.current);
             }
         }
 
@@ -66,7 +68,10 @@ const LocationDialog: React.FC<LocationDialogParams> =
             const response = await fetch(`https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/${viewState.longitude},${viewState.latitude},${viewState.zoom},${viewState.bearing},0/800x800?access_token=${MAPBOX_ACCESS_TOKEN}`)
             const base64 = await convertBlobToBase64(await response.blob())
 
-            onPickLocation(viewState, base64);
+            const metersPerPixel = 40007000 * Math.cos(viewState.latitude * Math.PI / 180) / (512 * Math.pow(2, viewState.zoom));
+            const totalSizeInMeters = metersPerPixel * 400;
+
+            onPickLocation(viewState, base64, totalSizeInMeters);
         }
 
         function handleClose() {
