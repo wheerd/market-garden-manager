@@ -5,6 +5,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import LocationDialog from "./LocationPicker";
 
+import "./Location.css";
+
 interface LocationData {
     longitude: number,
     latitude: number,
@@ -21,15 +23,25 @@ const Location: React.FC = () => {
     }), [])
 
     const [location, setLocation] = usePersistedState<LocationData>("location", defaultLocation);
+    const [locationImage, setLocationImage] = usePersistedState<string>("locationImage", "");
     const [pickerOpen, setPickerOpen] = useState(false)
+
+    function updateLocation(newLocation: LocationData, locationImage: string) {
+        setLocation(newLocation);
+        setLocationImage(locationImage);
+    }
 
     return (
         <div>
             <h1>Location</h1>
-            {!pickerOpen && <button onClick={() => setPickerOpen(true)}>Open Picker</button>}
+            <div className="locationImage" onClick={() => setPickerOpen(true)}>
+                <div style={({ backgroundImage: locationImage ? `url(${locationImage})` : undefined })}>
+                    <span>Change Location</span>
+                </div>
+            </div>
             <LocationDialog
                 initialLocation={location}
-                onPickLocation={setLocation}
+                onPickLocation={updateLocation}
                 isOpen={pickerOpen}
                 onHide={() => setPickerOpen(false)}
             />

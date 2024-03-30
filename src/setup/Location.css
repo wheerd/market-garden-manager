@@ -1,0 +1,38 @@
+.locationImage {
+    float: left;
+    margin: 10px;
+    background-color: lightgray;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.locationImage > div {
+    width: 400px;
+    height: 400px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.locationImage span {
+    display: none;
+}
+
+.locationImage:hover {
+    background: darkgray;
+}
+
+.locationImage:hover > div {
+    opacity: 0.8;
+}
+
+.locationImage:hover span {
+    display: block;
+    margin: 0;
+    color: white;
+    font-weight: bold;
+}

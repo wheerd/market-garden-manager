@@ -14,6 +14,8 @@ import Form from "react-bootstrap/Form";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
+const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+
 interface LocationData {
     longitude: number,
     latitude: number,
@@ -23,10 +25,19 @@ interface LocationData {
 
 interface LocationDialogParams {
     initialLocation: LocationData,
-    onPickLocation: (l: LocationData) => void,
+    onPickLocation: (l: LocationData, imageString: string) => void,
     isOpen: boolean,
     onHide: () => void,
 }
+
+export const convertBlobToBase64 = (blob: Blob) => new Promise<string>((resolve, reject) => {
+    const reader = new FileReader;
+    reader.onerror = reject;
+    reader.onload = () => {
+        resolve(reader.result as string);
+    };
+    reader.readAsDataURL(blob);
+});
 
 const LocationDialog: React.FC<LocationDialogParams> =
     ({ initialLocation, onPickLocation, isOpen, onHide }) => {
@@ -39,7 +50,7 @@ const LocationDialog: React.FC<LocationDialogParams> =
         function onMapLoad(e: MapboxEvent): void {
             if (!geocoderRef.current) {
                 geocoderRef.current = new MapboxGeocoder({
-                    accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN || "",
+                    accessToken: MAPBOX_ACCESS_TOKEN || "",
                     mapboxgl: mapboxgl
                 });
             }
@@ -48,10 +59,14 @@ const LocationDialog: React.FC<LocationDialogParams> =
             }
         }
 
-        function onSaveClick() {
-            onPickLocation(viewState);
+        async function onSaveClick() {
             setOpen(false);
             onHide();
+
+            const response = await fetch(`https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/${viewState.longitude},${viewState.latitude},${viewState.zoom},${viewState.bearing},0/800x800?access_token=${MAPBOX_ACCESS_TOKEN}`)
+            const base64 = await convertBlobToBase64(await response.blob())
+
+            onPickLocation(viewState, base64);
         }
 
         function handleClose() {
@@ -81,11 +96,11 @@ const LocationDialog: React.FC<LocationDialogParams> =
                             <Col>
                                 <Map
                                     onLoad={onMapLoad}
-                                    mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+                                    mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
                                     reuseMaps
                                     {...viewState}
                                     onMove={evt => updateViewState(evt.viewState)}
-                                    style={{ width: 600, height: 400 }}
+                                    style={{ width: 400, height: 400 }}
                                     mapStyle="mapbox://styles/mapbox/satellite-v9"
                                     maxPitch={0}
                                     minPitch={0}
