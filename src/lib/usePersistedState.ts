@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { set, get } from "idb-keyval";
 
-export function usePersistedState<TState>(keyToPersistWith: string, defaultState: TState) {
-    const [state, setState] = useState<TState | undefined>(undefined);
+export function  usePersistedState<TState>(keyToPersistWith: string, defaultState: TState) {
+    const [state, setState] = useState<TState>(defaultState);
 
     useEffect(() => {
         get<TState>(keyToPersistWith).then(retrievedState =>
