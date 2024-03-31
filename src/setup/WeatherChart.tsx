@@ -77,6 +77,17 @@ const WeatherChart: React.FC<{rawWeatherData: GroupedRawWeatherData | undefined}
                     yAxisID: "temperature"
                 },
                 {
+                    label: "Frost Probability",
+                    data: allDays.map(day => ({
+                        x: dayTimestamps[day],
+                        y: rawWeatherData[day].tempMin.filter(t => t <= 0).length / rawWeatherData[day].tempMin.length
+                    })),
+                    pointRadius: 0,
+                    order: 9,
+                    borderColor: "#0000AA",
+                    yAxisID: "probability"
+                },
+                {
                     label: "Number of years with data",
                     data: allDays.map(day => ({
                         x: dayTimestamps[day],
@@ -122,6 +133,8 @@ const WeatherChart: React.FC<{rawWeatherData: GroupedRawWeatherData | undefined}
                                 }
                                 if (item.dataset.yAxisID === "temperature") {
                                     label += item.parsed.y.toFixed(1) + "°C"
+                                } else if (item.dataset.yAxisID === "probability") {
+                                    label += (item.parsed.y * 100).toFixed(0) + '%'
                                 } else {
                                     label += item.parsed.y
                                 }
@@ -157,6 +170,21 @@ const WeatherChart: React.FC<{rawWeatherData: GroupedRawWeatherData | undefined}
                         },
                         ticks: {
                             callback: (value) => value + '°C'
+                        }
+                    },
+                    probability: {
+                        axis: "y",
+                        position: "right",
+                        min: 0,
+                        max: 1,
+                        grid: {
+                            display: false
+                        },
+                        title: {
+                            text: "Frost Probability"
+                        },
+                        ticks: {
+                            callback: (value) => (+value * 100).toFixed(0) + '%'
                         }
                     },
                     y: {
