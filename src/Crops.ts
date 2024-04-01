@@ -73,7 +73,7 @@ type LifetimeType = "Annual"
     | "Biennial"
     | "Perennial"
 
-type SoilType = "Clay"
+export type SoilType = "Clay"
     | "Silt"
     | "Loam"
     | "Sand"

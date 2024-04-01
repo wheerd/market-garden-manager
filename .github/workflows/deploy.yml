@@ -23,17 +23,22 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: v16.17.0
-        cache: npm
+        cache: pnpm
+    - uses: pnpm/action-setup@v3
+      name: Install pnpm
+      with:
+        version: 8.15.5
+        run_install: false
     - name: Install dependencies
-      run: npm ci
+      run: pnpm install --frozen-lockfile --strict-peer-dependencies
     - name: Build
-      run: npm run build
+      run: pnpm build && cp dist/index.html dist/404.html
       env:
-        REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
+        VITE_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
     - name: Upload Pages Artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: build
+        path: dist
     - id: deploy
       name: Deploy to GitHub Pages
       uses: actions/deploy-pages@v4
