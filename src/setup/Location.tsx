@@ -1,12 +1,9 @@
-import React, { useMemo, useState } from "react"
+import React, { lazy, useMemo, useState } from "react"
 import { usePersistedState } from "../lib/usePersistedState";
 import { GroupedRawWeatherData, fetchWeatherData } from "../lib/weatherData";
 
-import 'mapbox-gl/dist/mapbox-gl.css';
-import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-
-import LocationDialog from "./LocationPicker";
-import WeatherChart from "./WeatherChart";
+const LocationDialog = lazy(() => import("./LocationPicker"));
+const WeatherChart  = lazy(() => import("./WeatherChart"));
 
 import "./Location.css";
 import { useAsyncState } from "../lib/useAsyncState";

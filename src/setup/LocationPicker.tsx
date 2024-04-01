@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { lazy, useEffect, useRef, useState } from "react"
 
-import Map, { MapboxEvent } from "react-map-gl"
-import mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder"
+import { type MapboxEvent } from "react-map-gl"
+const Map = lazy(() => import("react-map-gl"));
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -10,9 +9,6 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
-
-import 'mapbox-gl/dist/mapbox-gl.css';
-import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 import { useAsyncState } from "../lib/useAsyncState";
 
@@ -49,13 +45,14 @@ const LocationDialog: React.FC<LocationDialogParams> =
         useEffect(() => { setOpen(isOpen); }, [isOpen]);
 
         const geocoderRef = useRef<MapboxGeocoder | null>();
-        function onMapLoad(e: MapboxEvent): void {
+        async function onMapLoad(e: MapboxEvent): Promise<void> {
+            // const mapboxgl = (await import("mapbox-gl")).map;
+            const MapboxGeocoder = (await import ("@mapbox/mapbox-gl-geocoder")).default;
             const map = e.target;
 
             if (!geocoderRef.current) {
                 geocoderRef.current = new MapboxGeocoder({
-                    accessToken: MAPBOX_ACCESS_TOKEN || "",
-                    mapboxgl: mapboxgl
+                    accessToken: MAPBOX_ACCESS_TOKEN || ""
                 });
             }
             if (!map.hasControl(geocoderRef.current)) {

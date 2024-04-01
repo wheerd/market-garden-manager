@@ -1,16 +1,13 @@
-import React, { useMemo } from "react"
+import React, { lazy, useMemo } from "react"
 
-import { Chart } from "chart.js/auto";
-import { Line } from "react-chartjs-2";
-import 'chartjs-adapter-date-fns';
+const Line = lazy(() => import("../lib/chart"));
+
 import { de } from 'date-fns/locale';
 import { format, parseISO } from "date-fns";
-import annotationPlugin, { BoxAnnotationOptions } from 'chartjs-plugin-annotation';
+import { type BoxAnnotationOptions } from 'chartjs-plugin-annotation';
 
 import { quantile } from "../lib/statistics";
 import { getMinTemperatureProbabilityThresholds, type DayOfYear, type GroupedRawWeatherData } from "../lib/weatherData";
-
-Chart.register(annotationPlugin)
 
 const WeatherChart: React.FC<{ rawWeatherData: GroupedRawWeatherData | undefined }> = ({ rawWeatherData }) => {
     const chartData = useMemo(() => {

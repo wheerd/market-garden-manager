@@ -1,6 +1,6 @@
-import React from "react"
+import React, { lazy } from "react"
 import { NavLink, Route, Routes } from "react-router-dom"
-import Location from "./setup/Location"
+const Location = lazy(() => import("./setup/Location"))
 import "./Setup.css"
 import Nav from "react-bootstrap/Nav"
 

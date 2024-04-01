@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from 'vite-plugin-pwa'
+import * as path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -46,4 +47,9 @@ export default defineConfig({
       },
     })
   ],
+  resolve: {
+    alias: {
+      '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
+    }
+  },
 })

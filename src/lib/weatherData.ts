@@ -1,5 +1,4 @@
 import { format } from 'date-fns';
-import { fetchWeatherApi } from 'openmeteo';
 
 type Opaque<K, T> = T & { __TYPE__: K }
 export type DayOfYear = Opaque<"DayOfYear", string>
@@ -21,6 +20,8 @@ function sortedObject<T extends object>(o: T): T {
 }
 
 export async function fetchWeatherData(latitude: number, longitude: number, elevation: number, timeZone: string): Promise<GroupedRawWeatherData> {
+    const { fetchWeatherApi } = await import("openmeteo")
+
     const params = {
         "latitude": latitude,
         "longitude": longitude,
@@ -52,7 +53,7 @@ export async function fetchWeatherData(latitude: number, longitude: number, elev
             const date = new Date(day);
             const dayId = format(date, "MM-dd") as DayOfYear
 
-            const data =  groupedData[dayId] = groupedData[dayId] ?? { tempMin: [], tempMean: [], tempMax: [], rainSum: [] }
+            const data = groupedData[dayId] = groupedData[dayId] ?? { tempMin: [], tempMean: [], tempMax: [], rainSum: [] }
             data.tempMin.push(temperature2mMin[i])
             data.tempMean.push(temperature2mMean[i])
             data.tempMax.push(temperature2mMax[i])
