@@ -1,4 +1,8 @@
+import { format } from 'date-fns';
 import { fetchWeatherApi } from 'openmeteo';
+
+type Opaque<K, T> = T & { __TYPE__: K }
+export type DayOfYear = Opaque<"DayOfYear", string>
 
 export interface WeatherDataRaw {
     tempMin: number[],
@@ -7,7 +11,13 @@ export interface WeatherDataRaw {
     rainSum: number[],
 }
 
-export type GroupedRawWeatherData = Record<string, WeatherDataRaw>
+export type GroupedRawWeatherData = { [day: DayOfYear]: WeatherDataRaw }
+
+function sortedObject<T extends object>(o: T) {
+    return (Object.keys(o) as Array<keyof T>)
+        .sort()
+        .reduce((r, k) => { r[k] = o[k]; return r }, {} as T)
+}
 
 export async function fetchWeatherData(latitude: number, longitude: number, elevation: number, timeZone: string): Promise<GroupedRawWeatherData> {
     const params = {
@@ -32,14 +42,12 @@ export async function fetchWeatherData(latitude: number, longitude: number, elev
 
     const start = Number(daily.time()) * 1000;
     const end = Number(daily.timeEnd()) * 1000;
-    const interval = daily.interval() * 1000
-
-    const dateFormatOptions = { timeZone: timeZone, month: "2-digit", day: "2-digit" } as Intl.DateTimeFormatOptions
+    const interval = daily.interval() * 1000;
 
     let i = 0;
     for (let day = start; day < end; day += interval) {
         const date = new Date(day);
-        const dayId = date.toLocaleDateString("en-us", dateFormatOptions).split("/").slice(0, 2).join('-')
+        const dayId = format(date, "MM-dd") as DayOfYear
 
         if (!groupedData[dayId]) groupedData[dayId] = { tempMin: [], tempMean: [], tempMax: [], rainSum: [] }
         groupedData[dayId].tempMin.push(temperature2mMin[i])
@@ -50,5 +58,52 @@ export async function fetchWeatherData(latitude: number, longitude: number, elev
         i++;
     }
 
-    return groupedData;
+    return sortedObject(groupedData);
+}
+
+export function getMinTemperatureProbabilities(weatherData: GroupedRawWeatherData, minTemperature: number): Record<DayOfYear, number> {
+    return Object.fromEntries(Object.entries(weatherData).map(([day, data]) => {
+        const matchingCount = data.tempMin.filter(t => t >= minTemperature).length;
+        const probability = matchingCount / data.tempMin.length;
+        return [day as DayOfYear, probability]
+    }))
+}
+
+interface DayWindow {
+    first: DayOfYear,
+    last: DayOfYear,
+}
+
+export function getMinTemperatureProbabilityThresholds(
+    weatherData: GroupedRawWeatherData, minTemperature: number, minProbability: number, maxProbability: number, minSize: number
+) {
+    const probabilities = getMinTemperatureProbabilities(weatherData, minTemperature)
+    const windows: DayWindow[] = []
+    let start: string | undefined = undefined;
+    let size = 0;
+    let previousDay = "" as DayOfYear;
+    Object.entries(probabilities).forEach(([day, p]) => {
+        if (p >= minProbability && p < maxProbability) {
+            if (typeof start === "undefined") {
+                start = day;
+            }
+            size++;
+        } else {
+            if (typeof start !== "undefined") {
+                if (size >= minSize) {
+                    windows.push({ first: start as DayOfYear, last: previousDay })
+                }
+                start = undefined;
+                size = 0;
+            }
+        }
+        previousDay = day as DayOfYear;
+    })
+    if (typeof start !== "undefined") {
+        if (size >= minSize) {
+            windows.push({ first: start as DayOfYear, last: previousDay })
+        }
+    }
+
+    return windows;
 }

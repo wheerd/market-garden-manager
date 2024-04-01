@@ -1,22 +1,23 @@
 import React, { useMemo } from "react"
 
-import { CategoryScale } from "chart.js";
 import { Chart } from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 import 'chartjs-adapter-date-fns';
 import { de } from 'date-fns/locale';
 import { format, parseISO } from "date-fns";
+import annotationPlugin, { BoxAnnotationOptions } from 'chartjs-plugin-annotation';
 
 import { quantile } from "../lib/statistics";
-import type { GroupedRawWeatherData } from "../lib/weatherData";
+import { getMinTemperatureProbabilityThresholds, type DayOfYear, type GroupedRawWeatherData } from "../lib/weatherData";
 
-Chart.register(CategoryScale);
+Chart.register(annotationPlugin)
 
-const WeatherChart: React.FC<{rawWeatherData: GroupedRawWeatherData | undefined}> = ({rawWeatherData}) => {
+const WeatherChart: React.FC<{ rawWeatherData: GroupedRawWeatherData | undefined }> = ({ rawWeatherData }) => {
     const chartData = useMemo(() => {
         if (!rawWeatherData) return { labels: [], datasets: [] }
-        const allDays = Object.keys(rawWeatherData).sort()
+        const allDays = Object.keys(rawWeatherData).sort() as DayOfYear[]
         const dayTimestamps = Object.fromEntries(allDays.map(d => [d, parseISO('2020-' + d).getTime()]));
+
         return ({
             datasets: [
                 {
@@ -101,6 +102,36 @@ const WeatherChart: React.FC<{rawWeatherData: GroupedRawWeatherData | undefined}
         })
     }, [rawWeatherData]);
 
+    const annotations = useMemo(() => {
+        if (!rawWeatherData) return []
+        const freeColor = 'rgba(100, 256, 100, 0.1)';
+        const lowRiskColor = 'rgba(100, 100, 200, 0.2)'
+        const highRiskColor = 'rgba(0, 0, 200, 0.2)'
+
+        const frostFreeWindows = getMinTemperatureProbabilityThresholds(rawWeatherData, 0, 1, 2, 10);
+        const frostLowWindows = getMinTemperatureProbabilityThresholds(rawWeatherData, 0, 0.95, 2, 5);
+        const frostHighWindows = getMinTemperatureProbabilityThresholds(rawWeatherData, 0, 0, 0.95, 0);
+
+        const allWindows = frostFreeWindows.map(w => ({ ...w, color: freeColor, label: "🌱" }))
+            .concat(frostLowWindows.map(w => ({ ...w, color: lowRiskColor, label: "❄" })))
+            .concat(frostHighWindows.map(w => ({ ...w, color: highRiskColor, label: "❄❄" })))
+
+        return Object.fromEntries(allWindows.map(
+            ({ first, last, color, label }, i) => (['box' + i, {
+                type: 'box',
+                xMin: parseISO('2020-' + first).getTime(),
+                xMax: parseISO('2020-' + last).getTime(),
+                backgroundColor: color,
+                borderWidth: 0,
+                drawTime: "beforeDatasetsDraw",
+                label: {
+                    content: label,
+                    display: true,
+                    position: "start"
+                }
+            } as BoxAnnotationOptions])));
+    }, [rawWeatherData])
+
     return (
         <Line
             width={600}
@@ -142,6 +173,10 @@ const WeatherChart: React.FC<{rawWeatherData: GroupedRawWeatherData | undefined}
                                 return label
                             }
                         }
+                    },
+
+                    annotation: {
+                        annotations: annotations
                     }
                 },
                 scales: {

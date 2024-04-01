@@ -19,6 +19,7 @@
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.2",
     "chartjs-adapter-date-fns": "^3.0.0",
+    "chartjs-plugin-annotation": "^3.0.1",
     "date-fns": "^3.6.0",
     "idb-keyval": "^6.2.1",
     "mapbox-gl": "^3.2.0",
