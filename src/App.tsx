@@ -3,8 +3,17 @@ import './App.css';
 import About from './About';
 import Home from './Home';
 import Setup from './Setup';
+import { useRegisterSW } from "virtual:pwa-register/react";
 
 function App() {
+  useRegisterSW({
+    immediate: true,
+    onOfflineReady() { console.log('offline ready') },
+    onRegisteredSW() { console.log('registered SW') },
+    onRegisterError() { console.error('error registering SW') },
+    onNeedRefresh() { console.log('need refresh') }
+  })
+
   return (
     <>
       <header className="header">
