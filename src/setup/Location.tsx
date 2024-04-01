@@ -9,6 +9,7 @@ import LocationDialog from "./LocationPicker";
 import WeatherChart from "./WeatherChart";
 
 import "./Location.css";
+import { useAsyncState } from "../lib/useAsyncState";
 
 interface LocationData {
     longitude: number,
@@ -71,28 +72,37 @@ const Location: React.FC = () => {
         setRawWeatherData(await fetchWeatherData(newLocation.latitude, newLocation.longitude, elevation, timezone))
     }
 
+    const [isLoading, onUpdateLocation] = useAsyncState(updateLocation)
+
     return (
         <div>
             <h1>Location</h1>
-            <div className="locationImage" onClick={() => setPickerOpen(true)}>
+            <div className="locationImage" onClick={() => { setPickerOpen(true); }}>
                 <div style={({ backgroundImage: locationImage ? `url(${locationImage})` : undefined })}>
-                    {location && <span className="coordinates">{location.longitude.toFixed(6)} {location.latitude.toFixed(6)}</span>}
+                    {<span className="coordinates">{location.longitude.toFixed(6)} {location.latitude.toFixed(6)}</span>}
                     <span className="prompt">Change Location</span>
                     {location.totalSizeInMeters && <span className="size">{location.totalSizeInMeters.toFixed(2)}x{location.totalSizeInMeters.toFixed(2)}m</span>}
                 </div>
             </div>
             <LocationDialog
                 initialLocation={location}
-                onPickLocation={updateLocation}
+                onPickLocation={onUpdateLocation}
                 isOpen={pickerOpen}
-                onHide={() => setPickerOpen(false)}
+                onHide={() => { setPickerOpen(false); }}
             />
-            <p>Elevation: {elevation}m</p>
-            <p>Time Zone: {timezone}</p>
-            <p>Weather Data: {typeof rawWeatherData !== "undefined" ? "yes" : "no"}</p>
-            <div>
-                <WeatherChart rawWeatherData={rawWeatherData} />
-            </div>
+            {!isLoading &&
+                <div>
+                    <p>Elevation: {elevation}m</p>
+                    <p>Time Zone: {timezone}</p>
+                    <p>Weather Data: {typeof rawWeatherData !== "undefined" ? "yes" : "no"}</p>
+                    <div>
+                        <WeatherChart rawWeatherData={rawWeatherData} />
+                    </div>
+                </div>
+            }
+            {isLoading &&
+                <p>Loading data...</p>
+            }
         </div>
     )
 }

@@ -117,7 +117,7 @@ const WeatherChart: React.FC<{ rawWeatherData: GroupedRawWeatherData | undefined
             .concat(frostHighWindows.map(w => ({ ...w, color: highRiskColor, label: "❄❄" })))
 
         return Object.fromEntries(allWindows.map(
-            ({ first, last, color, label }, i) => (['box' + i, {
+            ({ first, last, color, label }, i) => ([`box${i}`, {
                 type: 'box',
                 xMin: parseISO('2020-' + first).getTime(),
                 xMax: parseISO('2020-' + last).getTime(),
@@ -163,11 +163,11 @@ const WeatherChart: React.FC<{ rawWeatherData: GroupedRawWeatherData | undefined
                                     label += ': ';
                                 }
                                 if (item.dataset.yAxisID === "temperature") {
-                                    label += item.parsed.y.toFixed(1) + "°C"
+                                    label += `${item.parsed.y.toFixed(1)}°C`
                                 } else if (item.dataset.yAxisID === "probability") {
-                                    label += (item.parsed.y * 100).toFixed(0) + '%'
+                                    label += `${(item.parsed.y * 100).toFixed(0)}%`
                                 } else {
-                                    label += item.parsed.y
+                                    label += item.parsed.y.toString()
                                 }
 
                                 return label
@@ -204,7 +204,7 @@ const WeatherChart: React.FC<{ rawWeatherData: GroupedRawWeatherData | undefined
                             text: "Temperature"
                         },
                         ticks: {
-                            callback: (value) => value + '°C'
+                            callback: (value) => `${(+value).toFixed(1)}°C`
                         }
                     },
                     probability: {

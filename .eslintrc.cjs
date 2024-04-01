@@ -11,11 +11,15 @@ module.exports = {
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
+  plugins: ['react-refresh', 'react'],
   rules: {
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
+    ],
+    '@typescript-eslint/restrict-template-expressions': [
+      'error',
+      { allowNumber: true },
     ],
   },
   parserOptions: {
@@ -24,4 +28,9 @@ module.exports = {
     project: ['./tsconfig.json', './tsconfig.node.json'],
     tsconfigRootDir: __dirname,
   },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
 }

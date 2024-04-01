@@ -11,12 +11,13 @@ export interface WeatherDataRaw {
     rainSum: number[],
 }
 
-export type GroupedRawWeatherData = { [day: DayOfYear]: WeatherDataRaw }
+export type GroupedRawWeatherData = Record<DayOfYear, WeatherDataRaw>;
 
-function sortedObject<T extends object>(o: T) {
-    return (Object.keys(o) as Array<keyof T>)
+function sortedObject<T extends object>(o: T): T {
+    const sorted = {} as T
+    return (Object.keys(o) as (keyof T)[])
         .sort()
-        .reduce((r, k) => { r[k] = o[k]; return r }, {} as T)
+        .reduce<T>((r, k) => { r[k] = o[k]; return r }, sorted)
 }
 
 export async function fetchWeatherData(latitude: number, longitude: number, elevation: number, timeZone: string): Promise<GroupedRawWeatherData> {
@@ -31,34 +32,37 @@ export async function fetchWeatherData(latitude: number, longitude: number, elev
     };
     const url = "https://archive-api.open-meteo.com/v1/archive";
     const responses = await fetchWeatherApi(url, params);
-    const daily = responses[0].daily()!;
 
-    const temperature2mMax = daily.variables(0)!.valuesArray()!
-    const temperature2mMin = daily.variables(1)!.valuesArray()!
-    const temperature2mMean = daily.variables(2)!.valuesArray()!
-    const rainSum = daily.variables(3)!.valuesArray()!
+    const groupedData: Partial<GroupedRawWeatherData> = {}
 
-    const groupedData: GroupedRawWeatherData = {}
+    const daily = responses[0].daily();
 
-    const start = Number(daily.time()) * 1000;
-    const end = Number(daily.timeEnd()) * 1000;
-    const interval = daily.interval() * 1000;
+    if (daily) {
+        const temperature2mMax = daily.variables(0)?.valuesArray() ?? []
+        const temperature2mMin = daily.variables(1)?.valuesArray() ?? []
+        const temperature2mMean = daily.variables(2)?.valuesArray() ?? []
+        const rainSum = daily.variables(3)?.valuesArray() ?? []
 
-    let i = 0;
-    for (let day = start; day < end; day += interval) {
-        const date = new Date(day);
-        const dayId = format(date, "MM-dd") as DayOfYear
+        const start = Number(daily.time()) * 1000;
+        const end = Number(daily.timeEnd()) * 1000;
+        const interval = daily.interval() * 1000;
 
-        if (!groupedData[dayId]) groupedData[dayId] = { tempMin: [], tempMean: [], tempMax: [], rainSum: [] }
-        groupedData[dayId].tempMin.push(temperature2mMin[i])
-        groupedData[dayId].tempMean.push(temperature2mMean[i])
-        groupedData[dayId].tempMax.push(temperature2mMax[i])
-        groupedData[dayId].rainSum.push(rainSum[i])
+        let i = 0;
+        for (let day = start; day < end; day += interval) {
+            const date = new Date(day);
+            const dayId = format(date, "MM-dd") as DayOfYear
 
-        i++;
+            const data =  groupedData[dayId] = groupedData[dayId] ?? { tempMin: [], tempMean: [], tempMax: [], rainSum: [] }
+            data.tempMin.push(temperature2mMin[i])
+            data.tempMean.push(temperature2mMean[i])
+            data.tempMax.push(temperature2mMax[i])
+            data.rainSum.push(rainSum[i])
+
+            i++;
+        }
     }
 
-    return sortedObject(groupedData);
+    return sortedObject(groupedData) as GroupedRawWeatherData;
 }
 
 export function getMinTemperatureProbabilities(weatherData: GroupedRawWeatherData, minTemperature: number): Record<DayOfYear, number> {

@@ -6,10 +6,14 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <BrowserRouter basename='/market-garden-manager'>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
-);
+const root = document.getElementById('root')
+
+if (root) {
+  ReactDOM.createRoot(root).render(
+    <React.StrictMode>
+      <BrowserRouter basename='/market-garden-manager'>
+        <App />
+      </BrowserRouter>
+    </React.StrictMode>
+  );
+}
