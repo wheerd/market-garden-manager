@@ -36,7 +36,7 @@ interface TimeZoneResponse {
 }
 
 async function getTimeZone(location: LocationData) {
-    const response = await fetch(`http://api.geonames.org/timezoneJSON?lat=${location.latitude}&lng=${location.longitude}&username=wheerd`);
+    const response = await fetch(`https://secure.geonames.org/timezoneJSON?lat=${location.latitude}&lng=${location.longitude}&username=wheerd`);
     const data = await response.json() as TimeZoneResponse;
     return data.timezoneId;
 }
