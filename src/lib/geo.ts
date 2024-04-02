@@ -1,40 +1,9 @@
-import { useState, useEffect } from "react";
-
-
 export const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
 
 export interface GeoPosition {
     longitude: number,
     latitude: number,
 }
-
-export const useBrowserLocation = (initialLocation?: GeoPosition) => {
-    const [position, setPosition] = useState<GeoPosition>(initialLocation ?? {
-        latitude: 47.21725,
-        longitude: -1.55336,
-    });
-    useEffect(() => {
-        if (!initialLocation) {
-            navigator.geolocation.getCurrentPosition(
-                ({ coords }) => {
-                    setPosition(coords);
-                },
-                () => {
-                    const fetchByIp = async () => {
-                        try {
-                            const { data } = await (await fetch("https://ipapi.co/json")).json() as { data: GeoPosition };
-                            setPosition(data);
-                        } catch (err) {
-                            console.error(err);
-                        }
-                    };
-                    void fetchByIp();
-                }
-            );
-        }
-    }, [initialLocation]);
-    return { position };
-};
 
 const convertBlobToBase64 = (blob: Blob) => new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
@@ -75,4 +44,22 @@ export async function getTimeZone(location: GeoPosition) {
     const response = await fetch(`https://secure.geonames.org/timezoneJSON?lat=${location.latitude}&lng=${location.longitude}&username=wheerd`);
     const data = await response.json() as TimeZoneResponse;
     return data.timezoneId;
+}
+
+interface GeoIPResponse {
+    "ip": string,
+    "city": string,
+    "region_code": string,
+    "country_code": string,
+    "postal": string,
+    "latitude": number,
+    "longitude": number,
+    "timezone": string,
+    "currency": string,
+    "languages": string
+}
+
+export async function getGeoPositionByIp(): Promise<GeoPosition> {
+    const { latitude, longitude } = await (await fetch("https://ipapi.co/json")).json() as GeoIPResponse;
+    return { latitude, longitude };
 }

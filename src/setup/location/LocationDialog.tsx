@@ -12,13 +12,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
-import { type GeoPosition, useBrowserLocation, MAPBOX_ACCESS_TOKEN } from "../../lib/geo";
+import { type GeoPosition, MAPBOX_ACCESS_TOKEN } from "../../lib/geo";
 import { TrackPosition } from "./TrackPosition"
 import { LocateControl } from "./LocateControl"
 import { GeocoderControl } from "./GeocoderControl"
 
 interface LocationDialogParams {
-    initialLocation?: GeoPosition,
+    initialLocation?: GeoPosition | null,
     initialZoom?: number,
     initialBearing?: number,
     onPickLocation: (location: GeoPosition, zoom: number) => void,
@@ -26,17 +26,25 @@ interface LocationDialogParams {
     onHide: () => void,
 }
 
-const DEFAULT_ZOOM = 13
+const DEFAULT_ZOOM = 0
 
 const LocationDialog: React.FC<LocationDialogParams> =
     ({ initialLocation, initialZoom, onPickLocation, isOpen, onHide }) => {
-        const { position: inputPosition } = useBrowserLocation(initialLocation);
         const [position, setPosition] = useState<GeoPosition | undefined>()
         const [zoom, setZoom] = useState(initialZoom ?? DEFAULT_ZOOM)
 
         const [open, setOpen] = useState(isOpen);
         useEffect(() => { setOpen(isOpen); }, [isOpen]);
-        useEffect(() => { if (!position) setPosition(inputPosition); }, [position, inputPosition]);
+        useEffect(() => {
+            if (!position) {
+                if (initialLocation === null) {
+                    setPosition({ latitude: 0, longitude: 0 })
+                } else {
+                    setPosition(initialLocation);
+                }
+            }
+        }, [position, initialLocation]);
+        useEffect(() => { setZoom(initialZoom ?? DEFAULT_ZOOM); }, [initialZoom]);
 
         function onSave() {
             if (!position) return;
@@ -46,7 +54,7 @@ const LocationDialog: React.FC<LocationDialogParams> =
         }
 
         function handleClose() {
-            setPosition(initialLocation)
+            setPosition(initialLocation ?? undefined)
             setZoom(initialZoom ?? DEFAULT_ZOOM)
             setOpen(false);
             onHide();
@@ -62,20 +70,22 @@ const LocationDialog: React.FC<LocationDialogParams> =
                     <Container>
                         <Row>
                             <Col>
-                                <MapContainer
-                                    center={[inputPosition.latitude, inputPosition.longitude]}
-                                    zoom={zoom}
-                                    scrollWheelZoom={true}
-                                    style={{ width: 400, height: 400 }}
-                                >
-                                    <TileLayer
-                                        attribution='Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
-                                        url={`https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_ACCESS_TOKEN}`}
-                                    />
-                                    <TrackPosition onMove={setPosition} onZoom={setZoom} />
-                                    <LocateControl />
-                                    <GeocoderControl />
-                                </MapContainer>
+                                {position && (
+                                    <MapContainer
+                                        center={[position.latitude, position.longitude]}
+                                        zoom={zoom}
+                                        scrollWheelZoom={true}
+                                        style={{ width: 400, height: 400 }}
+                                    >
+                                        <TileLayer
+                                            attribution='Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
+                                            url={`https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_ACCESS_TOKEN}`}
+                                        />
+                                        <TrackPosition onMove={setPosition} onZoom={setZoom} />
+                                        <LocateControl autoStart={open && initialLocation === null} />
+                                        <GeocoderControl />
+                                    </MapContainer>)
+                                }
                             </Col>
                             <Col>
                                 <Form>
@@ -84,7 +94,7 @@ const LocationDialog: React.FC<LocationDialogParams> =
                                         <Form.Control type="text" value={position?.latitude ?? ""} onChange={(event) => {
                                             setPosition({
                                                 latitude: +(+event.target.value).toFixed(6),
-                                                longitude: position?.longitude ?? inputPosition.longitude
+                                                longitude: position?.longitude ?? initialLocation?.longitude ?? 0
                                             })
                                         }} />
                                     </Form.Group>
@@ -92,7 +102,7 @@ const LocationDialog: React.FC<LocationDialogParams> =
                                         <Form.Label>Longitude</Form.Label>
                                         <Form.Control type="text" value={position?.longitude ?? ""} onChange={(event) => {
                                             setPosition({
-                                                latitude: position?.latitude ?? inputPosition.latitude,
+                                                latitude: position?.latitude ?? initialLocation?.latitude ?? 0,
                                                 longitude: +(+event.target.value).toFixed(6)
                                             })
                                         }} />

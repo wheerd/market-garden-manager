@@ -1,4 +1,4 @@
-import React, { lazy, useMemo, useState } from "react"
+import React, { lazy, useState } from "react"
 import { usePersistedState } from "../../lib/usePersistedState";
 import { GroupedRawWeatherData, fetchWeatherData } from "../../lib/weatherData";
 
@@ -17,13 +17,7 @@ interface LocationData {
 }
 
 const Location: React.FC = () => {
-    const defaultLocation = useMemo(() => ({
-        longitude: -100,
-        latitude: 40,
-        zoom: 3.5
-    }), [])
-
-    const [location, setLocation] = usePersistedState<LocationData>("location", defaultLocation);
+    const [location, setLocation] = usePersistedState<LocationData | null>("location", null);
     const [locationImage, setLocationImage] = usePersistedState<string>("locationImage", "");
     const [timezone, setTimezone] = usePersistedState<string>("timezone", "");
     const [elevation, setElevation] = usePersistedState<number>("elevation", 0);
@@ -53,14 +47,14 @@ const Location: React.FC = () => {
             <h1>Location</h1>
             <div className="locationImage" onClick={() => { setPickerOpen(true); }}>
                 <div style={({ backgroundImage: locationImage ? `url(${locationImage})` : undefined })}>
-                    {<span className="coordinates">{location.longitude.toFixed(6)} {location.latitude.toFixed(6)}</span>}
+                    {<span className="coordinates">{location?.longitude.toFixed(6)} {location?.latitude.toFixed(6)}</span>}
                     <span className="prompt">Change Location</span>
-                    {location.totalSizeInMeters && <span className="size">{location.totalSizeInMeters.toFixed(2)}x{location.totalSizeInMeters.toFixed(2)}m</span>}
+                    {location?.totalSizeInMeters && <span className="size">{location.totalSizeInMeters.toFixed(2)}x{location.totalSizeInMeters.toFixed(2)}m</span>}
                 </div>
             </div>
             <LocationDialog
-                initialLocation={({latitude: location.latitude, longitude: location.longitude})}
-                initialZoom={location.zoom}
+                initialLocation={(location && {latitude: location.latitude, longitude: location.longitude})}
+                initialZoom={location?.zoom}
                 onPickLocation={onUpdateLocation}
                 isOpen={pickerOpen}
                 onHide={() => { setPickerOpen(false); }}

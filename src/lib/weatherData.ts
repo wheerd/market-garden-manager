@@ -19,7 +19,7 @@ function sortedObject<T extends object>(o: T): T {
         .reduce<T>((r, k) => { r[k] = o[k]; return r }, sorted)
 }
 
-export async function fetchWeatherData(latitude: number, longitude: number, elevation: number, timeZone: string): Promise<GroupedRawWeatherData> {
+export async function fetchWeatherData(latitude: number, longitude: number, elevation?: number, timeZone?: string): Promise<GroupedRawWeatherData> {
     const { fetchWeatherApi } = await import("openmeteo")
 
     const params = {
