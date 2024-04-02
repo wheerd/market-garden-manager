@@ -64,7 +64,7 @@ const LocateControl: React.FC = () => {
     useEffect(() => {
         map.addControl(control);
         return () => void map.removeControl(control)
-    }, [])
+    }, [map, control])
     return null
 }
 
@@ -82,7 +82,7 @@ const GeocoderControl: React.FC = () => {
     useEffect(() => {
         map.addControl(control);
         return () => void map.removeControl(control)
-    }, [])
+    }, [map, control])
     return null
 }
 
@@ -96,7 +96,7 @@ const LocationDialog: React.FC<LocationDialogParams> =
 
         const [open, setOpen] = useState(isOpen);
         useEffect(() => { setOpen(isOpen); }, [isOpen]);
-        useEffect(() => { if (!position) setPosition(inputPosition); }, [inputPosition]);
+        useEffect(() => { if (!position) setPosition(inputPosition); }, [position, inputPosition]);
 
         async function onSave() {
             if (!position) return;
