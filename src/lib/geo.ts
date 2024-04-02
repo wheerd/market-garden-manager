@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
-const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
+
+export const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
 
 export interface GeoPosition {
     longitude: number,

@@ -2,14 +2,8 @@ import React, { useEffect, useState } from "react"
 
 import { MapContainer } from 'react-leaflet/MapContainer'
 import { TileLayer } from 'react-leaflet/TileLayer'
-import { useMap, useMapEvents } from 'react-leaflet/hooks'
-import 'leaflet.locatecontrol'
-import { GeoSearchControl, MapBoxProvider } from 'leaflet-geosearch';
-import L from "leaflet"
 
 import "leaflet/dist/leaflet.css";
-import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css'
-import 'leaflet-geosearch/dist/geosearch.css';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -18,9 +12,10 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
-import { GeoPosition, useBrowserLocation } from "../lib/geo";
-
-const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
+import { type GeoPosition, useBrowserLocation, MAPBOX_ACCESS_TOKEN } from "../../lib/geo";
+import { TrackPosition } from "./TrackPosition"
+import { LocateControl } from "./LocateControl"
+import { GeocoderControl } from "./GeocoderControl"
 
 interface LocationDialogParams {
     initialLocation?: GeoPosition,
@@ -29,51 +24,6 @@ interface LocationDialogParams {
     onPickLocation: (location: GeoPosition, zoom: number) => void,
     isOpen: boolean,
     onHide: () => void,
-}
-
-const TrackPosition: React.FC<{
-    onMove: (p: GeoPosition) => void,
-    onZoom: (z: number) => void,
-}> = ({ onMove, onZoom }) => {
-    const map = useMapEvents({
-        move() {
-            const center = map.getCenter();
-            onMove({ latitude: +center.lat.toFixed(6), longitude: +center.lng.toFixed(6) })
-        },
-        zoom() {
-            onZoom(map.getZoom())
-        },
-    })
-
-    return null
-}
-
-const LocateControl: React.FC = () => {
-    const map = useMap()
-    const control = L.control.locate({ setView: "once", position: "topright" });
-    useEffect(() => {
-        map.addControl(control);
-        return () => void map.removeControl(control)
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
-    return null
-}
-
-const GeocoderControl: React.FC = () => {
-    const map = useMap()
-    const provider = new MapBoxProvider({
-        params: {
-            access_token: MAPBOX_ACCESS_TOKEN,
-        },
-    })
-    const control = GeoSearchControl({
-        provider,
-        style: 'bar'
-    });
-    useEffect(() => {
-        map.addControl(control);
-        return () => void map.removeControl(control)
-    }, [map, control])
-    return null
 }
 
 const DEFAULT_ZOOM = 13
