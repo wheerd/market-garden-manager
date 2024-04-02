@@ -1,7 +1,13 @@
-import React, { lazy, useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 
-import { type MapboxEvent } from "react-map-gl"
-const Map = lazy(() => import("react-map-gl"));
+import { MapContainer } from 'react-leaflet/MapContainer'
+import { TileLayer } from 'react-leaflet/TileLayer'
+import { useMap, useMapEvents } from 'react-leaflet/hooks'
+import 'leaflet.locatecontrol' // Import plugin
+import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css' // Import styles
+import L from "leaflet"
+
+import "leaflet/dist/leaflet.css";
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -11,19 +17,15 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
 import { useAsyncState } from "../lib/useAsyncState";
+import { GeoPosition, useBrowserLocation } from "../lib/geo";
 
 const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
 
-interface LocationData {
-    longitude: number,
-    latitude: number,
-    zoom: number,
-    bearing: number,
-}
-
 interface LocationDialogParams {
-    initialLocation: LocationData,
-    onPickLocation: (l: LocationData, imageString: string, totalSizeInMeters: number) => void,
+    initialLocation?: GeoPosition,
+    initialZoom?: number,
+    initialBearing?: number,
+    onPickLocation: (location: GeoPosition, zoom: number, imageString: string, totalSizeInMeters: number) => void,
     isOpen: boolean,
     onHide: () => void,
 }
@@ -37,37 +39,57 @@ const convertBlobToBase64 = (blob: Blob) => new Promise<string>((resolve, reject
     reader.readAsDataURL(blob);
 });
 
+const TrackPosition: React.FC<{
+    onMove: (p: GeoPosition) => void,
+    onZoom: (z: number) => void,
+}> = ({ onMove, onZoom }) => {
+    const map = useMapEvents({
+        move() {
+            const center = map.getCenter();
+            onMove({ latitude: +center.lat.toFixed(6), longitude: +center.lng.toFixed(6) })
+        },
+        zoom() {
+            onZoom(map.getZoom())
+        },
+    })
+
+    return null
+}
+
+const LocateControlWrapper: React.FC = () => {
+    const map = useMap()
+    const control = L.control.locate({ setView: "once" });
+    useEffect(() => {
+        map.addControl(control);
+        return () => void map.removeControl(control)
+    }, [map])
+
+
+    return null
+}
+
+const DEFAULT_ZOOM = 13
+
 const LocationDialog: React.FC<LocationDialogParams> =
-    ({ initialLocation, onPickLocation, isOpen, onHide }) => {
+    ({ initialLocation, initialZoom, onPickLocation, isOpen, onHide }) => {
+        const { position: inputPosition } = useBrowserLocation(initialLocation);
+        const [position, setPosition] = useState<GeoPosition | undefined>()
+        const [zoom, setZoom] = useState(initialZoom ?? DEFAULT_ZOOM)
+
         const [open, setOpen] = useState(isOpen);
-        const [viewState, setViewState] = useState(initialLocation);
-        useEffect(() => { setViewState(initialLocation); }, [initialLocation]);
         useEffect(() => { setOpen(isOpen); }, [isOpen]);
-
-        const geocoderRef = useRef<MapboxGeocoder | null>();
-        async function onMapLoad(e: MapboxEvent): Promise<void> {
-            // const mapboxgl = (await import("mapbox-gl")).map;
-            const MapboxGeocoder = (await import ("@mapbox/mapbox-gl-geocoder")).default;
-            const map = e.target;
-
-            if (!geocoderRef.current) {
-                geocoderRef.current = new MapboxGeocoder({
-                    accessToken: MAPBOX_ACCESS_TOKEN || ""
-                });
-            }
-            if (!map.hasControl(geocoderRef.current)) {
-                map.addControl(geocoderRef.current);
-            }
-        }
+        useEffect(() => { if (!position) setPosition(inputPosition); }, [inputPosition]);
 
         async function onSave() {
-            const response = await fetch(`https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/${viewState.longitude.toFixed(6)},${viewState.latitude.toFixed(6)},${viewState.zoom.toFixed(1)},${viewState.bearing.toFixed(0)},0/800x800?access_token=${MAPBOX_ACCESS_TOKEN}`)
+            if (!position) return;
+
+            const response = await fetch(`https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/${position.longitude.toFixed(6)},${position.latitude.toFixed(6)},${zoom.toFixed(1)},0},0/800x800?access_token=${MAPBOX_ACCESS_TOKEN}`)
             const base64 = await convertBlobToBase64(await response.blob())
 
-            const metersPerPixel = 40007000 * Math.cos(viewState.latitude * Math.PI / 180) / (512 * Math.pow(2, viewState.zoom));
+            const metersPerPixel = 40007000 * Math.cos(position.latitude * Math.PI / 180) / (512 * Math.pow(2, zoom));
             const totalSizeInMeters = metersPerPixel * 400;
 
-            onPickLocation(viewState, base64, totalSizeInMeters);
+            onPickLocation(position, zoom, base64, totalSizeInMeters);
 
             setOpen(false);
             onHide();
@@ -76,18 +98,10 @@ const LocationDialog: React.FC<LocationDialogParams> =
         const [isSaving, onSaveClick] = useAsyncState(onSave)
 
         function handleClose() {
-            setViewState(initialLocation);
+            setPosition(initialLocation)
+            setZoom(initialZoom ?? DEFAULT_ZOOM)
             setOpen(false);
             onHide();
-        }
-
-        function updateViewState(state: Partial<LocationData>) {
-            setViewState({
-                latitude: +(state.latitude?.toFixed(6) ?? viewState.latitude),
-                longitude: +(state.longitude?.toFixed(6) ?? viewState.longitude),
-                zoom: +(state.zoom?.toFixed(1) ?? viewState.zoom),
-                bearing: +(state.bearing?.toFixed(0) ?? viewState.bearing),
-            })
         }
 
         return (
@@ -100,41 +114,44 @@ const LocationDialog: React.FC<LocationDialogParams> =
                     <Container>
                         <Row>
                             <Col>
-                                <Map
-                                    onLoad={onMapLoad}
-                                    mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
-                                    reuseMaps
-                                    {...viewState}
-                                    onMove={evt => { updateViewState(evt.viewState); }}
+                                <MapContainer
+                                    center={[inputPosition.latitude, inputPosition.longitude]}
+                                    zoom={zoom}
+                                    scrollWheelZoom={true}
                                     style={{ width: 400, height: 400 }}
-                                    mapStyle="mapbox://styles/mapbox/satellite-v9"
-                                    maxPitch={0}
-                                    minPitch={0}
-                                /></Col>
+                                >
+                                    <TileLayer
+                                        attribution='Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
+                                        url={`https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_ACCESS_TOKEN}`}
+                                    />
+                                    <TrackPosition onMove={setPosition} onZoom={setZoom} />
+                                    <LocateControlWrapper />
+                                </MapContainer>
+                            </Col>
                             <Col>
                                 <Form>
                                     <Form.Group className="mb-3" controlId="formLatitude">
                                         <Form.Label>Latitude</Form.Label>
-                                        <Form.Control type="text" value={viewState.latitude} onChange={(event) => {
-                                            updateViewState({ latitude: +(+event.target.value).toFixed(6) })
+                                        <Form.Control type="text" value={position?.latitude ?? ""} onChange={(event) => {
+                                            setPosition({
+                                                latitude: +(+event.target.value).toFixed(6),
+                                                longitude: position?.longitude ?? inputPosition.longitude
+                                            })
                                         }} />
                                     </Form.Group>
                                     <Form.Group className="mb-3" controlId="formLongitude">
                                         <Form.Label>Longitude</Form.Label>
-                                        <Form.Control type="text" value={viewState.longitude} onChange={(event) => {
-                                            updateViewState({ longitude: +(+event.target.value).toFixed(6) })
+                                        <Form.Control type="text" value={position?.longitude ?? ""} onChange={(event) => {
+                                            setPosition({
+                                                latitude: position?.latitude ?? inputPosition.latitude,
+                                                longitude: +(+event.target.value).toFixed(6)
+                                            })
                                         }} />
                                     </Form.Group>
                                     <Form.Group className="mb-3" controlId="formZoom">
                                         <Form.Label>Zoom</Form.Label>
-                                        <Form.Control type="text" value={viewState.zoom} onChange={(event) => {
-                                            updateViewState({ zoom: +(+event.target.value).toFixed(1) })
-                                        }} />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3" controlId="formBearing">
-                                        <Form.Label>Bearing</Form.Label>
-                                        <Form.Control type="text" value={viewState.bearing} onChange={(event) => {
-                                            updateViewState({ bearing: +(+event.target.value).toFixed(0) })
+                                        <Form.Control type="text" value={zoom} onChange={(event) => {
+                                            setZoom(+(+event.target.value).toFixed(1))
                                         }} />
                                     </Form.Group>
                                 </Form>
@@ -147,7 +164,7 @@ const LocationDialog: React.FC<LocationDialogParams> =
                     <Button variant="secondary" onClick={handleClose}>Close</Button>
                     <Button variant="primary" disabled={isSaving} onClick={onSaveClick}>
                         {isSaving ? 'Saving…' : 'Save changes'}
-                        </Button>
+                    </Button>
                 </Modal.Footer>
             </Modal>
         )

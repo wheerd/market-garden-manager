@@ -7,12 +7,12 @@ const WeatherChart  = lazy(() => import("./WeatherChart"));
 
 import "./Location.css";
 import { useAsyncState } from "../lib/useAsyncState";
+import { GeoPosition } from "../lib/geo";
 
 interface LocationData {
     longitude: number,
     latitude: number,
     zoom: number,
-    bearing: number,
     totalSizeInMeters?: number,
 }
 
@@ -24,7 +24,7 @@ interface ElevationResponse {
     }[]
 }
 
-async function getElevation(location: LocationData) {
+async function getElevation(location: GeoPosition) {
     const response = await fetch(`https://api.open-elevation.com/api/v1/lookup?locations=${location.latitude},${location.longitude}`);
     const data = await response.json() as ElevationResponse;
     return data.results[0].elevation;
@@ -35,7 +35,7 @@ interface TimeZoneResponse {
     "timezoneId": string
 }
 
-async function getTimeZone(location: LocationData) {
+async function getTimeZone(location: GeoPosition) {
     const response = await fetch(`https://secure.geonames.org/timezoneJSON?lat=${location.latitude}&lng=${location.longitude}&username=wheerd`);
     const data = await response.json() as TimeZoneResponse;
     return data.timezoneId;
@@ -45,8 +45,7 @@ const Location: React.FC = () => {
     const defaultLocation = useMemo(() => ({
         longitude: -100,
         latitude: 40,
-        zoom: 3.5,
-        bearing: 0
+        zoom: 3.5
     }), [])
 
     const [location, setLocation] = usePersistedState<LocationData>("location", defaultLocation);
@@ -57,16 +56,16 @@ const Location: React.FC = () => {
 
     const [pickerOpen, setPickerOpen] = useState(false)
 
-    async function updateLocation(newLocation: LocationData, locationImage: string, totalSizeInMeters: number) {
-        setLocation({ ...newLocation, totalSizeInMeters });
+    async function updateLocation(position: GeoPosition, zoom: number, locationImage: string, totalSizeInMeters: number) {
+        setLocation({ ...position, zoom, totalSizeInMeters });
         setLocationImage(locationImage);
 
         setRawWeatherData(undefined)
 
-        setElevation(await getElevation(newLocation));
-        setTimezone(await getTimeZone(newLocation));
+        setElevation(await getElevation(position));
+        setTimezone(await getTimeZone(position));
 
-        setRawWeatherData(await fetchWeatherData(newLocation.latitude, newLocation.longitude, elevation, timezone))
+        setRawWeatherData(await fetchWeatherData(position.latitude, position.longitude, elevation, timezone))
     }
 
     const [isLoading, onUpdateLocation] = useAsyncState(updateLocation)
@@ -82,7 +81,8 @@ const Location: React.FC = () => {
                 </div>
             </div>
             <LocationDialog
-                initialLocation={location}
+                initialLocation={({latitude: location.latitude, longitude: location.longitude})}
+                initialZoom={location.zoom}
                 onPickLocation={onUpdateLocation}
                 isOpen={pickerOpen}
                 onHide={() => { setPickerOpen(false); }}
