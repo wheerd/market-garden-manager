@@ -1,7 +1,10 @@
+import {Suspense} from 'react';
 import {Routes, Route, NavLink, Link} from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 import About from './About';
 import Home from './Home';
@@ -51,8 +54,15 @@ function App() {
       </Navbar>
 
       <Routes>
-        <Route path="/" index />
-        <Route path="/setup/*" element={<Setup />} />
+        <Route path="/" index element={'Home'} />
+        <Route
+          path="/setup/*"
+          element={
+            <Suspense fallback={<Skeleton />}>
+              <Setup />
+            </Suspense>
+          }
+        />
         <Route path="/crops" element={<About />} />
         <Route path="/seeds" element={<Home />} />
       </Routes>
