@@ -5,7 +5,7 @@ import { GroupedRawWeatherData, fetchWeatherData } from "../../lib/weatherData";
 const LocationDialog = lazy(() => import("./LocationDialog"));
 const WeatherChart  = lazy(() => import("./WeatherChart"));
 
-import "./index.css";
+import "./index.scss";
 import { useAsyncState } from "../../lib/useAsyncState";
 import { GeoPosition, getElevation, getSatelliteImageAsDataUri, getTimeZone, metersPerPixel } from "../../lib/geo";
 
