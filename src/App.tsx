@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container';
 
 import About from './About';
 import Home from './Home';
-import Setup from './Setup';
+import Setup from './setup';
 import ReloadPrompt from "./ReloadPrompt";
 
 function App() {
