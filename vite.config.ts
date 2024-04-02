@@ -11,7 +11,7 @@ export default defineConfig({
     VitePWA({
       registerType: "prompt",
       devOptions: {
-        enabled: true,
+        enabled: false,
         navigateFallback: 'index.html',
       },
       includeAssets: ['favicon.ico', 'logo192.png', 'logo512.png'],

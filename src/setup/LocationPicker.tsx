@@ -5,6 +5,8 @@ import { TileLayer } from 'react-leaflet/TileLayer'
 import { useMap, useMapEvents } from 'react-leaflet/hooks'
 import 'leaflet.locatecontrol' // Import plugin
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css' // Import styles
+import { GeoSearchControl, MapBoxProvider } from 'leaflet-geosearch';
+import 'leaflet-geosearch/dist/geosearch.css';
 import L from "leaflet"
 
 import "leaflet/dist/leaflet.css";
@@ -56,15 +58,31 @@ const TrackPosition: React.FC<{
     return null
 }
 
-const LocateControlWrapper: React.FC = () => {
+const LocateControl: React.FC = () => {
     const map = useMap()
-    const control = L.control.locate({ setView: "once" });
+    const control = L.control.locate({ setView: "once", position: "topright" });
     useEffect(() => {
         map.addControl(control);
         return () => void map.removeControl(control)
-    }, [map])
+    }, [])
+    return null
+}
 
-
+const GeocoderControl: React.FC = () => {
+    const map = useMap()
+    const provider = new MapBoxProvider({
+        params: {
+            access_token: MAPBOX_ACCESS_TOKEN,
+        },
+    })
+    const control = GeoSearchControl({
+        provider,
+        style: 'bar'
+    });
+    useEffect(() => {
+        map.addControl(control);
+        return () => void map.removeControl(control)
+    }, [])
     return null
 }
 
@@ -125,7 +143,8 @@ const LocationDialog: React.FC<LocationDialogParams> =
                                         url={`https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_ACCESS_TOKEN}`}
                                     />
                                     <TrackPosition onMove={setPosition} onZoom={setZoom} />
-                                    <LocateControlWrapper />
+                                    <LocateControl />
+                                    <GeocoderControl />
                                 </MapContainer>
                             </Col>
                             <Col>
