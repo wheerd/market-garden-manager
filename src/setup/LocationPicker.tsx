@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react"
 import { MapContainer } from 'react-leaflet/MapContainer'
 import { TileLayer } from 'react-leaflet/TileLayer'
 import { useMap, useMapEvents } from 'react-leaflet/hooks'
-import 'leaflet.locatecontrol' // Import plugin
-import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css' // Import styles
+import 'leaflet.locatecontrol'
 import { GeoSearchControl, MapBoxProvider } from 'leaflet-geosearch';
-import 'leaflet-geosearch/dist/geosearch.css';
 import L from "leaflet"
 
 import "leaflet/dist/leaflet.css";
+import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css'
+import 'leaflet-geosearch/dist/geosearch.css';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -18,7 +18,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
-import { useAsyncState } from "../lib/useAsyncState";
 import { GeoPosition, useBrowserLocation } from "../lib/geo";
 
 const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
@@ -27,19 +26,10 @@ interface LocationDialogParams {
     initialLocation?: GeoPosition,
     initialZoom?: number,
     initialBearing?: number,
-    onPickLocation: (location: GeoPosition, zoom: number, imageString: string, totalSizeInMeters: number) => void,
+    onPickLocation: (location: GeoPosition, zoom: number) => void,
     isOpen: boolean,
     onHide: () => void,
 }
-
-const convertBlobToBase64 = (blob: Blob) => new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = reject;
-    reader.onload = () => {
-        resolve(reader.result as string);
-    };
-    reader.readAsDataURL(blob);
-});
 
 const TrackPosition: React.FC<{
     onMove: (p: GeoPosition) => void,
@@ -64,7 +54,7 @@ const LocateControl: React.FC = () => {
     useEffect(() => {
         map.addControl(control);
         return () => void map.removeControl(control)
-    }, [map, control])
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
     return null
 }
 
@@ -98,22 +88,12 @@ const LocationDialog: React.FC<LocationDialogParams> =
         useEffect(() => { setOpen(isOpen); }, [isOpen]);
         useEffect(() => { if (!position) setPosition(inputPosition); }, [position, inputPosition]);
 
-        async function onSave() {
+        function onSave() {
             if (!position) return;
-
-            const response = await fetch(`https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/${position.longitude.toFixed(6)},${position.latitude.toFixed(6)},${zoom.toFixed(1)},0},0/800x800?access_token=${MAPBOX_ACCESS_TOKEN}`)
-            const base64 = await convertBlobToBase64(await response.blob())
-
-            const metersPerPixel = 40007000 * Math.cos(position.latitude * Math.PI / 180) / (512 * Math.pow(2, zoom));
-            const totalSizeInMeters = metersPerPixel * 400;
-
-            onPickLocation(position, zoom, base64, totalSizeInMeters);
-
+            onPickLocation(position, zoom);
             setOpen(false);
             onHide();
         }
-
-        const [isSaving, onSaveClick] = useAsyncState(onSave)
 
         function handleClose() {
             setPosition(initialLocation)
@@ -181,9 +161,7 @@ const LocationDialog: React.FC<LocationDialogParams> =
 
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Close</Button>
-                    <Button variant="primary" disabled={isSaving} onClick={onSaveClick}>
-                        {isSaving ? 'Saving…' : 'Save changes'}
-                    </Button>
+                    <Button variant="primary" onClick={onSave}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         )

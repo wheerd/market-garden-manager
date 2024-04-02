@@ -7,38 +7,13 @@ const WeatherChart  = lazy(() => import("./WeatherChart"));
 
 import "./Location.css";
 import { useAsyncState } from "../lib/useAsyncState";
-import { GeoPosition } from "../lib/geo";
+import { GeoPosition, getElevation, getSatelliteImageAsDataUri, getTimeZone, metersPerPixel } from "../lib/geo";
 
 interface LocationData {
     longitude: number,
     latitude: number,
     zoom: number,
     totalSizeInMeters?: number,
-}
-
-interface ElevationResponse {
-    results: {
-        "latitude": number,
-        "longitude": number,
-        "elevation": number
-    }[]
-}
-
-async function getElevation(location: GeoPosition) {
-    const response = await fetch(`https://api.open-elevation.com/api/v1/lookup?locations=${location.latitude},${location.longitude}`);
-    const data = await response.json() as ElevationResponse;
-    return data.results[0].elevation;
-}
-
-interface TimeZoneResponse {
-    "countryCode": string,
-    "timezoneId": string
-}
-
-async function getTimeZone(location: GeoPosition) {
-    const response = await fetch(`https://secure.geonames.org/timezoneJSON?lat=${location.latitude}&lng=${location.longitude}&username=wheerd`);
-    const data = await response.json() as TimeZoneResponse;
-    return data.timezoneId;
 }
 
 const Location: React.FC = () => {
@@ -56,11 +31,14 @@ const Location: React.FC = () => {
 
     const [pickerOpen, setPickerOpen] = useState(false)
 
-    async function updateLocation(position: GeoPosition, zoom: number, locationImage: string, totalSizeInMeters: number) {
+    async function updateLocation(position: GeoPosition, zoom: number) {
+        setRawWeatherData(undefined)
+
+        const locationImage = await getSatelliteImageAsDataUri(position, zoom, 800, 800)
+        const totalSizeInMeters = metersPerPixel(position, zoom) * 800
+
         setLocation({ ...position, zoom, totalSizeInMeters });
         setLocationImage(locationImage);
-
-        setRawWeatherData(undefined)
 
         setElevation(await getElevation(position));
         setTimezone(await getTimeZone(position));
