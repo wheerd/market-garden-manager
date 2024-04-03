@@ -1,24 +1,22 @@
 import React, {lazy, useMemo} from 'react';
 
-const Line = lazy(() => import('@/lib/chart'));
+const LineChart = lazy(() => import('@/lib/chart'));
 
 import {de} from 'date-fns/locale';
 import {format, parseISO} from 'date-fns';
 import {type BoxAnnotationOptions} from 'chartjs-plugin-annotation';
 
-import {quantile} from '@/lib/statistics';
-import {
-  getMinTemperatureProbabilityThresholds,
-  type DayOfYear,
-  type GroupedRawWeatherData,
-} from '@/lib/weatherData';
+import {Stats} from '@/lib/statistics';
+import {type DayOfYear, getFrostWindows} from '@/lib/weatherData';
 
 const WeatherChart: React.FC<{
-  rawWeatherData: GroupedRawWeatherData | undefined;
-}> = ({rawWeatherData}) => {
+  temperatureStats: Record<DayOfYear, Stats> | undefined;
+  frostProbabilities: Record<DayOfYear, number> | undefined;
+}> = ({temperatureStats, frostProbabilities}) => {
   const chartData = useMemo(() => {
-    if (!rawWeatherData) return {labels: [], datasets: []};
-    const allDays = Object.keys(rawWeatherData).sort() as DayOfYear[];
+    if (!temperatureStats || !frostProbabilities)
+      return {labels: [], datasets: []};
+    const allDays = Object.keys(temperatureStats).sort() as DayOfYear[];
     const dayTimestamps = Object.fromEntries(
       allDays.map(d => [d, parseISO('2020-' + d).getTime()])
     );
@@ -29,44 +27,19 @@ const WeatherChart: React.FC<{
           label: 'Mean Temperature',
           data: allDays.map(day => ({
             x: dayTimestamps[day],
-            y:
-              rawWeatherData[day].tempMean.reduce((a, b) => a + b, 0) /
-              rawWeatherData[day].tempMean.length,
+            y: temperatureStats[day].mean,
           })),
           pointRadius: 0,
           borderColor: 'red',
           order: 10,
           yAxisID: 'temperature',
         },
-        /*
-                {
-                    label: "Maximum Temperature",
-                    fill: "+1",
-                    data: allDays.map(day => ({
-                        x: "2000-" + day,
-                        y: Math.max(...rawWeatherData[day].tempMax)
-                    })),
-                    pointRadius: 0,
-                    borderWidth: 0,
-                    order: 0
-                },
-                {
-                    label: "Minimum Temperature",
-                    data: allDays.map(day => ({
-                        x: "2000-" + day,
-                        y: Math.min(...rawWeatherData[day].tempMin)
-                    })),
-                    pointRadius: 0,
-                    borderWidth: 0,
-                    order: 0
-                },
-                */
         {
           label: 'Maximum Temperature (p95)',
           fill: '+1',
           data: allDays.map(day => ({
             x: dayTimestamps[day],
-            y: quantile(rawWeatherData[day].tempMax, 0.95),
+            y: temperatureStats[day].p95,
           })),
           pointRadius: 0,
           borderWidth: 0,
@@ -77,7 +50,7 @@ const WeatherChart: React.FC<{
           label: 'Minimum Temperature (p5)',
           data: allDays.map(day => ({
             x: dayTimestamps[day],
-            y: quantile(rawWeatherData[day].tempMin, 0.05),
+            y: temperatureStats[day].p5,
           })),
           pointRadius: 0,
           borderWidth: 0,
@@ -88,9 +61,7 @@ const WeatherChart: React.FC<{
           label: 'Frost Probability',
           data: allDays.map(day => ({
             x: dayTimestamps[day],
-            y:
-              rawWeatherData[day].tempMin.filter(t => t <= 0).length /
-              rawWeatherData[day].tempMin.length,
+            y: frostProbabilities[day],
           })),
           pointRadius: 0,
           order: 9,
@@ -101,7 +72,7 @@ const WeatherChart: React.FC<{
           label: 'Number of years with data',
           data: allDays.map(day => ({
             x: dayTimestamps[day],
-            y: rawWeatherData[day].tempMin.length,
+            y: temperatureStats[day].valueCount / 24,
           })),
           pointRadius: 0,
           borderWidth: 0,
@@ -109,44 +80,48 @@ const WeatherChart: React.FC<{
         },
       ],
     };
-  }, [rawWeatherData]);
+  }, [temperatureStats, frostProbabilities]);
 
   const annotations = useMemo(() => {
-    if (!rawWeatherData) return [];
+    if (!frostProbabilities) return [];
     const freeColor = 'rgba(100, 256, 100, 0.1)';
     const lowRiskColor = 'rgba(100, 100, 200, 0.2)';
     const highRiskColor = 'rgba(0, 0, 200, 0.2)';
 
-    const frostFreeWindows = getMinTemperatureProbabilityThresholds(
-      rawWeatherData,
-      0,
-      1,
-      2,
-      10
-    );
-    const frostLowWindows = getMinTemperatureProbabilityThresholds(
-      rawWeatherData,
-      0,
-      0.95,
-      2,
-      5
-    );
-    const frostHighWindows = getMinTemperatureProbabilityThresholds(
-      rawWeatherData,
-      0,
-      0,
-      0.95,
-      0
-    );
+    const frostWindows = getFrostWindows(frostProbabilities, 0.05);
 
-    const allWindows = frostFreeWindows
-      .map(w => ({...w, color: freeColor, label: '🌱'}))
-      .concat(
-        frostLowWindows.map(w => ({...w, color: lowRiskColor, label: '❄'}))
-      )
-      .concat(
-        frostHighWindows.map(w => ({...w, color: highRiskColor, label: '❄❄'}))
-      );
+    const allWindows = [
+      {
+        first: '01-01',
+        last: frostWindows.firstLowRiskDay,
+        color: highRiskColor,
+        label: '❄❄',
+      },
+      {
+        first: frostWindows.firstLowRiskDay,
+        last: frostWindows.firstFrostFreeDay,
+        color: lowRiskColor,
+        label: '❄',
+      },
+      {
+        first: frostWindows.firstFrostFreeDay,
+        last: frostWindows.lastFrostFreeDay,
+        color: freeColor,
+        label: '🌱',
+      },
+      {
+        first: frostWindows.lastFrostFreeDay,
+        last: frostWindows.lastLowRiskDay,
+        color: lowRiskColor,
+        label: '❄',
+      },
+      {
+        first: frostWindows.lastLowRiskDay,
+        last: '12-31',
+        color: highRiskColor,
+        label: '❄❄',
+      },
+    ];
 
     return Object.fromEntries(
       allWindows.map(({first, last, color, label}, i) => [
@@ -166,10 +141,10 @@ const WeatherChart: React.FC<{
         } as BoxAnnotationOptions,
       ])
     );
-  }, [rawWeatherData]);
+  }, [frostProbabilities]);
 
   return (
-    <Line
+    <LineChart
       width={600}
       data={chartData}
       options={{
@@ -242,14 +217,13 @@ const WeatherChart: React.FC<{
               text: 'Temperature',
             },
             ticks: {
-              callback: value => `${(+value).toFixed(1)}°C`,
+              callback: value => `${(+value).toFixed(0)}°C`,
             },
           },
           probability: {
             axis: 'y',
             position: 'right',
             min: 0,
-            max: 1,
             grid: {
               display: false,
             },
