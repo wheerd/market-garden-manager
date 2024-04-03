@@ -104,11 +104,6 @@ export function splitGroupedIntoDayAndNight(
   return {day: days, night: nights};
 }
 
-export interface DayWindow {
-  first: DayOfYear;
-  last: DayOfYear;
-}
-
 export function getMinTemperatureProbabilities(
   weatherData: Record<DayOfYear, number[]>,
   maxTemperatureThreshold: number
@@ -127,38 +122,52 @@ export function getMinTemperatureProbabilities(
   );
 }
 
-export function getProbabilityThresholdWindows(
-  probabilities: Record<DayOfYear, number>,
-  minProbability: number,
-  maxProbability: number,
-  minSize: number
-) {
-  const windows: DayWindow[] = [];
-  let start: string | undefined = undefined;
-  let size = 0;
-  let previousDay = '' as DayOfYear;
-  Object.entries(probabilities).forEach(([day, p]) => {
-    if (p >= minProbability && p < maxProbability) {
-      if (typeof start === 'undefined') {
-        start = day;
-      }
-      size++;
-    } else {
-      if (typeof start !== 'undefined') {
-        if (size >= minSize) {
-          windows.push({first: start as DayOfYear, last: previousDay});
-        }
-        start = undefined;
-        size = 0;
-      }
-    }
-    previousDay = day as DayOfYear;
-  });
-  if (typeof start !== 'undefined') {
-    if (size >= minSize) {
-      windows.push({first: start as DayOfYear, last: previousDay});
-    }
-  }
+export interface FrostWindows {
+  firstFrostFreeDay: DayOfYear;
+  lastFrostFreeDay: DayOfYear;
+  firstLowRiskDay: DayOfYear;
+  lastLowRiskDay: DayOfYear;
+}
 
-  return windows;
+export function getFrostWindows(
+  probabilities: Record<DayOfYear, number>,
+  lowRiskThreshold: number
+): FrostWindows {
+  const allDays = Object.keys(probabilities) as DayOfYear[];
+  const midIndex = Math.floor(allDays.length / 2);
+  let frostFreeStartIndex,
+    frostFreeEndIndex,
+    lowRiskStartIndex,
+    lowRiskEndIndex;
+  for (
+    frostFreeStartIndex = midIndex;
+    frostFreeStartIndex >= 0 &&
+    probabilities[allDays[frostFreeStartIndex]] === 0;
+    frostFreeStartIndex--
+  );
+  for (
+    frostFreeEndIndex = midIndex;
+    frostFreeEndIndex < allDays.length &&
+    probabilities[allDays[frostFreeEndIndex]] === 0;
+    frostFreeEndIndex++
+  );
+  for (
+    lowRiskStartIndex = frostFreeStartIndex;
+    lowRiskStartIndex >= 0 &&
+    probabilities[allDays[lowRiskStartIndex]] < lowRiskThreshold;
+    lowRiskStartIndex--
+  );
+  for (
+    lowRiskEndIndex = frostFreeEndIndex;
+    lowRiskEndIndex < allDays.length &&
+    probabilities[allDays[lowRiskEndIndex]] < lowRiskThreshold;
+    lowRiskEndIndex++
+  );
+
+  return {
+    firstFrostFreeDay: allDays[frostFreeStartIndex + 1],
+    lastFrostFreeDay: allDays[frostFreeEndIndex - 1],
+    firstLowRiskDay: allDays[lowRiskStartIndex + 1],
+    lastLowRiskDay: allDays[lowRiskEndIndex - 1],
+  };
 }

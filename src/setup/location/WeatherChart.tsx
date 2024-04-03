@@ -7,11 +7,7 @@ import {format, parseISO} from 'date-fns';
 import {type BoxAnnotationOptions} from 'chartjs-plugin-annotation';
 
 import {Stats} from '@/lib/statistics';
-import {
-  type DayOfYear,
-  type DayWindow,
-  getProbabilityThresholdWindows,
-} from '@/lib/weatherData';
+import {type DayOfYear, getFrostWindows} from '@/lib/weatherData';
 
 const WeatherChart: React.FC<{
   temperatureStats: Record<DayOfYear, Stats> | undefined;
@@ -92,33 +88,40 @@ const WeatherChart: React.FC<{
     const lowRiskColor = 'rgba(100, 100, 200, 0.2)';
     const highRiskColor = 'rgba(0, 0, 200, 0.2)';
 
-    const frostFreeWindows: DayWindow[] = getProbabilityThresholdWindows(
-      frostProbabilities,
-      0,
-      0.0001,
-      10
-    );
-    const frostLowWindows: DayWindow[] = getProbabilityThresholdWindows(
-      frostProbabilities,
-      0,
-      0.05,
-      5
-    );
-    const frostHighWindows: DayWindow[] = getProbabilityThresholdWindows(
-      frostProbabilities,
-      0.05,
-      2,
-      10
-    );
+    const frostWindows = getFrostWindows(frostProbabilities, 0.05);
 
-    const allWindows = frostFreeWindows
-      .map(w => ({...w, color: freeColor, label: '🌱'}))
-      .concat(
-        frostLowWindows.map(w => ({...w, color: lowRiskColor, label: '❄'}))
-      )
-      .concat(
-        frostHighWindows.map(w => ({...w, color: highRiskColor, label: '❄❄'}))
-      );
+    const allWindows = [
+      {
+        first: '01-01',
+        last: frostWindows.firstLowRiskDay,
+        color: highRiskColor,
+        label: '❄❄',
+      },
+      {
+        first: frostWindows.firstLowRiskDay,
+        last: frostWindows.firstFrostFreeDay,
+        color: lowRiskColor,
+        label: '❄',
+      },
+      {
+        first: frostWindows.firstFrostFreeDay,
+        last: frostWindows.lastFrostFreeDay,
+        color: freeColor,
+        label: '🌱',
+      },
+      {
+        first: frostWindows.lastFrostFreeDay,
+        last: frostWindows.lastLowRiskDay,
+        color: lowRiskColor,
+        label: '❄',
+      },
+      {
+        first: frostWindows.lastLowRiskDay,
+        last: '12-31',
+        color: highRiskColor,
+        label: '❄❄',
+      },
+    ];
 
     return Object.fromEntries(
       allWindows.map(({first, last, color, label}, i) => [
@@ -214,14 +217,13 @@ const WeatherChart: React.FC<{
               text: 'Temperature',
             },
             ticks: {
-              callback: value => `${(+value).toFixed(1)}°C`,
+              callback: value => `${(+value).toFixed(0)}°C`,
             },
           },
           probability: {
             axis: 'y',
             position: 'right',
             min: 0,
-            max: 1,
             grid: {
               display: false,
             },
