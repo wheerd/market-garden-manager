@@ -2,7 +2,7 @@ import React, {lazy, useMemo} from 'react';
 
 const LineChart = lazy(() => import('@/lib/chart'));
 
-import {de} from 'date-fns/locale';
+import {enUS} from 'date-fns/locale';
 import {format, parseISO} from 'date-fns';
 import {type BoxAnnotationOptions} from 'chartjs-plugin-annotation';
 
@@ -145,9 +145,11 @@ const WeatherChart: React.FC<{
 
   return (
     <LineChart
-      width={600}
+      height={400}
+      width={'100%'}
       data={chartData}
       options={{
+        maintainAspectRatio: false,
         animation: false,
         parsing: false,
         interaction: {
@@ -203,11 +205,11 @@ const WeatherChart: React.FC<{
               parser: 'yyyy-MM-dd',
             },
             ticks: {
-              labelOffset: 50,
+              align: 'start',
             },
             adapters: {
               date: {
-                locale: de,
+                locale: enUS,
               },
             },
           },
