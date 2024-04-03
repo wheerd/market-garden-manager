@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useMap} from 'react-leaflet/hooks';
 import L from 'leaflet';
 
-import {getGeoPositionByIp} from '../../lib/geo';
+import {getGeoPositionByIp} from '@/lib/geo';
 
 import 'leaflet.locatecontrol';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';

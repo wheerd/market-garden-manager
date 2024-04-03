@@ -2,29 +2,29 @@ name: Pull Requests
 on:
   pull_request:
     branches:
-    - main
+      - main
 jobs:
   test:
     runs-on: ubuntu-latest
     name: Test
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - uses: pnpm/action-setup@v3
-      name: Install pnpm
-      with:
-        version: 8.15.5
-        run_install: false
-    - name: Setup node
-      uses: actions/setup-node@v4
-      with:
-        node-version: v20.12.0
-        cache: pnpm
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile --strict-peer-dependencies
-    - name: Lint
-      run: pnpm lint
-    - name: Build
-      run: pnpm build
-      env:
-        VITE_MAPBOX_ACCESS_TOKEN: NOT_USED
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8.15.5
+          run_install: false
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: v20.12.0
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --strict-peer-dependencies
+      - name: Lint
+        run: pnpm lint
+      - name: Build
+        run: pnpm build
+        env:
+          VITE_MAPBOX_ACCESS_TOKEN: NOT_USED

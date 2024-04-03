@@ -1,21 +1,14 @@
 import Toast from 'react-bootstrap/Toast';
 
 import {useRegisterSW} from 'virtual:pwa-register/react';
-import Button from 'react-bootstrap/esm/Button';
+import Button from 'react-bootstrap/Button';
 
 function ReloadPrompt() {
   const {
     offlineReady: [offlineReady, setOfflineReady],
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
-  } = useRegisterSW({
-    onRegisteredSW(_swUrl, r) {
-      console.log('SW Registered:', r);
-    },
-    onRegisterError(error) {
-      console.log('SW registration error', error);
-    },
-  });
+  } = useRegisterSW();
 
   const close = () => {
     setOfflineReady(false);
@@ -23,17 +16,28 @@ function ReloadPrompt() {
   };
 
   return (
-    <Toast show={offlineReady || needRefresh} onClose={close}>
-      <Toast.Body>
-        {offlineReady ? (
-          <span>App ready to work offline</span>
-        ) : (
-          <span>New content available, click on reload button to update.</span>
-        )}
-        {needRefresh && (
-          <Button onClick={() => void updateServiceWorker(true)}>Reload</Button>
-        )}
-      </Toast.Body>
+    <Toast show={offlineReady || needRefresh} className="align-items-center">
+      <div className="d-flex">
+        <Toast.Body>
+          {offlineReady ? (
+            <span>App ready to work offline</span>
+          ) : (
+            <span>
+              New content available, click on reload button to update.
+            </span>
+          )}
+          {needRefresh && (
+            <Button onClick={() => void updateServiceWorker(true)}>
+              Reload
+            </Button>
+          )}
+        </Toast.Body>
+        <Button
+          className="btn-close me-2 m-auto"
+          onClick={close}
+          aria-label="Close"
+        ></Button>
+      </div>
     </Toast>
   );
 }
