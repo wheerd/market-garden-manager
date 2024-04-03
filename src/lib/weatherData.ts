@@ -1,40 +1,42 @@
-import {format} from 'date-fns';
 import {Stats, getStats} from './statistics';
 
 type Opaque<K, T> = T & {__TYPE__: K};
 export type DayOfYear = Opaque<'DayOfYear', string>;
-
-function sortedObject<T extends object>(o: T): T {
-  const sorted = {} as T;
-  return (Object.keys(o) as (keyof T)[]).sort().reduce<T>((r, k) => {
-    r[k] = o[k];
-    return r;
-  }, sorted);
-}
 
 export interface WeatherRequestParams {
   latitude: number;
   longitude: number;
   start_date: string;
   end_date: string;
-  hourly: string;
+  hourly: [_: WeatherHourlyFields];
   timezone?: string;
   elevation?: number;
 }
 
-export async function fetchWeatherData(
+export type WeatherDataPoint = {
+  time: Date;
+  temperature_2m?: number;
+  rain?: number;
+  soil_temperature_0_to_7cm?: number;
+};
+
+type WeatherHourlyFields = Exclude<keyof WeatherDataPoint, 'time'>;
+
+export async function fetchWeatherData<T extends WeatherDataPoint>(
   params: WeatherRequestParams
-): Promise<Record<DayOfYear, number[]>> {
+): Promise<Required<T>[]> {
   const {fetchWeatherApi} = await import('openmeteo');
   const url = 'https://archive-api.open-meteo.com/v1/archive';
   const responses = await fetchWeatherApi(url, params);
 
-  const groupedData: Partial<Record<DayOfYear, number[]>> = {};
+  const data: Required<T>[] = [];
 
   const hourly = responses[0].hourly();
 
   if (hourly) {
-    const values = hourly.variables(0)?.valuesArray() ?? [];
+    const values = Object.fromEntries(
+      params.hourly.map((v, i) => [v, hourly.variables(i)?.valuesArray() ?? []])
+    );
 
     const start = Number(hourly.time()) * 1000;
     const end = Number(hourly.timeEnd()) * 1000;
@@ -43,16 +45,21 @@ export async function fetchWeatherData(
     let i = 0;
     for (let day = start; day < end; day += interval) {
       const date = new Date(day);
-      const dayId = format(date, 'MM-dd') as DayOfYear;
+      const pointValues = Object.fromEntries(
+        params.hourly.map(p => [p, values[p][i]])
+      );
 
-      const data = (groupedData[dayId] = groupedData[dayId] ?? []);
-      data.push(values[i]);
+      const point: WeatherDataPoint = {
+        time: date,
+        ...pointValues,
+      };
+      data.push(point as Required<T>);
 
       i++;
     }
   }
 
-  return sortedObject(groupedData) as Record<DayOfYear, number[]>;
+  return data;
 }
 
 export function splitIntoDayAndNight(

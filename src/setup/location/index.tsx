@@ -1,10 +1,8 @@
 import React, {lazy, useEffect, useMemo, useState} from 'react';
 import {usePersistedState} from '@/lib/usePersistedState';
-import {
-  type DayOfYear,
-  fetchWeatherData,
-  getGroupedStats,
-} from '@/lib/weatherData';
+import {fetchWeatherData, getGroupedStats} from '@/lib/weatherData';
+
+import {DataFrame} from 'data-forge';
 
 const LocationDialog = lazy(() => import('./LocationDialog'));
 const WeatherChart = lazy(() => import('./WeatherChart'));
@@ -18,6 +16,7 @@ import {
   getTimeZone,
   metersPerPixel,
 } from '@/lib/geo';
+import {format} from 'date-fns';
 
 interface LocationData {
   longitude: number;
@@ -26,9 +25,14 @@ interface LocationData {
   totalSizeInMeters?: number;
 }
 
+interface TemperatureDataPoint {
+  time: Date;
+  temperature_2m?: number;
+}
+
 interface RawWeatherDataCache {
   cacheKey: string;
-  data: Record<DayOfYear, number[]>;
+  data: TemperatureDataPoint[];
 }
 
 const Location: React.FC = () => {
@@ -45,10 +49,21 @@ const Location: React.FC = () => {
   const [rawTemperatureData, setRawTemperatureData] = usePersistedState<
     RawWeatherDataCache | undefined
   >('rawTemperatureData', undefined);
-  const temperatureStats = useMemo(
-    () => getGroupedStats(rawTemperatureData?.data ?? {}),
-    [rawTemperatureData]
-  );
+  const temperatureStats = useMemo(() => {
+    const df = new DataFrame(rawTemperatureData?.data ?? []);
+    const groupedByDayOfYear = df
+      .generateSeries<TemperatureDataPoint & {dayOfYear: string}>({
+        dayOfYear: row => {
+          return format(row.time, 'MM-dd');
+        },
+      })
+      .groupBy(r => r.dayOfYear)
+      .toObject(
+        g => g.first().dayOfYear,
+        g => g.select(r => r.temperature_2m).toArray()
+      );
+    return getGroupedStats(groupedByDayOfYear);
+  }, [rawTemperatureData]);
 
   const [pickerOpen, setPickerOpen] = useState(false);
 
@@ -76,14 +91,14 @@ const Location: React.FC = () => {
       if (cacheKey !== rawTemperatureData?.cacheKey) {
         setRawTemperatureData(undefined);
 
-        fetchWeatherData({
+        fetchWeatherData<TemperatureDataPoint>({
           latitude: location.latitude,
           longitude: location.longitude,
           start_date: '2000-01-01',
           end_date: '2023-12-31',
           elevation,
           timezone,
-          hourly: 'temperature_2m',
+          hourly: ['temperature_2m'],
         }).then(data => setRawTemperatureData({cacheKey, data}), console.error);
       }
     }
