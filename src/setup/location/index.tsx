@@ -1,6 +1,10 @@
-import React, {lazy, useState} from 'react';
+import React, {lazy, useEffect, useMemo, useState} from 'react';
 import {usePersistedState} from '@/lib/usePersistedState';
-import {GroupedRawWeatherData, fetchWeatherData} from '@/lib/weatherData';
+import {
+  type DayOfYear,
+  fetchWeatherData,
+  getGroupedStats,
+} from '@/lib/weatherData';
 
 const LocationDialog = lazy(() => import('./LocationDialog'));
 const WeatherChart = lazy(() => import('./WeatherChart'));
@@ -22,6 +26,11 @@ interface LocationData {
   totalSizeInMeters?: number;
 }
 
+interface RawWeatherDataCache {
+  cacheKey: string;
+  data: Record<DayOfYear, number[]>;
+}
+
 const Location: React.FC = () => {
   const [location, setLocation] = usePersistedState<LocationData | null>(
     'location',
@@ -33,15 +42,17 @@ const Location: React.FC = () => {
   );
   const [timezone, setTimezone] = usePersistedState<string>('timezone', '');
   const [elevation, setElevation] = usePersistedState<number>('elevation', 0);
-  const [rawWeatherData, setRawWeatherData] = usePersistedState<
-    GroupedRawWeatherData | undefined
-  >('rawWeatherData', undefined);
+  const [rawTemperatureData, setRawTemperatureData] = usePersistedState<
+    RawWeatherDataCache | undefined
+  >('rawTemperatureData', undefined);
+  const temperatureStats = useMemo(
+    () => getGroupedStats(rawTemperatureData?.data ?? {}),
+    [rawTemperatureData]
+  );
 
   const [pickerOpen, setPickerOpen] = useState(false);
 
   async function updateLocation(position: GeoPosition, zoom: number) {
-    setRawWeatherData(undefined);
-
     const locationImage = await getSatelliteImageAsDataUri(
       position,
       zoom,
@@ -55,16 +66,28 @@ const Location: React.FC = () => {
 
     setElevation(await getElevation(position));
     setTimezone(await getTimeZone(position));
-
-    setRawWeatherData(
-      await fetchWeatherData(
-        position.latitude,
-        position.longitude,
-        elevation,
-        timezone
-      )
-    );
   }
+
+  useEffect(() => {
+    if (location && elevation && timezone) {
+      const cacheKey = `${location.latitude.toFixed(
+        6
+      )},${location.longitude.toFixed(6)}`;
+      if (cacheKey !== rawTemperatureData?.cacheKey) {
+        setRawTemperatureData(undefined);
+
+        fetchWeatherData({
+          latitude: location.latitude,
+          longitude: location.longitude,
+          start_date: '2000-01-01',
+          end_date: '2023-12-31',
+          elevation,
+          timezone,
+          hourly: 'temperature_2m',
+        }).then(data => setRawTemperatureData({cacheKey, data}), console.error);
+      }
+    }
+  }, [location, elevation, timezone]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [isLoading, onUpdateLocation] = useAsyncState(updateLocation);
 
@@ -117,10 +140,11 @@ const Location: React.FC = () => {
           <p>Elevation: {elevation}m</p>
           <p>Time Zone: {timezone}</p>
           <p>
-            Weather Data: {typeof rawWeatherData !== 'undefined' ? 'yes' : 'no'}
+            Weather Data:{' '}
+            {typeof rawTemperatureData !== 'undefined' ? 'yes' : 'no'}
           </p>
           <div>
-            <WeatherChart rawWeatherData={rawWeatherData} />
+            <WeatherChart temperatureStats={temperatureStats} />
           </div>
         </div>
       )}

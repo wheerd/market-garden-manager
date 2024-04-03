@@ -6,6 +6,7 @@ import {
   PointElement,
   LineElement,
   Filler,
+  Tooltip,
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import {Line} from 'react-chartjs-2';
@@ -17,6 +18,7 @@ Chart.register(
   LinearScale,
   PointElement,
   LineElement,
+  Tooltip,
   Filler,
   annotationPlugin
 );
