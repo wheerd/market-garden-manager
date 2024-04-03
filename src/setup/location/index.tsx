@@ -11,7 +11,6 @@ const LocationDialog = lazy(() => import('./LocationDialog'));
 const WeatherChart = lazy(() => import('./WeatherChart'));
 
 import './index.scss';
-import {useAsyncState} from '@/lib/useAsyncState';
 import {
   GeoPosition,
   getElevation,
@@ -19,6 +18,10 @@ import {
   getTimeZone,
   metersPerPixel,
 } from '@/lib/geo';
+import Container from 'react-bootstrap/esm/Container';
+import Row from 'react-bootstrap/esm/Row';
+import Col from 'react-bootstrap/esm/Col';
+import Skeleton from 'react-loading-skeleton';
 
 interface LocationData {
   longitude: number;
@@ -97,38 +100,58 @@ const Location: React.FC = () => {
     }
   }, [location, elevation, timezone]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [isLoading, onUpdateLocation] = useAsyncState(updateLocation);
-
   return (
-    <div>
-      <h1>Location</h1>
-      <div
-        className="locationImage"
-        onClick={() => {
-          setPickerOpen(true);
-        }}
-      >
-        <div
-          style={{
-            backgroundImage: locationImage
-              ? `url(${locationImage})`
-              : undefined,
-          }}
-        >
-          {
-            <span className="coordinates">
-              {location?.longitude.toFixed(6)} {location?.latitude.toFixed(6)}
-            </span>
-          }
-          <span className="prompt">Change Location</span>
-          {location?.totalSizeInMeters && (
-            <span className="size">
-              {location.totalSizeInMeters.toFixed(2)}x
-              {location.totalSizeInMeters.toFixed(2)}m
-            </span>
-          )}
-        </div>
-      </div>
+    <>
+      <Container fluid>
+        <Row>
+          <Col md="auto">
+            <div
+              className="locationImage"
+              onClick={() => {
+                setPickerOpen(true);
+              }}
+            >
+              <div
+                style={{
+                  backgroundImage: locationImage
+                    ? `url(${locationImage})`
+                    : undefined,
+                }}
+              >
+                {
+                  <span className="coordinates">
+                    {location?.longitude.toFixed(6)}{' '}
+                    {location?.latitude.toFixed(6)}
+                  </span>
+                }
+                <span className="prompt">Change Location</span>
+                {location?.totalSizeInMeters && (
+                  <span className="size">
+                    {location.totalSizeInMeters.toFixed(2)}x
+                    {location.totalSizeInMeters.toFixed(2)}m
+                  </span>
+                )}
+              </div>
+            </div>
+          </Col>
+          <Col>
+            <p>
+              Elevation: {elevation ? `${elevation.toFixed(0)}m` : <Skeleton />}
+            </p>
+            <p>Time Zone: {timezone ?? <Skeleton />}</p>
+            {rawTemperatureData ? (
+              <div>
+                <WeatherChart
+                  temperatureStats={temperatureStats}
+                  frostProbabilities={frostProbabilities}
+                />
+              </div>
+            ) : (
+              <Skeleton height={400} />
+            )}
+          </Col>
+        </Row>
+      </Container>
       <LocationDialog
         initialLocation={
           location && {
@@ -137,32 +160,13 @@ const Location: React.FC = () => {
           }
         }
         initialZoom={location?.zoom}
-        onPickLocation={onUpdateLocation}
+        onPickLocation={updateLocation}
         isOpen={pickerOpen}
         onHide={() => {
           setPickerOpen(false);
         }}
       />
-      {!isLoading && (
-        <div>
-          <p>Elevation: {elevation}m</p>
-          <p>Time Zone: {timezone}</p>
-          <p>
-            Weather Data:{' '}
-            {typeof rawTemperatureData !== 'undefined' ? 'yes' : 'no'}
-          </p>
-        </div>
-      )}
-      {isLoading && <p>Loading data...</p>}
-      {rawTemperatureData && (
-        <div>
-          <WeatherChart
-            temperatureStats={temperatureStats}
-            frostProbabilities={frostProbabilities}
-          />
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 
