@@ -21,7 +21,7 @@ export interface Stats {
   p1: number;
   p5: number;
   p10: number;
-  mode: number;
+  median: number;
   mean: number;
   p90: number;
   p95: number;
@@ -40,7 +40,7 @@ export function getStats(data: number[]): Stats {
     p1: quantileOnSorted(sorted, 0.01),
     p5: quantileOnSorted(sorted, 0.05),
     p10: quantileOnSorted(sorted, 0.1),
-    mode: quantileOnSorted(sorted, 0.5),
+    median: quantileOnSorted(sorted, 0.5),
     mean: sum / data.length,
     p90: quantileOnSorted(sorted, 0.9),
     p95: quantileOnSorted(sorted, 0.95),

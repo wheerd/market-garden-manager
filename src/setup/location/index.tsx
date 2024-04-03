@@ -1,6 +1,11 @@
 import React, {lazy, useEffect, useMemo, useState} from 'react';
 import {usePersistedState} from '@/lib/usePersistedState';
-import {DayOfYear, fetchWeatherData, getGroupedStats} from '@/lib/weatherData';
+import {
+  DayOfYear,
+  fetchWeatherData,
+  getGroupedStats,
+  getMinTemperatureProbabilities,
+} from '@/lib/weatherData';
 
 const LocationDialog = lazy(() => import('./LocationDialog'));
 const WeatherChart = lazy(() => import('./WeatherChart'));
@@ -42,9 +47,15 @@ const Location: React.FC = () => {
   const [elevation, setElevation] = usePersistedState<number>('elevation', 0);
   const [rawTemperatureData, setRawTemperatureData] =
     usePersistedState<RawWeatherDataCache | null>('rawTemperatureData', null);
+
   const temperatureStats = useMemo(() => {
     const data = rawTemperatureData?.data ?? {};
     return getGroupedStats(data);
+  }, [rawTemperatureData]);
+
+  const frostProbabilities = useMemo(() => {
+    const data = rawTemperatureData?.data ?? {};
+    return getMinTemperatureProbabilities(data, 0);
   }, [rawTemperatureData]);
 
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -145,7 +156,10 @@ const Location: React.FC = () => {
       {isLoading && <p>Loading data...</p>}
       {rawTemperatureData && (
         <div>
-          <WeatherChart temperatureStats={temperatureStats} />
+          <WeatherChart
+            temperatureStats={temperatureStats}
+            frostProbabilities={frostProbabilities}
+          />
         </div>
       )}
     </div>

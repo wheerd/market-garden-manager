@@ -7,13 +7,19 @@ import {format, parseISO} from 'date-fns';
 import {type BoxAnnotationOptions} from 'chartjs-plugin-annotation';
 
 import {Stats} from '@/lib/statistics';
-import {type DayOfYear, type DayWindow} from '@/lib/weatherData';
+import {
+  type DayOfYear,
+  type DayWindow,
+  getProbabilityThresholdWindows,
+} from '@/lib/weatherData';
 
 const WeatherChart: React.FC<{
   temperatureStats: Record<DayOfYear, Stats> | undefined;
-}> = ({temperatureStats}) => {
+  frostProbabilities: Record<DayOfYear, number> | undefined;
+}> = ({temperatureStats, frostProbabilities}) => {
   const chartData = useMemo(() => {
-    if (!temperatureStats) return {labels: [], datasets: []};
+    if (!temperatureStats || !frostProbabilities)
+      return {labels: [], datasets: []};
     const allDays = Object.keys(temperatureStats).sort() as DayOfYear[];
     const dayTimestamps = Object.fromEntries(
       allDays.map(d => [d, parseISO('2020-' + d).getTime()])
@@ -55,21 +61,17 @@ const WeatherChart: React.FC<{
           order: 1,
           yAxisID: 'temperature',
         },
-        /*
         {
           label: 'Frost Probability',
           data: allDays.map(day => ({
             x: dayTimestamps[day],
-            y:
-              rawWeatherData[day].tempMin.filter(t => t <= 0).length /
-              rawWeatherData[day].tempMin.length,
+            y: frostProbabilities[day],
           })),
           pointRadius: 0,
           order: 9,
           borderColor: '#0000AA',
           yAxisID: 'probability',
         },
-        */
         {
           label: 'Number of years with data',
           data: allDays.map(day => ({
@@ -82,17 +84,32 @@ const WeatherChart: React.FC<{
         },
       ],
     };
-  }, [temperatureStats]);
+  }, [temperatureStats, frostProbabilities]);
 
   const annotations = useMemo(() => {
-    if (!temperatureStats) return [];
+    if (!frostProbabilities) return [];
     const freeColor = 'rgba(100, 256, 100, 0.1)';
     const lowRiskColor = 'rgba(100, 100, 200, 0.2)';
     const highRiskColor = 'rgba(0, 0, 200, 0.2)';
 
-    const frostFreeWindows: DayWindow[] = [];
-    const frostLowWindows: DayWindow[] = [];
-    const frostHighWindows: DayWindow[] = [];
+    const frostFreeWindows: DayWindow[] = getProbabilityThresholdWindows(
+      frostProbabilities,
+      0,
+      0.0001,
+      10
+    );
+    const frostLowWindows: DayWindow[] = getProbabilityThresholdWindows(
+      frostProbabilities,
+      0,
+      0.05,
+      5
+    );
+    const frostHighWindows: DayWindow[] = getProbabilityThresholdWindows(
+      frostProbabilities,
+      0.05,
+      2,
+      10
+    );
 
     const allWindows = frostFreeWindows
       .map(w => ({...w, color: freeColor, label: '🌱'}))
@@ -121,7 +138,7 @@ const WeatherChart: React.FC<{
         } as BoxAnnotationOptions,
       ])
     );
-  }, [temperatureStats]);
+  }, [frostProbabilities]);
 
   return (
     <LineChart

@@ -109,33 +109,30 @@ export interface DayWindow {
   last: DayOfYear;
 }
 
-/*
 export function getMinTemperatureProbabilities(
-  weatherData: GroupedRawWeatherData,
-  minTemperature: number
+  weatherData: Record<DayOfYear, number[]>,
+  maxTemperatureThreshold: number
 ): Record<DayOfYear, number> {
   return Object.fromEntries(
     Object.entries(weatherData).map(([day, data]) => {
-      const matchingCount = data.tempMin.filter(
-        t => t >= minTemperature
-      ).length;
-      const probability = matchingCount / data.tempMin.length;
+      const dayCount = data.length / 24;
+      let matchingCount = 0;
+      for (let i = 0; i < dayCount; i++) {
+        const minDayTemperature = Math.min(...data.slice(i * 24, i * 24 + 24));
+        if (minDayTemperature <= maxTemperatureThreshold) matchingCount++;
+      }
+      const probability = matchingCount / dayCount;
       return [day as DayOfYear, probability];
     })
   );
 }
 
-export function getMinTemperatureProbabilityThresholds(
-  weatherData: GroupedRawWeatherData,
-  minTemperature: number,
+export function getProbabilityThresholdWindows(
+  probabilities: Record<DayOfYear, number>,
   minProbability: number,
   maxProbability: number,
   minSize: number
 ) {
-  const probabilities = getMinTemperatureProbabilities(
-    weatherData,
-    minTemperature
-  );
   const windows: DayWindow[] = [];
   let start: string | undefined = undefined;
   let size = 0;
@@ -165,4 +162,3 @@ export function getMinTemperatureProbabilityThresholds(
 
   return windows;
 }
-*/
