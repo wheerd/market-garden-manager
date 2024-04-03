@@ -9,29 +9,22 @@ export function usePersistedState<TState>(
 
   useEffect(() => {
     get<TState>(keyToPersistWith).then(
-      retrievedState => {
+      retrievedState =>
         setState(
           typeof retrievedState === 'undefined' ? defaultState : retrievedState
-        );
-      },
-      (e: unknown) => {
-        console.error(e);
-      }
+        ),
+      (e: unknown) => console.error(e)
     );
-  }, [keyToPersistWith, setState, defaultState]);
+  }, [keyToPersistWith, defaultState]);
 
   const setPersistedValue = useCallback(
     (newValue: TState) => {
       set(keyToPersistWith, newValue).then(
-        () => {
-          setState(newValue);
-        },
-        (e: unknown) => {
-          console.error(e);
-        }
+        () => setState(newValue),
+        (e: unknown) => console.error(e)
       );
     },
-    [keyToPersistWith, setState]
+    [keyToPersistWith]
   );
 
   return [state, setPersistedValue] as const;

@@ -3,63 +3,66 @@ import {Stats, getStats} from './statistics';
 type Opaque<K, T> = T & {__TYPE__: K};
 export type DayOfYear = Opaque<'DayOfYear', string>;
 
-export interface WeatherRequestParams {
+export interface WeatherRequestParams<T extends [_: WeatherHourlyFields]> {
   latitude: number;
   longitude: number;
   start_date: string;
   end_date: string;
-  hourly: [_: WeatherHourlyFields];
+  hourly: T;
   timezone?: string;
   elevation?: number;
 }
 
-export type WeatherDataPoint = {
-  time: Date;
-  temperature_2m?: number;
-  rain?: number;
-  soil_temperature_0_to_7cm?: number;
+type WeatherHourlyFields =
+  | 'temperature_2m'
+  | 'rain'
+  | 'soil_temperature_0_to_7cm';
+
+type FullResults = {
+  [field in WeatherHourlyFields]: number[];
 };
 
-type WeatherHourlyFields = Exclude<keyof WeatherDataPoint, 'time'>;
+type WeatherApiResults<T extends WeatherHourlyFields> = Pick<FullResults, T> & {
+  times: number[];
+};
 
-export async function fetchWeatherData<T extends WeatherDataPoint>(
-  params: WeatherRequestParams
-): Promise<Required<T>[]> {
+const range = (start: number, stop: number, step: number) =>
+  Array.from({length: (stop - start) / step}, (_, i) => start + i * step);
+
+export async function fetchWeatherData<T extends WeatherHourlyFields>(
+  params: WeatherRequestParams<[_: T]>
+): Promise<WeatherApiResults<T>> {
   const {fetchWeatherApi} = await import('openmeteo');
   const url = 'https://archive-api.open-meteo.com/v1/archive';
   const responses = await fetchWeatherApi(url, params);
 
-  const data: Required<T>[] = [];
-
   const hourly = responses[0].hourly();
 
   if (hourly) {
-    const values = Object.fromEntries(
-      params.hourly.map((v, i) => [v, hourly.variables(i)?.valuesArray() ?? []])
-    );
-
     const start = Number(hourly.time()) * 1000;
     const end = Number(hourly.timeEnd()) * 1000;
     const interval = hourly.interval() * 1000;
 
-    let i = 0;
-    for (let day = start; day < end; day += interval) {
-      const date = new Date(day);
-      const pointValues = Object.fromEntries(
-        params.hourly.map(p => [p, values[p][i]])
-      );
+    const series = Object.fromEntries(
+      params.hourly.map((p, i) => [
+        p,
+        Array.from(hourly.variables(i)?.valuesArray() ?? []),
+      ])
+    ) as Pick<FullResults, T>;
 
-      const point: WeatherDataPoint = {
-        time: date,
-        ...pointValues,
-      };
-      data.push(point as Required<T>);
-
-      i++;
-    }
+    return {
+      times: range(start, end, interval),
+      ...series,
+    };
   }
+  const series = Object.fromEntries(
+    params.hourly.map(p => [p, [] as number[]])
+  ) as Pick<FullResults, T>;
 
-  return data;
+  return {
+    times: [],
+    ...series,
+  };
 }
 
 export function splitIntoDayAndNight(

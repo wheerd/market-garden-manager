@@ -25,14 +25,12 @@ interface LocationData {
   totalSizeInMeters?: number;
 }
 
-interface TemperatureDataPoint {
-  time: Date;
-  temperature_2m?: number;
-}
-
 interface RawWeatherDataCache {
   cacheKey: string;
-  data: TemperatureDataPoint[];
+  data: {
+    times: number[];
+    temperature_2m: number[];
+  };
 }
 
 const Location: React.FC = () => {
@@ -46,15 +44,16 @@ const Location: React.FC = () => {
   );
   const [timezone, setTimezone] = usePersistedState<string>('timezone', '');
   const [elevation, setElevation] = usePersistedState<number>('elevation', 0);
-  const [rawTemperatureData, setRawTemperatureData] = usePersistedState<
-    RawWeatherDataCache | undefined
-  >('rawTemperatureData', undefined);
+  const [rawTemperatureData, setRawTemperatureData] =
+    usePersistedState<RawWeatherDataCache | null>('rawTemperatureData', null);
   const temperatureStats = useMemo(() => {
-    const df = new DataFrame(rawTemperatureData?.data ?? []);
+    const data = rawTemperatureData?.data ?? {times: [], temperature_2m: []};
+    type Row = {times: number; temperature_2m: number};
+    const df = new DataFrame<Row>({columns: data});
     const groupedByDayOfYear = df
-      .generateSeries<TemperatureDataPoint & {dayOfYear: string}>({
+      .generateSeries<Row & {dayOfYear: string}>({
         dayOfYear: row => {
-          return format(row.time, 'MM-dd');
+          return format(row.times, 'MM-dd');
         },
       })
       .groupBy(r => r.dayOfYear)
@@ -84,14 +83,14 @@ const Location: React.FC = () => {
   }
 
   useEffect(() => {
-    if (location && elevation && timezone) {
+    if (location && elevation && timezone && rawTemperatureData !== undefined) {
       const cacheKey = `${location.latitude.toFixed(
         6
       )},${location.longitude.toFixed(6)}`;
       if (cacheKey !== rawTemperatureData?.cacheKey) {
-        setRawTemperatureData(undefined);
+        setRawTemperatureData(null);
 
-        fetchWeatherData<TemperatureDataPoint>({
+        fetchWeatherData({
           latitude: location.latitude,
           longitude: location.longitude,
           start_date: '2000-01-01',
@@ -158,12 +157,14 @@ const Location: React.FC = () => {
             Weather Data:{' '}
             {typeof rawTemperatureData !== 'undefined' ? 'yes' : 'no'}
           </p>
-          <div>
-            <WeatherChart temperatureStats={temperatureStats} />
-          </div>
         </div>
       )}
       {isLoading && <p>Loading data...</p>}
+      {rawTemperatureData && (
+        <div>
+          <WeatherChart temperatureStats={temperatureStats} />
+        </div>
+      )}
     </div>
   );
 };
