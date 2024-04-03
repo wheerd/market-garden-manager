@@ -61,8 +61,8 @@ function App() {
             </Suspense>
           }
         />
-        <Route path="/crops" element={"Crops"} />
-        <Route path="/seeds" element={"Seeds"} />
+        <Route path="/crops" element={'Crops'} />
+        <Route path="/seeds" element={'Seeds'} />
       </Routes>
 
       <ReloadPrompt />
