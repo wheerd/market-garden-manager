@@ -1,8 +1,6 @@
 import React, {lazy, useEffect, useMemo, useState} from 'react';
 import {usePersistedState} from '@/lib/usePersistedState';
-import {fetchWeatherData} from '@/lib/weatherData';
-
-import {DataFrame} from 'data-forge';
+import {DayOfYear, fetchWeatherData, getGroupedStats} from '@/lib/weatherData';
 
 const LocationDialog = lazy(() => import('./LocationDialog'));
 const WeatherChart = lazy(() => import('./WeatherChart'));
@@ -16,7 +14,6 @@ import {
   getTimeZone,
   metersPerPixel,
 } from '@/lib/geo';
-import {format} from 'date-fns';
 
 interface LocationData {
   longitude: number;
@@ -28,17 +25,8 @@ interface LocationData {
 interface RawWeatherDataCache {
   cacheKey: string;
   data: {
-    times: number[];
-    temperature_2m: number[];
+    [day: DayOfYear]: number[];
   };
-}
-
-interface Stats {
-  day: string;
-  min: number;
-  mean: number;
-  max: number;
-  valueCount: number;
 }
 
 const Location: React.FC = () => {
@@ -55,31 +43,8 @@ const Location: React.FC = () => {
   const [rawTemperatureData, setRawTemperatureData] =
     usePersistedState<RawWeatherDataCache | null>('rawTemperatureData', null);
   const temperatureStats = useMemo(() => {
-    const data = rawTemperatureData?.data ?? {times: [], temperature_2m: []};
-    type Row = {times: number; temperature_2m: number};
-    const df = new DataFrame<Row>({columns: data});
-    const groupedByDayOfYear = df
-      .generateSeries<Row & {dayOfYear: string}>({
-        dayOfYear: row => {
-          return format(row.times, 'MM-dd');
-        },
-      })
-      .groupBy(r => r.dayOfYear)
-      .map(
-        g =>
-          ({
-            day: g.first().dayOfYear,
-            min: g.getSeries('temperature_2m').min(),
-            mean: g.getSeries('temperature_2m').mean(),
-            max: g.getSeries('temperature_2m').max(),
-            valueCount: g.getSeries('temperature_2m').count() / 24,
-          }) as Stats
-      )
-      .toObject(
-        g => g.day,
-        g => g
-      );
-    return groupedByDayOfYear;
+    const data = rawTemperatureData?.data ?? {};
+    return getGroupedStats(data);
   }, [rawTemperatureData]);
 
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -115,7 +80,7 @@ const Location: React.FC = () => {
           end_date: '2023-12-31',
           elevation,
           timezone,
-          hourly: ['temperature_2m'],
+          hourly: 'temperature_2m',
         }).then(data => setRawTemperatureData({cacheKey, data}), console.error);
       }
     }

@@ -1,68 +1,58 @@
+import {format} from 'date-fns';
 import {Stats, getStats} from './statistics';
 
 type Opaque<K, T> = T & {__TYPE__: K};
 export type DayOfYear = Opaque<'DayOfYear', string>;
 
-export interface WeatherRequestParams<T extends [_: WeatherHourlyFields]> {
+function sortedObject<T extends object>(o: T): T {
+  const sorted = {} as T;
+  return (Object.keys(o) as (keyof T)[]).sort().reduce<T>((r, k) => {
+    r[k] = o[k];
+    return r;
+  }, sorted);
+}
+
+export interface WeatherRequestParams {
   latitude: number;
   longitude: number;
   start_date: string;
   end_date: string;
-  hourly: T;
-  timezone?: string;
-  elevation?: number;
+  hourly: string;
+  timezone: string;
+  elevation: number;
 }
 
-type WeatherHourlyFields =
-  | 'temperature_2m'
-  | 'rain'
-  | 'soil_temperature_0_to_7cm';
-
-type FullResults = {
-  [field in WeatherHourlyFields]: number[];
-};
-
-type WeatherApiResults<T extends WeatherHourlyFields> = Pick<FullResults, T> & {
-  times: number[];
-};
-
-const range = (start: number, stop: number, step: number) =>
-  Array.from({length: (stop - start) / step}, (_, i) => start + i * step);
-
-export async function fetchWeatherData<T extends WeatherHourlyFields>(
-  params: WeatherRequestParams<[_: T]>
-): Promise<WeatherApiResults<T>> {
+export async function fetchWeatherData(
+  params: WeatherRequestParams
+): Promise<Record<DayOfYear, number[]>> {
   const {fetchWeatherApi} = await import('openmeteo');
   const url = 'https://archive-api.open-meteo.com/v1/archive';
   const responses = await fetchWeatherApi(url, params);
 
+  const groupedData: Partial<Record<DayOfYear, number[]>> = {};
+
   const hourly = responses[0].hourly();
 
   if (hourly) {
+    const values = hourly.variables(0)?.valuesArray() ?? [];
+
     const start = Number(hourly.time()) * 1000;
     const end = Number(hourly.timeEnd()) * 1000;
     const interval = hourly.interval() * 1000;
 
-    const series = Object.fromEntries(
-      params.hourly.map((p, i) => [
-        p,
-        Array.from(hourly.variables(i)?.valuesArray() ?? []),
-      ])
-    ) as Pick<FullResults, T>;
+    let i = 0;
+    for (let day = start; day < end; day += interval) {
+      const date = new Date(day);
+      const dayId = format(date, 'MM-dd') as DayOfYear;
 
-    return {
-      times: range(start, end, interval),
-      ...series,
-    };
+      const data = (groupedData[dayId] = groupedData[dayId] ?? []);
+      data.push(values[i]);
+
+      i++;
+    }
   }
-  const series = Object.fromEntries(
-    params.hourly.map(p => [p, [] as number[]])
-  ) as Pick<FullResults, T>;
 
-  return {
-    times: [],
-    ...series,
-  };
+  return sortedObject(groupedData) as Record<DayOfYear, number[]>;
 }
 
 export function splitIntoDayAndNight(
