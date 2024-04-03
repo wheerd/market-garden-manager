@@ -1,19 +1,19 @@
 import React, {lazy, useState} from 'react';
-import {usePersistedState} from '../../lib/usePersistedState';
-import {GroupedRawWeatherData, fetchWeatherData} from '../../lib/weatherData';
+import {usePersistedState} from '@/lib/usePersistedState';
+import {GroupedRawWeatherData, fetchWeatherData} from '@/lib/weatherData';
 
 const LocationDialog = lazy(() => import('./LocationDialog'));
 const WeatherChart = lazy(() => import('./WeatherChart'));
 
 import './index.scss';
-import {useAsyncState} from '../../lib/useAsyncState';
+import {useAsyncState} from '@/lib/useAsyncState';
 import {
   GeoPosition,
   getElevation,
   getSatelliteImageAsDataUri,
   getTimeZone,
   metersPerPixel,
-} from '../../lib/geo';
+} from '@/lib/geo';
 
 interface LocationData {
   longitude: number;

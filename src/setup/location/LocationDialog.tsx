@@ -12,7 +12,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 
-import {type GeoPosition, MAPBOX_ACCESS_TOKEN} from '../../lib/geo';
+import {type GeoPosition, MAPBOX_ACCESS_TOKEN} from '@/lib/geo';
 import {TrackPosition} from './TrackPosition';
 import {LocateControl} from './LocateControl';
 import {GeocoderControl} from './GeocoderControl';

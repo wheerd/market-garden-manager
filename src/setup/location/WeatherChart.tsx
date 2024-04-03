@@ -1,17 +1,17 @@
 import React, {lazy, useMemo} from 'react';
 
-const Line = lazy(() => import('../../lib/chart'));
+const Line = lazy(() => import('@/lib/chart'));
 
 import {de} from 'date-fns/locale';
 import {format, parseISO} from 'date-fns';
 import {type BoxAnnotationOptions} from 'chartjs-plugin-annotation';
 
-import {quantile} from '../../lib/statistics';
+import {quantile} from '@/lib/statistics';
 import {
   getMinTemperatureProbabilityThresholds,
   type DayOfYear,
   type GroupedRawWeatherData,
-} from '../../lib/weatherData';
+} from '@/lib/weatherData';
 
 const WeatherChart: React.FC<{
   rawWeatherData: GroupedRawWeatherData | undefined;

@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useMap} from 'react-leaflet/hooks';
-import {MAPBOX_ACCESS_TOKEN} from '../../lib/geo';
+import {MAPBOX_ACCESS_TOKEN} from '@/lib/geo';
 
 import {GeoSearchControl, MapBoxProvider} from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
