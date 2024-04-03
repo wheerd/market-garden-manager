@@ -33,11 +33,11 @@ const WeatherChart: React.FC<{
           yAxisID: 'temperature',
         },
         {
-          label: 'Maximum Temperature (p95)',
+          label: 'Maximum Temperature',
           fill: '+1',
           data: allDays.map(day => ({
             x: dayTimestamps[day],
-            y: temperatureStats[day].p95,
+            y: temperatureStats[day].max,
           })),
           pointRadius: 0,
           borderWidth: 0,
@@ -45,10 +45,10 @@ const WeatherChart: React.FC<{
           yAxisID: 'temperature',
         },
         {
-          label: 'Minimum Temperature (p5)',
+          label: 'Minimum Temperature',
           data: allDays.map(day => ({
             x: dayTimestamps[day],
-            y: temperatureStats[day].p5,
+            y: temperatureStats[day].min,
           })),
           pointRadius: 0,
           borderWidth: 0,
@@ -74,7 +74,7 @@ const WeatherChart: React.FC<{
           label: 'Number of years with data',
           data: allDays.map(day => ({
             x: dayTimestamps[day],
-            y: temperatureStats[day].valueCount / 24,
+            y: temperatureStats[day].valueCount,
           })),
           pointRadius: 0,
           borderWidth: 0,

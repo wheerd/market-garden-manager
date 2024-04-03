@@ -1,6 +1,6 @@
 import React, {lazy, useEffect, useMemo, useState} from 'react';
 import {usePersistedState} from '@/lib/usePersistedState';
-import {fetchWeatherData, getGroupedStats} from '@/lib/weatherData';
+import {fetchWeatherData} from '@/lib/weatherData';
 
 import {DataFrame} from 'data-forge';
 
@@ -33,6 +33,14 @@ interface RawWeatherDataCache {
   };
 }
 
+interface Stats {
+  day: string;
+  min: number;
+  mean: number;
+  max: number;
+  valueCount: number;
+}
+
 const Location: React.FC = () => {
   const [location, setLocation] = usePersistedState<LocationData | null>(
     'location',
@@ -57,11 +65,21 @@ const Location: React.FC = () => {
         },
       })
       .groupBy(r => r.dayOfYear)
+      .map(
+        g =>
+          ({
+            day: g.first().dayOfYear,
+            min: g.getSeries('temperature_2m').min(),
+            mean: g.getSeries('temperature_2m').mean(),
+            max: g.getSeries('temperature_2m').max(),
+            valueCount: g.getSeries('temperature_2m').count() / 24,
+          }) as Stats
+      )
       .toObject(
-        g => g.first().dayOfYear,
-        g => g.select(r => r.temperature_2m).toArray()
+        g => g.day,
+        g => g
       );
-    return getGroupedStats(groupedByDayOfYear);
+    return groupedByDayOfYear;
   }, [rawTemperatureData]);
 
   const [pickerOpen, setPickerOpen] = useState(false);
