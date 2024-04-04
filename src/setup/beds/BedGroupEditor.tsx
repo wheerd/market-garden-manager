@@ -27,7 +27,7 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
       labelInput?.current?.focus();
     }
     setBedGroup({...inputBedGroup});
-  }, [inputBedGroup]);
+  }, [inputBedGroup]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [validated, setValidated] = useState(false);
 
