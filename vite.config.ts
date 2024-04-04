@@ -1,4 +1,6 @@
 /* eslint-disable node/no-unpublished-import */
+/// <reference types="vitest" />
+/// <reference types="vite/client" />
 import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import {VitePWA} from 'vite-plugin-pwa';
@@ -53,6 +55,15 @@ export default defineConfig({
     alias: {
       '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  test: {
+    globals: true,
+    environment: 'happy-dom',
+    restoreMocks: true,
+    coverage: {
+      provider: 'v8',
+      include: ['src/**'],
     },
   },
 });

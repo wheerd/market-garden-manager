@@ -19,10 +19,8 @@ export function usePersistedState<TState>(
 
   const setPersistedValue = useCallback(
     (newValue: TState) => {
-      set(keyToPersistWith, newValue).then(
-        () => setState(newValue),
-        (e: unknown) => console.error(e)
-      );
+      setState(newValue);
+      set(keyToPersistWith, newValue).catch((e: unknown) => console.error(e));
     },
     [keyToPersistWith]
   );

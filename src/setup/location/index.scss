@@ -1,46 +1,48 @@
-.locationImage {
-  float: left;
-  margin: 10px;
-  background-color: lightgray;
-  border: 1px solid black;
-  cursor: pointer;
+.setup-location {
+  .locationImage {
+    float: left;
+    margin: 10px;
+    background-color: lightgray;
+    border: 1px solid black;
+    cursor: pointer;
 
-  & > div {
-    width: 300px;
-    height: 300px;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    display: flex;
-    align-items: stretch;
-    justify-content: space-between;
-    align-content: center;
-    flex-direction: column;
-    color: white;
-  }
-
-  span {
-    background: #00000088;
-    display: block;
-    text-align: center;
-
-    &.prompt {
-      display: none;
-      font-weight: bold;
-      background: none;
+    & > div {
+      width: 300px;
+      height: 300px;
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      align-content: center;
+      flex-direction: column;
+      color: white;
     }
-  }
 
-  &:hover {
-    background: darkgray;
-  }
+    span {
+      background: #00000088;
+      display: block;
+      text-align: center;
 
-  &:hover > div {
-    opacity: 0.8;
-  }
+      &.prompt {
+        display: none;
+        font-weight: bold;
+        background: none;
+      }
+    }
 
-  &:hover span {
-    display: block;
-    margin: 0;
+    &:hover {
+      background: darkgray;
+    }
+
+    &:hover > div {
+      opacity: 0.8;
+    }
+
+    &:hover span {
+      display: block;
+      margin: 0;
+    }
   }
 }
