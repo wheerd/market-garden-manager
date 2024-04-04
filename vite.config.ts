@@ -60,5 +60,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'happy-dom',
+    restoreMocks: true,
+    coverage: {
+      provider: 'v8',
+    },
   },
 });
