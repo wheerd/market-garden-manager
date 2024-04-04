@@ -98,11 +98,8 @@ const Beds: React.FC = () => {
                 >
                   {bedGroups?.map(b => (
                     <option key={b.id} value={b.id}>
-                      {b.label}{' '}
-                      <small>
-                        ({b.count} bed(s), {b.lengthInMeters}m&times;
-                        {b.widthInCentimeters}cm)
-                      </small>
+                      {b.label} ({b.count} bed(s), {b.lengthInMeters}m&times;
+                      {b.widthInCentimeters}cm)
                     </option>
                   ))}
                 </Form.Select>

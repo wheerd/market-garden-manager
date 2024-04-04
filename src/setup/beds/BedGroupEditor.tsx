@@ -31,7 +31,7 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
 
   const [validated, setValidated] = useState(false);
 
-  const labelInput = useRef<HTMLInputElement>();
+  const labelInput = useRef<HTMLInputElement>(null);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
