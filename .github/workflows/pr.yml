@@ -28,3 +28,5 @@ jobs:
         run: pnpm build
         env:
           VITE_MAPBOX_ACCESS_TOKEN: NOT_USED
+      - name: Test
+        run: pnpm test

@@ -21,7 +21,9 @@
     "fix": "gts fix",
     "prepare": "husky",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "test:ci": "vitest run",
+    "coverage": "vitest run --coverage",
+    "coverage:ci": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
