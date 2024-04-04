@@ -102,7 +102,7 @@ const Location: React.FC = () => {
 
   return (
     <>
-      <Container fluid>
+      <Container fluid className="setup-location">
         <Row>
           <Col md="auto">
             <div

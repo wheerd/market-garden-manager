@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Skeleton from 'react-loading-skeleton';
 
 const Location = lazy(() => import('./location'));
+const Beds = lazy(() => import('./beds'));
 import './index.css';
 
 const Setup: React.FC = () => (
@@ -56,7 +57,14 @@ const Setup: React.FC = () => (
             </Suspense>
           }
         />
-        <Route path="beds" element={'Beds'} />
+        <Route
+          path="beds"
+          element={
+            <Suspense fallback={<Skeleton />}>
+              <Beds />
+            </Suspense>
+          }
+        />
         <Route path="crops" element={'Crops'} />
         <Route path="plan" element={'Plan'} />
         <Route path="csa" element={'CSA'} />

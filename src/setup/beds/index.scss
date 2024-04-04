@@ -1,0 +1,15 @@
+.setup-beds {
+  .locationImage {
+    margin: 10px auto;
+    background-color: lightgray;
+    border: 1px solid black;
+
+    & > div {
+      width: 400px;
+      height: 400px;
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+  }
+}
