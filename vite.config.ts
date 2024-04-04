@@ -63,6 +63,7 @@ export default defineConfig({
     restoreMocks: true,
     coverage: {
       provider: 'v8',
+      include: ['src/**'],
     },
   },
 });

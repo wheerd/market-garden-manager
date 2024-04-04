@@ -1,3 +1,5 @@
+/* v8 ignore start */
+
 export interface SoilRequirements {
   clay: boolean;
   silt: boolean;
