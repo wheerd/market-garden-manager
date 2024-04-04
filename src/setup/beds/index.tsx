@@ -135,144 +135,171 @@ const Beds: React.FC = () => {
                 </Button>
               </Col>
             </Form.Group>
-            <Form noValidate validated={validated} onSubmit={onSubmit}>
-              <Form.Group
-                as={Row}
-                className="mb-3 position-relative"
-                controlId="formLabel"
-              >
-                <Form.Label column sm={2}>
-                  Label
-                </Form.Label>
-                <Col sm={10}>
-                  <Form.Control
-                    required
-                    type="text"
-                    placeholder="Enter label"
-                    value={bedGroup.label}
-                    onChange={e =>
-                      setBedGroup({...bedGroup, label: e.target.value})
-                    }
-                  />
-                  <Form.Control.Feedback tooltip type="invalid">
-                    Please enter a label.
-                  </Form.Control.Feedback>
-                </Col>
-              </Form.Group>
-              <Form.Group as={Row} className="mb-3" controlId="formCount">
-                <Form.Label column sm={2}>
-                  Bed Count
-                </Form.Label>
-                <Col sm={10}>
-                  <Form.Control
-                    required
-                    type="number"
-                    min={1}
-                    placeholder="Enter bed count"
-                    value={bedGroup.count}
-                    onChange={e =>
-                      setBedGroup({...bedGroup, count: +e.target.value})
-                    }
-                  />
-                </Col>
-              </Form.Group>
-              <Form.Group as={Row} className="mb-3" controlId="formBedLength">
-                <Form.Label column sm={2}>
-                  Bed Length
-                </Form.Label>
-                <Col sm={10}>
-                  <InputGroup className="mb-2">
+            {bedGroups?.length || adding ? (
+              <Form noValidate validated={validated} onSubmit={onSubmit}>
+                <Form.Group
+                  as={Row}
+                  className="mb-3 position-relative"
+                  controlId="formLabel"
+                >
+                  <Form.Label column sm={2}>
+                    Label
+                  </Form.Label>
+                  <Col sm={10}>
                     <Form.Control
                       required
-                      type="number"
-                      min={0}
-                      step={0.1}
-                      placeholder="Enter bed length"
-                      value={bedGroup.lengthInMeters}
+                      type="text"
+                      placeholder="Enter label"
+                      value={bedGroup.label}
                       onChange={e =>
-                        setBedGroup({
-                          ...bedGroup,
-                          lengthInMeters: +e.target.value,
-                        })
+                        setBedGroup({...bedGroup, label: e.target.value})
                       }
                     />
-                    <InputGroup.Text>m</InputGroup.Text>
-                  </InputGroup>
-                </Col>
-              </Form.Group>
-              <Form.Group as={Row} className="mb-3" controlId="formBedWidth">
-                <Form.Label column sm={2}>
-                  Bed Width
-                </Form.Label>
-                <Col sm={10}>
-                  <InputGroup className="mb-2">
+                    <Form.Control.Feedback tooltip type="invalid">
+                      Please enter a label.
+                    </Form.Control.Feedback>
+                  </Col>
+                </Form.Group>
+                <Form.Group as={Row} className="mb-3" controlId="formCount">
+                  <Form.Label column sm={2}>
+                    Bed Count
+                  </Form.Label>
+                  <Col sm={10}>
                     <Form.Control
                       required
                       type="number"
                       min={1}
-                      placeholder="Enter bed width"
-                      value={bedGroup.widthInCentimeters}
+                      placeholder="Enter bed count"
+                      value={bedGroup.count}
                       onChange={e =>
-                        setBedGroup({
-                          ...bedGroup,
-                          widthInCentimeters: +e.target.value,
-                        })
+                        setBedGroup({...bedGroup, count: +e.target.value})
                       }
                     />
-                    <InputGroup.Text>cm</InputGroup.Text>
-                  </InputGroup>
-                </Col>
-              </Form.Group>
-              <Form.Group as={Row} className="mb-3" controlId="formBedSpacing">
-                <Form.Label column sm={2}>
-                  Bed Spacing
-                </Form.Label>
-                <Col sm={10}>
-                  <InputGroup className="mb-2">
-                    <Form.Control
-                      required
-                      type="number"
-                      min={0}
-                      placeholder="Enter bed spacing"
-                      value={bedGroup.spacingInCentimeters}
-                      onChange={e =>
-                        setBedGroup({
-                          ...bedGroup,
-                          spacingInCentimeters: +e.target.value,
-                        })
-                      }
-                    />
-                    <InputGroup.Text>cm</InputGroup.Text>
-                  </InputGroup>
-                </Col>
-              </Form.Group>
-              <Row>
-                <Col xs={1}>
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    disabled={!adding && !selectedBedId}
-                  >
-                    {adding ? 'Add' : 'Save'}
-                  </Button>
-                </Col>
-                <Col xs={1}>
-                  <Button variant="secondary" type="reset" onClick={onCancel}>
-                    {adding ? 'Cancel' : 'Reset'}
-                  </Button>
-                </Col>
-                <Col xs={1}>
-                  <Button
-                    variant="danger"
-                    type="button"
-                    disabled={adding || !selectedBedId}
-                    onClick={onDelete}
-                  >
-                    Delete
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
+                  </Col>
+                </Form.Group>
+                <Form.Group as={Row} className="mb-3" controlId="formBedLength">
+                  <Form.Label column sm={2}>
+                    Bed Length
+                  </Form.Label>
+                  <Col sm={10}>
+                    <InputGroup className="mb-2">
+                      <Form.Control
+                        required
+                        type="number"
+                        min={0}
+                        step={0.1}
+                        placeholder="Enter bed length"
+                        value={bedGroup.lengthInMeters}
+                        onChange={e =>
+                          setBedGroup({
+                            ...bedGroup,
+                            lengthInMeters: +e.target.value,
+                          })
+                        }
+                      />
+                      <InputGroup.Text>m</InputGroup.Text>
+                    </InputGroup>
+                  </Col>
+                </Form.Group>
+                <Form.Group as={Row} className="mb-3" controlId="formBedWidth">
+                  <Form.Label column sm={2}>
+                    Bed Width
+                  </Form.Label>
+                  <Col sm={10}>
+                    <InputGroup className="mb-2">
+                      <Form.Control
+                        required
+                        type="number"
+                        min={1}
+                        placeholder="Enter bed width"
+                        value={bedGroup.widthInCentimeters}
+                        onChange={e =>
+                          setBedGroup({
+                            ...bedGroup,
+                            widthInCentimeters: +e.target.value,
+                          })
+                        }
+                      />
+                      <InputGroup.Text>cm</InputGroup.Text>
+                    </InputGroup>
+                  </Col>
+                </Form.Group>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formBedSpacing"
+                >
+                  <Form.Label column sm={2}>
+                    Bed Spacing
+                  </Form.Label>
+                  <Col sm={10}>
+                    <InputGroup className="mb-2">
+                      <Form.Control
+                        required
+                        type="number"
+                        min={0}
+                        placeholder="Enter bed spacing"
+                        value={bedGroup.spacingInCentimeters}
+                        onChange={e =>
+                          setBedGroup({
+                            ...bedGroup,
+                            spacingInCentimeters: +e.target.value,
+                          })
+                        }
+                      />
+                      <InputGroup.Text>cm</InputGroup.Text>
+                    </InputGroup>
+                  </Col>
+                </Form.Group>
+                <Row>
+                  <Col md="auto">
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      disabled={!adding && !selectedBedId}
+                    >
+                      {adding ? 'Add' : 'Save'}
+                    </Button>
+                  </Col>
+                  <Col md="auto">
+                    <Button variant="secondary" type="reset" onClick={onCancel}>
+                      {adding ? 'Cancel' : 'Reset'}
+                    </Button>
+                  </Col>
+                  <Col md="auto">
+                    <Button
+                      variant="danger"
+                      type="button"
+                      disabled={adding || !selectedBedId}
+                      onClick={onDelete}
+                    >
+                      Delete
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            ) : (
+              <Container>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <p>There are currently no bed groups defined</p>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <Button
+                      variant="success"
+                      type="button"
+                      size="lg"
+                      disabled={adding}
+                      onClick={onAdd}
+                    >
+                      Add first bed group
+                    </Button>
+                  </Col>
+                </Row>
+              </Container>
+            )}
           </Col>
         </Row>
       </Container>
