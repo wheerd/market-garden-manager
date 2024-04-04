@@ -8,8 +8,10 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 import Setup from './setup';
 import ReloadPrompt from './ReloadPrompt';
+import {useTranslation} from 'react-i18next';
 
 function App() {
+  const {t} = useTranslation();
   return (
     <>
       <Navbar
@@ -21,7 +23,7 @@ function App() {
       >
         <Container>
           <Navbar.Brand as={Link} to="/">
-            Market Garden Manager
+            {t('app_title')}
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">

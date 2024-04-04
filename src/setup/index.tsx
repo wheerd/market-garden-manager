@@ -5,6 +5,7 @@ import Skeleton from 'react-loading-skeleton';
 
 const Location = lazy(() => import('./location'));
 const Beds = lazy(() => import('./beds'));
+const Basic = lazy(() => import('./basic'));
 import './index.css';
 
 const Setup: React.FC = () => (
@@ -69,7 +70,14 @@ const Setup: React.FC = () => (
         <Route path="plan" element={'Plan'} />
         <Route path="csa" element={'CSA'} />
         <Route path="tasks" element={'Tasks'} />
-        <Route element={'Basic'} index />
+        <Route
+          element={
+            <Suspense fallback={<Skeleton />}>
+              <Basic />
+            </Suspense>
+          }
+          index
+        />
       </Routes>
     </div>
   </div>
