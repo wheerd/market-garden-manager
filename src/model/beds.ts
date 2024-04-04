@@ -15,3 +15,12 @@ export interface BedGroupPosition {
   y: number;
   bearing: number;
 }
+
+export const DEFAULT_BED_GROUP: BedGroup = {
+  id: '',
+  label: '',
+  lengthInMeters: 10,
+  count: 1,
+  spacingInCentimeters: 30,
+  widthInCentimeters: 60,
+};
