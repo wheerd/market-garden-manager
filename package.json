@@ -23,7 +23,7 @@
     "test": "vitest",
     "test:ci": "vitest run",
     "coverage": "vitest run --coverage",
-    "coverage:ci": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
+    "coverage:ci": "vitest run --coverage.enabled --coverage.reporter=cobertura"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
