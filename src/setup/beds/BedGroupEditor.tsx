@@ -56,7 +56,12 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
   }
 
   return (
-    <Form noValidate validated={validated} onSubmit={onSubmit}>
+    <Form
+      noValidate
+      validated={validated}
+      onSubmit={onSubmit}
+      data-testid="form"
+    >
       <Form.Group
         as={Row}
         className="mb-3 position-relative"
@@ -104,13 +109,13 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
               required
               type="number"
               min={0}
-              step={0.1}
+              step="any"
               placeholder="Enter bed length"
               value={bedGroup.lengthInMeters}
               onChange={e =>
                 setBedGroup({
                   ...bedGroup,
-                  lengthInMeters: +e.target.value,
+                  lengthInMeters: +(+e.target.value).toFixed(1),
                 })
               }
             />
