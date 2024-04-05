@@ -1,5 +1,7 @@
 import React, {TouchEvent, MouseEvent, useMemo, useState} from 'react';
 
+import './BedOverlay.scss';
+
 interface BedGroupOptions {
   x: number;
   y: number;
@@ -36,9 +38,14 @@ const BedGroup: React.FC<BedGroupOptions> = ({
   const [offset, setOffset] = useState({x: 0, y: 0});
 
   const bedXs = useMemo(
-    () => [...Array(count).keys()].map(i => (width + spacing) * i),
+    () => [...Array(count).keys()].map(i => spacing + (width + spacing) * i),
     [count, width, spacing]
   );
+  const totalWidth = useMemo(
+    () => count * (width + spacing) + spacing,
+    [count, width, spacing]
+  );
+  const totalHeight = useMemo(() => length + 2 * spacing, [length, spacing]);
 
   function onDragStart(evt: SvgDragEvent) {
     setDragging(true);
@@ -59,9 +66,14 @@ const BedGroup: React.FC<BedGroupOptions> = ({
   }
 
   function onDragEnd() {
-    setCoordinates({x: offset.x + coordinates.x, y: offset.y + coordinates.y});
-    setOffset({x: 0, y: 0});
-    setDragging(false);
+    if (dragging) {
+      setCoordinates({
+        x: offset.x + coordinates.x,
+        y: offset.y + coordinates.y,
+      });
+      setOffset({x: 0, y: 0});
+      setDragging(false);
+    }
   }
 
   return (
@@ -78,14 +90,21 @@ const BedGroup: React.FC<BedGroupOptions> = ({
         onTouchCancel={onDragEnd}
         className="draggable-group"
       >
+        <rect
+          x={0}
+          y={0}
+          width={totalWidth}
+          height={totalHeight}
+          className="group-outline"
+        ></rect>
         {bedXs.map((xOff, i) => (
           <rect
             key={`bed${i}`}
             x={xOff}
-            y={0}
+            y={spacing}
             width={width}
             height={length}
-            fill="black"
+            className="bed"
           ></rect>
         ))}
       </g>
@@ -104,7 +123,14 @@ export const BedOverlay: React.FC<BedOverlayOptions> = ({sizeInMeters}) => {
       height="100%"
       viewBox={`0 0 ${sizeInMeters} ${sizeInMeters}`}
     >
-      <BedGroup x={30} y={30} width={0.6} length={10} count={8} spacing={0.3} />
+      <defs>
+        <linearGradient id="bedGradient">
+          <stop offset="0%" stopColor="#3f2915" />
+          <stop offset="50%" stopColor="#654321" />
+          <stop offset="100%" stopColor="#3f2915" />
+        </linearGradient>
+      </defs>
+      <BedGroup x={10} y={10} width={0.6} length={10} count={8} spacing={0.3} />
     </svg>
   );
 };
