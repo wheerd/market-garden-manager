@@ -2,6 +2,7 @@ import {describe, test, expect, vi} from 'vitest';
 import {render, screen, fireEvent} from '@testing-library/react';
 import {BedGroupEditor, BedGroupEditorOptions} from './BedGroupEditor';
 import {BedGroup, DEFAULT_BED_GROUP} from '@/model/beds';
+import '@/i18nForTests';
 
 describe('Button Group Editor', () => {
   const onSave = vi.fn();
@@ -23,14 +24,14 @@ describe('Button Group Editor', () => {
   describe('Label field', () => {
     test('Has value from input model', () => {
       render(editor({label: 'Some Label'}));
-      const input = screen.getByLabelText(/Label/) as HTMLInputElement;
+      const input = screen.getByLabelText(/label_label/) as HTMLInputElement;
 
       expect(input.value).toBe('Some Label');
     });
 
     test('Changes value on edit', () => {
       render(editor({label: 'Some Label'}));
-      const input = screen.getByLabelText(/Label/) as HTMLInputElement;
+      const input = screen.getByLabelText(/label_label/) as HTMLInputElement;
 
       fireEvent.input(input, {target: {value: 'New Label'}});
 
@@ -40,7 +41,7 @@ describe('Button Group Editor', () => {
     test('Does not modify input model on edit', () => {
       const e = editor({label: 'Some Label'});
       render(e);
-      const input = screen.getByLabelText(/Label/) as HTMLInputElement;
+      const input = screen.getByLabelText(/label_label/) as HTMLInputElement;
 
       fireEvent.input(input, {target: {value: 'New Label'}});
 
@@ -49,7 +50,7 @@ describe('Button Group Editor', () => {
 
     test('Updates value if input model changes', () => {
       const {rerender} = render(editor({label: 'Some Label'}));
-      const input = screen.getByLabelText(/Label/) as HTMLInputElement;
+      const input = screen.getByLabelText(/label_label/) as HTMLInputElement;
 
       rerender(editor({label: 'New Label'}));
 
@@ -58,7 +59,7 @@ describe('Button Group Editor', () => {
 
     test('Focusses field when model changes and new label is empty', () => {
       const {container, rerender} = render(editor({id: 'old'}));
-      const input = screen.getByLabelText(/Label/) as HTMLInputElement;
+      const input = screen.getByLabelText(/label_label/) as HTMLInputElement;
 
       rerender(editor({id: 'new', label: ''}));
 
@@ -69,14 +70,18 @@ describe('Button Group Editor', () => {
   describe('Bed count field', () => {
     test('Has value from input model', () => {
       render(editor({count: 42}));
-      const input = screen.getByLabelText(/Bed Count/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_count_label/
+      ) as HTMLInputElement;
 
       expect(input.value).toBe('42');
     });
 
     test('Changes value on edit', () => {
       render(editor({count: 42}));
-      const input = screen.getByLabelText(/Bed Count/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_count_label/
+      ) as HTMLInputElement;
 
       fireEvent.input(input, {target: {value: '24'}});
 
@@ -86,7 +91,9 @@ describe('Button Group Editor', () => {
     test('Does not modify input model on edit', () => {
       const e = editor({count: 42});
       render(e);
-      const input = screen.getByLabelText(/Bed Count/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_count_label/
+      ) as HTMLInputElement;
 
       fireEvent.input(input, {target: {value: '24'}});
 
@@ -95,7 +102,9 @@ describe('Button Group Editor', () => {
 
     test('Updates value if input model changes', () => {
       const {rerender} = render(editor({count: 42}));
-      const input = screen.getByLabelText(/Bed Count/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_count_label/
+      ) as HTMLInputElement;
 
       rerender(editor({count: 23}));
 
@@ -106,14 +115,18 @@ describe('Button Group Editor', () => {
   describe('Bed length field', () => {
     test('Has value from input model', () => {
       render(editor({lengthInMeters: 42}));
-      const input = screen.getByLabelText(/Bed Length/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_length_label/
+      ) as HTMLInputElement;
 
       expect(input.value).toBe('42');
     });
 
     test('Changes value on edit', () => {
       render(editor({lengthInMeters: 42}));
-      const input = screen.getByLabelText(/Bed Length/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_length_label/
+      ) as HTMLInputElement;
 
       fireEvent.input(input, {target: {value: '24'}});
 
@@ -122,7 +135,9 @@ describe('Button Group Editor', () => {
 
     test('Limits value to one decimal on edit', () => {
       render(editor());
-      const input = screen.getByLabelText(/Bed Length/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_length_label/
+      ) as HTMLInputElement;
 
       fireEvent.input(input, {target: {value: '24.12'}});
 
@@ -132,7 +147,9 @@ describe('Button Group Editor', () => {
     test('Does not modify input model on edit', () => {
       const e = editor({lengthInMeters: 42});
       render(e);
-      const input = screen.getByLabelText(/Bed Length/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_length_label/
+      ) as HTMLInputElement;
 
       fireEvent.input(input, {target: {value: '24'}});
 
@@ -141,7 +158,9 @@ describe('Button Group Editor', () => {
 
     test('Updates value if input model changes', () => {
       const {rerender} = render(editor({lengthInMeters: 42}));
-      const input = screen.getByLabelText(/Bed Length/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_length_label/
+      ) as HTMLInputElement;
 
       rerender(editor({lengthInMeters: 23}));
 
@@ -152,14 +171,18 @@ describe('Button Group Editor', () => {
   describe('Bed width field', () => {
     test('Has value from input model', () => {
       render(editor({widthInCentimeters: 42}));
-      const input = screen.getByLabelText(/Bed Width/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_width_label/
+      ) as HTMLInputElement;
 
       expect(input.value).toBe('42');
     });
 
     test('Changes value on edit', () => {
       render(editor({widthInCentimeters: 42}));
-      const input = screen.getByLabelText(/Bed Width/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_width_label/
+      ) as HTMLInputElement;
 
       fireEvent.input(input, {target: {value: '24'}});
 
@@ -169,7 +192,9 @@ describe('Button Group Editor', () => {
     test('Does not modify input model on edit', () => {
       const e = editor({widthInCentimeters: 42});
       render(e);
-      const input = screen.getByLabelText(/Bed Width/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_width_label/
+      ) as HTMLInputElement;
 
       fireEvent.input(input, {target: {value: '24'}});
 
@@ -178,7 +203,9 @@ describe('Button Group Editor', () => {
 
     test('Updates value if input model changes', () => {
       const {rerender} = render(editor({widthInCentimeters: 42}));
-      const input = screen.getByLabelText(/Bed Width/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_width_label/
+      ) as HTMLInputElement;
 
       rerender(editor({widthInCentimeters: 23}));
 
@@ -189,14 +216,18 @@ describe('Button Group Editor', () => {
   describe('Bed spacing field', () => {
     test('Has value from input model', () => {
       render(editor({spacingInCentimeters: 42}));
-      const input = screen.getByLabelText(/Bed Spacing/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_spacing_label/
+      ) as HTMLInputElement;
 
       expect(input.value).toBe('42');
     });
 
     test('Changes value on edit', () => {
       render(editor({spacingInCentimeters: 42}));
-      const input = screen.getByLabelText(/Bed Spacing/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_spacing_label/
+      ) as HTMLInputElement;
 
       fireEvent.input(input, {target: {value: '24'}});
 
@@ -206,7 +237,9 @@ describe('Button Group Editor', () => {
     test('Does not modify input model on edit', () => {
       const e = editor({spacingInCentimeters: 42});
       render(e);
-      const input = screen.getByLabelText(/Bed Spacing/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_spacing_label/
+      ) as HTMLInputElement;
 
       fireEvent.input(input, {target: {value: '24'}});
 
@@ -215,7 +248,9 @@ describe('Button Group Editor', () => {
 
     test('Updates value if input model changes', () => {
       const {rerender} = render(editor({spacingInCentimeters: 42}));
-      const input = screen.getByLabelText(/Bed Spacing/) as HTMLInputElement;
+      const input = screen.getByLabelText(
+        /bed_spacing_label/
+      ) as HTMLInputElement;
 
       rerender(editor({spacingInCentimeters: 23}));
 
@@ -301,7 +336,7 @@ describe('Button Group Editor', () => {
         widthInCentimeters: 4,
       };
       render(editor(beforeBedGroup, {cancelButtonText: 'Cancel Button'}));
-      const input = screen.getByLabelText(/Label/) as HTMLInputElement;
+      const input = screen.getByLabelText(/label_label/) as HTMLInputElement;
       fireEvent.input(input, {target: {value: 'New Label'}});
 
       fireEvent.click(screen.getByText(/Cancel Button/));
