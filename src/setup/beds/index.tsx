@@ -13,6 +13,10 @@ import './index.scss';
 import {BedGroupEditor} from './BedGroupEditor';
 import {BedOverlay} from './BedOverlay';
 
+interface LocationData {
+  totalSizeInMeters?: number;
+}
+
 const Beds: React.FC = () => {
   const {t} = useTranslation();
 
@@ -21,6 +25,7 @@ const Beds: React.FC = () => {
     []
   );
   const [locationImage] = usePersistedState<string>('locationImage', '');
+  const [location] = usePersistedState<LocationData | null>('location', null);
 
   const [bedGroup, setBedGroup] = useState<BedGroup>({...DEFAULT_BED_GROUP});
   const [adding, setAdding] = useState(false);
@@ -87,7 +92,7 @@ const Beds: React.FC = () => {
                     : undefined,
                 }}
               >
-                <BedOverlay />
+                <BedOverlay sizeInMeters={location?.totalSizeInMeters ?? 100} />
               </div>
             </div>
           </Col>

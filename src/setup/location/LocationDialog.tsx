@@ -96,9 +96,7 @@ const LocationDialog: React.FC<LocationDialogParams> = ({
                     id="mapbox/satellite-v9"
                     accessToken={MAPBOX_ACCESS_TOKEN}
                     attribution='&copy; <a href="https://www.mapbox.com/">Mapbox</a>'
-                    url={
-                      'https://api.mapbox.com/styles/v1/{id}/tiles/512/{z}/{x}/{y}?access_token={accessToken}'
-                    }
+                    url={`https://api.mapbox.com/styles/v1/{id}/tiles/512/{z}/{x}/{y}?access_token={accessToken}`}
                   />
                   <TrackPosition onMove={setPosition} onZoom={setZoom} />
                   <LocateControl autoStart={open && initialLocation === null} />
