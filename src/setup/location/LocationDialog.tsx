@@ -16,6 +16,8 @@ import {type GeoPosition, MAPBOX_ACCESS_TOKEN} from '@/lib/geo';
 import {TrackPosition} from './TrackPosition';
 import {LocateControl} from './LocateControl';
 import {GeocoderControl} from './GeocoderControl';
+import {useTranslation} from 'react-i18next';
+import {ZoomControl} from 'react-leaflet';
 
 interface LocationDialogParams {
   initialLocation?: GeoPosition | null;
@@ -35,6 +37,7 @@ const LocationDialog: React.FC<LocationDialogParams> = ({
   isOpen,
   onHide,
 }) => {
+  const {t} = useTranslation();
   const [position, setPosition] = useState<GeoPosition | undefined>();
   const [zoom, setZoom] = useState(initialZoom ?? DEFAULT_ZOOM);
 
@@ -72,7 +75,7 @@ const LocationDialog: React.FC<LocationDialogParams> = ({
   return (
     <Modal show={open} onHide={handleClose} size="xl">
       <Modal.Header closeButton>
-        <Modal.Title>Pick a Location</Modal.Title>
+        <Modal.Title>{t('location_dialog_title')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -85,21 +88,32 @@ const LocationDialog: React.FC<LocationDialogParams> = ({
                   zoom={zoom}
                   scrollWheelZoom={true}
                   style={{width: 400, height: 400}}
+                  zoomControl={false}
                 >
                   <TileLayer
-                    attribution='Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
+                    attribution='&copy; <a href="https://www.mapbox.com/">Mapbox</a>'
                     url={`https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_ACCESS_TOKEN}`}
                   />
                   <TrackPosition onMove={setPosition} onZoom={setZoom} />
                   <LocateControl autoStart={open && initialLocation === null} />
                   <GeocoderControl />
+                  <ZoomControl
+                    zoomInText={t('location_zoom_in_button', {
+                      defaultValue: '+',
+                    })}
+                    zoomOutText={t('location_zoom_out_button', {
+                      defaultValue: '-',
+                    })}
+                    zoomInTitle={t('location_zoom_in_tooltip')}
+                    zoomOutTitle={t('location_zoom_out_tooltip')}
+                  />
                 </MapContainer>
               )}
             </Col>
             <Col>
               <Form>
                 <Form.Group className="mb-3" controlId="formLatitude">
-                  <Form.Label>Latitude</Form.Label>
+                  <Form.Label>{t('location_latitude_label')}</Form.Label>
                   <Form.Control
                     type="text"
                     value={position?.latitude ?? ''}
@@ -115,7 +129,7 @@ const LocationDialog: React.FC<LocationDialogParams> = ({
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formLongitude">
-                  <Form.Label>Longitude</Form.Label>
+                  <Form.Label>{t('location_longitude_label')}</Form.Label>
                   <Form.Control
                     type="text"
                     value={position?.longitude ?? ''}
@@ -129,7 +143,7 @@ const LocationDialog: React.FC<LocationDialogParams> = ({
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formZoom">
-                  <Form.Label>Zoom</Form.Label>
+                  <Form.Label>{t('location_zoom_label')}</Form.Label>
                   <Form.Control
                     type="text"
                     value={zoom}
@@ -146,10 +160,10 @@ const LocationDialog: React.FC<LocationDialogParams> = ({
 
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
-          Close
+          {t('location_close_button')}
         </Button>
         <Button variant="primary" onClick={onSave}>
-          Save changes
+          {t('location_save_button')}
         </Button>
       </Modal.Footer>
     </Modal>

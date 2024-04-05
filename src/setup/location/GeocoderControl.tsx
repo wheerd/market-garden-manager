@@ -1,11 +1,13 @@
 import React, {useEffect} from 'react';
 import {useMap} from 'react-leaflet/hooks';
+import {useTranslation} from 'react-i18next';
 import {MAPBOX_ACCESS_TOKEN} from '@/lib/geo';
 
 import {GeoSearchControl, MapBoxProvider} from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
 
 export const GeocoderControl: React.FC = () => {
+  const {t} = useTranslation();
   const map = useMap();
   const provider = new MapBoxProvider({
     params: {
@@ -15,6 +17,9 @@ export const GeocoderControl: React.FC = () => {
   const control = GeoSearchControl({
     provider,
     style: 'bar',
+    searchLabel: t('geo_search_label'),
+    clearSearchLabel: t('geo_clear_search_label'),
+    notFoundMessage: t('geo_not_found_message'),
   });
   useEffect(() => {
     map.addControl(control);

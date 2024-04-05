@@ -2,17 +2,19 @@ import React, {lazy, useMemo} from 'react';
 
 const LineChart = lazy(() => import('@/lib/chart'));
 
-import {enUS} from 'date-fns/locale';
-import {format, parseISO} from 'date-fns';
+import {parseISO} from 'date-fns';
 import {type BoxAnnotationOptions} from 'chartjs-plugin-annotation';
 
 import {Stats} from '@/lib/statistics';
 import {type DayOfYear, getFrostWindows} from '@/lib/weatherData';
+import {useTranslation} from 'react-i18next';
+import {SupportedLanguage, localeMap} from '@/i18n';
 
 const WeatherChart: React.FC<{
   temperatureStats: Record<DayOfYear, Stats> | undefined;
   frostProbabilities: Record<DayOfYear, number> | undefined;
 }> = ({temperatureStats, frostProbabilities}) => {
+  const {t, i18n} = useTranslation();
   const chartData = useMemo(() => {
     if (!temperatureStats || !frostProbabilities)
       return {labels: [], datasets: []};
@@ -24,7 +26,7 @@ const WeatherChart: React.FC<{
     return {
       datasets: [
         {
-          label: 'Mean Temperature',
+          label: t('weather_mean_temperature'),
           data: allDays.map(day => ({
             x: dayTimestamps[day],
             y: temperatureStats[day].mean,
@@ -35,7 +37,7 @@ const WeatherChart: React.FC<{
           yAxisID: 'temperature',
         },
         {
-          label: 'Maximum Temperature (p95)',
+          label: t('weather_max_temperature_p95'),
           fill: '+1',
           data: allDays.map(day => ({
             x: dayTimestamps[day],
@@ -47,7 +49,7 @@ const WeatherChart: React.FC<{
           yAxisID: 'temperature',
         },
         {
-          label: 'Minimum Temperature (p5)',
+          label: t('weather_min_temperature_p5'),
           data: allDays.map(day => ({
             x: dayTimestamps[day],
             y: temperatureStats[day].p5,
@@ -58,7 +60,7 @@ const WeatherChart: React.FC<{
           yAxisID: 'temperature',
         },
         {
-          label: 'Frost Probability',
+          label: t('weather_frost_probability'),
           data: allDays.map(day => ({
             x: dayTimestamps[day],
             y: frostProbabilities[day],
@@ -69,7 +71,7 @@ const WeatherChart: React.FC<{
           yAxisID: 'probability',
         },
         {
-          label: 'Number of years with data',
+          label: t('weather_years_count'),
           data: allDays.map(day => ({
             x: dayTimestamps[day],
             y: temperatureStats[day].valueCount / 24,
@@ -80,7 +82,7 @@ const WeatherChart: React.FC<{
         },
       ],
     };
-  }, [temperatureStats, frostProbabilities]);
+  }, [temperatureStats, frostProbabilities, t]);
 
   const annotations = useMemo(() => {
     if (!frostProbabilities) return [];
@@ -95,31 +97,31 @@ const WeatherChart: React.FC<{
         first: '01-01',
         last: frostWindows.firstLowRiskDay,
         color: highRiskColor,
-        label: '❄❄',
+        label: t('weather_high_frost_area_label', {defaultValue: '❄❄'}),
       },
       {
         first: frostWindows.firstLowRiskDay,
         last: frostWindows.firstFrostFreeDay,
         color: lowRiskColor,
-        label: '❄',
+        label: t('weather_low_frost_area_label', {defaultValue: '❄'}),
       },
       {
         first: frostWindows.firstFrostFreeDay,
         last: frostWindows.lastFrostFreeDay,
         color: freeColor,
-        label: '🌱',
+        label: t('weather_frost_free_area_label', {defaultValue: '🌱'}),
       },
       {
         first: frostWindows.lastFrostFreeDay,
         last: frostWindows.lastLowRiskDay,
         color: lowRiskColor,
-        label: '❄',
+        label: t('weather_low_frost_area_label', {defaultValue: '❄'}),
       },
       {
         first: frostWindows.lastLowRiskDay,
         last: '12-31',
         color: highRiskColor,
-        label: '❄❄',
+        label: t('weather_high_frost_area_label', {defaultValue: '❄❄'}),
       },
     ];
 
@@ -141,7 +143,7 @@ const WeatherChart: React.FC<{
         } as BoxAnnotationOptions,
       ])
     );
-  }, [frostProbabilities]);
+  }, [frostProbabilities, t]);
 
   return (
     <LineChart
@@ -161,7 +163,7 @@ const WeatherChart: React.FC<{
         plugins: {
           title: {
             display: true,
-            text: 'Location Weather',
+            text: t('weather_title'),
           },
           legend: {
             display: false,
@@ -169,23 +171,37 @@ const WeatherChart: React.FC<{
           tooltip: {
             callbacks: {
               title: items => {
-                return format(items[0].parsed.x, 'dd MMMM');
+                return t(
+                  'weather_tooltip_title',
+                  '{{day, datefns(format: dd MMMM)}}',
+                  {day: items[0].parsed.x}
+                );
               },
               label: item => {
-                let label = item.dataset.label ?? '';
+                const formattedValue =
+                  item.dataset.yAxisID === 'temperature'
+                    ? t(
+                        'weather_temperature_value_celsius',
+                        '{{value, number(maximumFractionDigits:0)}}°C',
+                        {
+                          value: item.parsed.y,
+                        }
+                      )
+                    : item.dataset.yAxisID === 'probability'
+                      ? t(
+                          'weather_frost_probability_value',
+                          '{{value, number(style:percent)}}',
+                          {
+                            value: item.parsed.y,
+                          }
+                        )
+                      : item.parsed.y.toString();
 
-                if (label) {
-                  label += ': ';
-                }
-                if (item.dataset.yAxisID === 'temperature') {
-                  label += `${item.parsed.y.toFixed(1)}°C`;
-                } else if (item.dataset.yAxisID === 'probability') {
-                  label += `${(item.parsed.y * 100).toFixed(0)}%`;
-                } else {
-                  label += item.parsed.y.toString();
-                }
-
-                return label;
+                return t(
+                  'weather_tooltip_dataset_label',
+                  '{{label}}: {{value}}',
+                  {label: item.dataset.label, value: formattedValue}
+                );
               },
             },
           },
@@ -200,26 +216,33 @@ const WeatherChart: React.FC<{
             time: {
               unit: 'month',
               displayFormats: {
-                month: 'MMM',
+                month: t('weather_month_axis_format', 'MMM'),
               },
-              parser: 'yyyy-MM-dd',
             },
             ticks: {
               align: 'start',
             },
             adapters: {
               date: {
-                locale: enUS,
+                locale: localeMap[i18n.language as SupportedLanguage],
               },
             },
           },
           temperature: {
             axis: 'y',
             title: {
-              text: 'Temperature',
+              display: true,
+              text: t('weather_temperature_axis'),
             },
             ticks: {
-              callback: value => `${(+value).toFixed(0)}°C`,
+              callback: value =>
+                t(
+                  'weather_temperature_value_celsius',
+                  '{{value, number(maximumFractionDigits:0)}}°C',
+                  {
+                    value,
+                  }
+                ),
             },
           },
           probability: {
@@ -230,10 +253,18 @@ const WeatherChart: React.FC<{
               display: false,
             },
             title: {
-              text: 'Frost Probability',
+              display: true,
+              text: t('weather_frost_probability_axis'),
             },
             ticks: {
-              callback: value => (+value * 100).toFixed(0) + '%',
+              callback: value =>
+                t(
+                  'weather_frost_probability_value',
+                  '{{value, number(style:percent)}}',
+                  {
+                    value,
+                  }
+                ),
             },
           },
           y: {

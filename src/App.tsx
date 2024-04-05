@@ -31,22 +31,22 @@ function App() {
             <Nav variant="pill" className="me-auto container-fluid">
               <Nav.Item>
                 <Nav.Link as={NavLink} to="/">
-                  Home
+                  {t('nav_home')}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link as={NavLink} to="/setup">
-                  Setup
+                  {t('nav_setup')}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link as={NavLink} to="/crops">
-                  Crops
+                  {t('nav_crops')}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link as={NavLink} to="/seeds">
-                  Seeds
+                  {t('nav_seeds')}
                 </Nav.Link>
               </Nav.Item>
               <LanguageSelect className="ms-auto" align="end" />

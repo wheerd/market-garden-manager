@@ -7,80 +7,84 @@ const Location = lazy(() => import('./location'));
 const Beds = lazy(() => import('./beds'));
 const Basic = lazy(() => import('./basic'));
 import './index.css';
+import {useTranslation} from 'react-i18next';
 
-const Setup: React.FC = () => (
-  <div>
-    <Nav variant="tabs" className="justify-content-center">
-      <Nav.Item>
-        <Nav.Link as={NavLink} to="." end>
-          Basic
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link as={NavLink} to="location">
-          Location
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link as={NavLink} to="beds">
-          Beds
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link as={NavLink} to="crops">
-          Crops
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link as={NavLink} to="plan">
-          Target Plan
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link as={NavLink} to="csa">
-          CSA
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link as={NavLink} to="tasks">
-          Tasks
-        </Nav.Link>
-      </Nav.Item>
-    </Nav>
+const Setup: React.FC = () => {
+  const {t} = useTranslation();
+  return (
+    <div>
+      <Nav variant="tabs" className="justify-content-center">
+        <Nav.Item>
+          <Nav.Link as={NavLink} to="." end>
+            {t('nav_setup_basic')}
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to="location">
+            {t('nav_setup_location')}
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to="beds">
+            {t('nav_setup_beds')}
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to="crops">
+            {t('nav_setup_crops')}
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to="plan">
+            {t('nav_setup_plan')}
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to="csa">
+            {t('nav_setup_csa')}
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to="tasks">
+            {t('nav_setup_tasks')}
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
 
-    <div className="content-wrapper">
-      <Routes>
-        <Route
-          path="location"
-          element={
-            <Suspense fallback={<Skeleton />}>
-              <Location />
-            </Suspense>
-          }
-        />
-        <Route
-          path="beds"
-          element={
-            <Suspense fallback={<Skeleton />}>
-              <Beds />
-            </Suspense>
-          }
-        />
-        <Route path="crops" element={'Crops'} />
-        <Route path="plan" element={'Plan'} />
-        <Route path="csa" element={'CSA'} />
-        <Route path="tasks" element={'Tasks'} />
-        <Route
-          element={
-            <Suspense fallback={<Skeleton />}>
-              <Basic />
-            </Suspense>
-          }
-          index
-        />
-      </Routes>
+      <div className="content-wrapper">
+        <Routes>
+          <Route
+            path="location"
+            element={
+              <Suspense fallback={<Skeleton />}>
+                <Location />
+              </Suspense>
+            }
+          />
+          <Route
+            path="beds"
+            element={
+              <Suspense fallback={<Skeleton />}>
+                <Beds />
+              </Suspense>
+            }
+          />
+          <Route path="crops" element={'Crops'} />
+          <Route path="plan" element={'Plan'} />
+          <Route path="csa" element={'CSA'} />
+          <Route path="tasks" element={'Tasks'} />
+          <Route
+            element={
+              <Suspense fallback={<Skeleton />}>
+                <Basic />
+              </Suspense>
+            }
+            index
+          />
+        </Routes>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Setup;
