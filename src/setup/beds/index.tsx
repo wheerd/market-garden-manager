@@ -11,6 +11,7 @@ import {BedGroup, DEFAULT_BED_GROUP} from '@/model/beds';
 
 import './index.scss';
 import {BedGroupEditor} from './BedGroupEditor';
+import {BedOverlay} from './BedOverlay';
 
 const Beds: React.FC = () => {
   const {t} = useTranslation();
@@ -85,7 +86,9 @@ const Beds: React.FC = () => {
                     ? `url(${locationImage})`
                     : undefined,
                 }}
-              ></div>
+              >
+                <BedOverlay />
+              </div>
             </div>
           </Col>
           <Col>
