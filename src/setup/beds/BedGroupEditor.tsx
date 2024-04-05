@@ -1,4 +1,5 @@
 import React, {FormEvent, useEffect, useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -21,6 +22,8 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
   saveButtonText,
   cancelButtonText,
 }) => {
+  const {t} = useTranslation();
+
   const [bedGroup, setBedGroup] = useState<BedGroup>({...inputBedGroup});
   useEffect(() => {
     if (bedGroup.id !== inputBedGroup.id && !inputBedGroup.label) {
@@ -68,32 +71,32 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
         controlId="formLabel"
       >
         <Form.Label column sm={2}>
-          Label
+          {t('label_label')}
         </Form.Label>
         <Col sm={10}>
           <Form.Control
             required
             type="text"
-            placeholder="Enter label"
+            placeholder={t('label_placeholder')}
             value={bedGroup.label}
             onChange={e => setBedGroup({...bedGroup, label: e.target.value})}
             ref={labelInput}
           />
           <Form.Control.Feedback tooltip type="invalid">
-            Please enter a label.
+            {t('label_feedback')}
           </Form.Control.Feedback>
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="mb-3" controlId="formCount">
         <Form.Label column sm={2}>
-          Bed Count
+          {t('bed_count_label')}
         </Form.Label>
         <Col sm={10}>
           <Form.Control
             required
             type="number"
             min={1}
-            placeholder="Enter bed count"
+            placeholder={t('bed_count_placeholder')}
             value={bedGroup.count}
             onChange={e => setBedGroup({...bedGroup, count: +e.target.value})}
           />
@@ -101,7 +104,7 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
       </Form.Group>
       <Form.Group as={Row} className="mb-3" controlId="formBedLength">
         <Form.Label column sm={2}>
-          Bed Length
+          {t('bed_length_label')}
         </Form.Label>
         <Col sm={10}>
           <InputGroup className="mb-2">
@@ -110,7 +113,7 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
               type="number"
               min={0}
               step="any"
-              placeholder="Enter bed length"
+              placeholder={t('bed_length_placeholder')}
               value={bedGroup.lengthInMeters}
               onChange={e =>
                 setBedGroup({
@@ -119,13 +122,13 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
                 })
               }
             />
-            <InputGroup.Text>m</InputGroup.Text>
+            <InputGroup.Text>{t('unit_meter_short')}</InputGroup.Text>
           </InputGroup>
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="mb-3" controlId="formBedWidth">
         <Form.Label column sm={2}>
-          Bed Width
+          {t('bed_width_label')}
         </Form.Label>
         <Col sm={10}>
           <InputGroup className="mb-2">
@@ -133,7 +136,7 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
               required
               type="number"
               min={1}
-              placeholder="Enter bed width"
+              placeholder={t('bed_width_placeholder')}
               value={bedGroup.widthInCentimeters}
               onChange={e =>
                 setBedGroup({
@@ -142,13 +145,13 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
                 })
               }
             />
-            <InputGroup.Text>cm</InputGroup.Text>
+            <InputGroup.Text>{t('unit_centimeter_short')}</InputGroup.Text>
           </InputGroup>
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="mb-3" controlId="formBedSpacing">
         <Form.Label column sm={2}>
-          Bed Spacing
+          {t('bed_spacing_label')}
         </Form.Label>
         <Col sm={10}>
           <InputGroup className="mb-2">
@@ -156,7 +159,7 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
               required
               type="number"
               min={0}
-              placeholder="Enter bed spacing"
+              placeholder={t('bed_spacing_placeholder')}
               value={bedGroup.spacingInCentimeters}
               onChange={e =>
                 setBedGroup({
@@ -165,23 +168,18 @@ export const BedGroupEditor: React.FC<BedGroupEditorOptions> = ({
                 })
               }
             />
-            <InputGroup.Text>cm</InputGroup.Text>
+            <InputGroup.Text>{t('unit_centimeter_short')}</InputGroup.Text>
           </InputGroup>
         </Col>
       </Form.Group>
       <Row>
         <Col md="auto">
-          <Button variant="primary" type="submit" style={{width: '5em'}}>
+          <Button variant="primary" type="submit">
             {saveButtonText}
           </Button>
         </Col>
         <Col md="auto">
-          <Button
-            variant="secondary"
-            type="reset"
-            onClick={onCancelClick}
-            style={{width: '5em'}}
-          >
+          <Button variant="secondary" type="reset" onClick={onCancelClick}>
             {cancelButtonText}
           </Button>
         </Col>

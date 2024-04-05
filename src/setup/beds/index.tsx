@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -12,6 +13,8 @@ import './index.scss';
 import {BedGroupEditor} from './BedGroupEditor';
 
 const Beds: React.FC = () => {
+  const {t} = useTranslation();
+
   const [bedGroups, setBedGroups] = usePersistedState<BedGroup[]>(
     'bedGroups',
     []
@@ -90,7 +93,7 @@ const Beds: React.FC = () => {
             <Form.Group as={Row} className="mb-3 position-relative">
               <Col>
                 <Form.Select
-                  aria-label="Select bed group"
+                  aria-label={t('select_bed_group_label')}
                   size="lg"
                   disabled={adding || !bedGroups?.length}
                   value={selectedBedId}
@@ -98,8 +101,12 @@ const Beds: React.FC = () => {
                 >
                   {bedGroups?.map(b => (
                     <option key={b.id} value={b.id}>
-                      {b.label} ({b.count} bed(s), {b.lengthInMeters}m&times;
-                      {b.widthInCentimeters}cm)
+                      {t('bed_group_select_option', {
+                        label: b.label,
+                        count: b.count,
+                        length: b.lengthInMeters,
+                        width: b.widthInCentimeters,
+                      })}
                     </option>
                   ))}
                 </Form.Select>
@@ -112,7 +119,7 @@ const Beds: React.FC = () => {
                   disabled={adding}
                   onClick={onAdd}
                 >
-                  Add
+                  {t('add_button')}
                 </Button>
               </Col>
               <Col md="auto">
@@ -123,7 +130,7 @@ const Beds: React.FC = () => {
                   disabled={adding || !selectedBedId}
                   onClick={onDelete}
                 >
-                  Delete
+                  {t('delete_button')}
                 </Button>
               </Col>
             </Form.Group>
@@ -132,14 +139,16 @@ const Beds: React.FC = () => {
                 bedGroup={bedGroup}
                 onSave={onSave}
                 onCancel={onCancel}
-                saveButtonText={adding ? 'Add' : 'Save'}
-                cancelButtonText={adding ? 'Cancel' : 'Reset'}
+                saveButtonText={adding ? t('add_button_do') : t('save_button')}
+                cancelButtonText={
+                  adding ? t('cancel_button') : t('reset_button')
+                }
               />
             ) : (
               <Container>
                 <Row className="justify-content-md-center">
                   <Col md="auto">
-                    <p>There are currently no bed groups defined</p>
+                    <p>{t('no_bed_groups')}</p>
                   </Col>
                 </Row>
                 <Row className="justify-content-md-center">
@@ -151,7 +160,7 @@ const Beds: React.FC = () => {
                       disabled={adding}
                       onClick={onAdd}
                     >
-                      Add first bed group
+                      {t('add_button_first')}
                     </Button>
                   </Col>
                 </Row>

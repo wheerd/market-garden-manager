@@ -1,4 +1,5 @@
 import React, {lazy, useEffect, useMemo, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {usePersistedState} from '@/lib/usePersistedState';
 import {
   DayOfYear,
@@ -18,9 +19,9 @@ import {
   getTimeZone,
   metersPerPixel,
 } from '@/lib/geo';
-import Container from 'react-bootstrap/esm/Container';
-import Row from 'react-bootstrap/esm/Row';
-import Col from 'react-bootstrap/esm/Col';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Skeleton from 'react-loading-skeleton';
 
 interface LocationData {
@@ -38,6 +39,7 @@ interface RawWeatherDataCache {
 }
 
 const Location: React.FC = () => {
+  const {t} = useTranslation();
   const [location, setLocation] = usePersistedState<LocationData | null>(
     'location',
     null
@@ -120,15 +122,18 @@ const Location: React.FC = () => {
               >
                 {
                   <span className="coordinates">
-                    {location?.longitude.toFixed(6)}{' '}
-                    {location?.latitude.toFixed(6)}
+                    {t('location_position_label', {
+                      lat: location?.latitude.toFixed(6),
+                      lon: location?.longitude.toFixed(6),
+                    })}
                   </span>
                 }
-                <span className="prompt">Change Location</span>
+                <span className="prompt">{t('location_change_prompt')}</span>
                 {location?.totalSizeInMeters && (
                   <span className="size">
-                    {location.totalSizeInMeters.toFixed(2)}x
-                    {location.totalSizeInMeters.toFixed(2)}m
+                    {t('location_size_label', {
+                      size: location.totalSizeInMeters.toFixed(2),
+                    })}
                   </span>
                 )}
               </div>
@@ -136,9 +141,15 @@ const Location: React.FC = () => {
           </Col>
           <Col>
             <p>
-              Elevation: {elevation ? `${elevation.toFixed(0)}m` : <Skeleton />}
+              {elevation
+                ? t('elevation_with_label', {elevation: elevation.toFixed(0)})
+                : t('elevation_unknown')}
             </p>
-            <p>Time Zone: {timezone ?? <Skeleton />}</p>
+            <p>
+              {timezone
+                ? t('timezone_with_label', {timezone})
+                : t('timezone_unknown')}
+            </p>
             {rawTemperatureData ? (
               <div>
                 <WeatherChart

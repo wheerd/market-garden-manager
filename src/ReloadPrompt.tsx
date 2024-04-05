@@ -1,9 +1,13 @@
 import Toast from 'react-bootstrap/Toast';
+import Button from 'react-bootstrap/Button';
+import CloseButton from 'react-bootstrap/CloseButton';
 
 import {useRegisterSW} from 'virtual:pwa-register/react';
-import Button from 'react-bootstrap/Button';
+import {useTranslation} from 'react-i18next';
 
 function ReloadPrompt() {
+  const {t} = useTranslation();
+
   const {
     offlineReady: [offlineReady, setOfflineReady],
     needRefresh: [needRefresh, setNeedRefresh],
@@ -20,23 +24,17 @@ function ReloadPrompt() {
       <div className="d-flex">
         <Toast.Body>
           {offlineReady ? (
-            <span>App ready to work offline</span>
+            <span>{t('offline_ready_prompt')}</span>
           ) : (
-            <span>
-              New content available, click on reload button to update.
-            </span>
+            <span>{t('reload_prompt')}</span>
           )}
           {needRefresh && (
             <Button onClick={() => void updateServiceWorker(true)}>
-              Reload
+              {t('reload_button')}
             </Button>
           )}
         </Toast.Body>
-        <Button
-          className="btn-close me-2 m-auto"
-          onClick={close}
-          aria-label="Close"
-        ></Button>
+        <CloseButton onClick={close} aria-label={t('close')}></CloseButton>
       </div>
     </Toast>
   );

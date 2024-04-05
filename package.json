@@ -23,7 +23,8 @@
     "test": "vitest",
     "test:ci": "vitest run",
     "coverage": "vitest run --coverage",
-    "coverage:ci": "vitest run --coverage.enabled --coverage.reporter=cobertura"
+    "coverage:ci": "vitest run --coverage.enabled --coverage.reporter=cobertura",
+    "i18n:generate": "i18next"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
@@ -31,6 +32,10 @@
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-plugin-annotation": "^3.0.1",
     "date-fns": "^3.6.0",
+    "flag-icons": "^7.2.1",
+    "i18next": "^23.10.1",
+    "i18next-browser-languagedetector": "^7.2.1",
+    "i18next-http-backend": "^2.5.0",
     "idb-keyval": "^6.2.1",
     "leaflet": "^1.9.4",
     "leaflet-geosearch": "^3.11.1",
@@ -40,6 +45,7 @@
     "react-bootstrap": "^2.10.2",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^14.1.0",
     "react-leaflet": "^4.2.1",
     "react-loading-skeleton": "^3.4.0",
     "react-router-dom": "^6.22.3"
@@ -64,6 +70,7 @@
     "gts": "^5.3.0",
     "happy-dom": "^14.4.0",
     "husky": "^9.0.11",
+    "i18next-parser": "^8.13.0",
     "lint-staged": "^15.2.2",
     "sass": "^1.72.0",
     "typescript": "~5.4.3",
