@@ -1,0 +1,12 @@
+.countryFlag {
+  border-radius: 50%;
+  border: 0px solid grey;
+  height: 1em;
+  width: 1em;
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  display: inline-block;
+  box-shadow: inset rgba($color: #cccccc, $alpha: 0.5) 0 0 5px 0;
+  margin-right: 0.2em;
+}

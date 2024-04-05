@@ -16,7 +16,7 @@
   "bed_spacing_placeholder": "Abstand der Beet Reihen",
   "select_bed_group_label": "Wähle eine Beet Gruppe aus",
   "bed_group_select_option_one": "{{label}} ({{count}} Beet, {{length}}m×{{width}}cm)",
-  "bed_group_select_option_many": "{{label}} ({{count}} Beete, {{length}}m×{{width}}cm)",
+  "bed_group_select_option_other": "{{label}} ({{count}} Beete, {{length}}m×{{width}}cm)",
   "add_button": "Neu",
   "add_button_do": "Hinzufügen",
   "delete_button": "Löschen",

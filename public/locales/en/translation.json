@@ -16,13 +16,13 @@
   "bed_spacing_placeholder": "Enter bed spacing",
   "select_bed_group_label": "Select a bed group",
   "bed_group_select_option_one": "{{label}} ({{count}} bed, {{length}}m×{{width}}cm)",
-  "bed_group_select_option_other": "",
+  "bed_group_select_option_other": "{{label}} ({{count}} beds, {{length}}m×{{width}}cm)",
   "add_button": "Add",
+  "add_button_do": "Add",
   "delete_button": "Delete",
   "save_button": "Save",
   "cancel_button": "Cancel",
   "reset_button": "Reset",
   "no_bed_groups": "There are currently no bed groups defined",
-  "add_button_first": "Add first bed group",
-  "bed_group_select_option_many": "{{label}} ({{count}} beds, {{length}}m×{{width}}cm)"
+  "add_button_first": "Add first bed group"
 }

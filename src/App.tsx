@@ -9,6 +9,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import Setup from './setup';
 import ReloadPrompt from './ReloadPrompt';
 import {useTranslation} from 'react-i18next';
+import LanguageSelect from './LanguageSelect';
 
 function App() {
   const {t} = useTranslation();
@@ -21,13 +22,13 @@ function App() {
         bg="primary"
         data-bs-theme="dark"
       >
-        <Container>
+        <Container fluid>
           <Navbar.Brand as={Link} to="/">
             {t('app_title')}
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav variant="pill" className="me-auto">
+            <Nav variant="pill" className="me-auto container-fluid">
               <Nav.Item>
                 <Nav.Link as={NavLink} to="/">
                   Home
@@ -48,6 +49,7 @@ function App() {
                   Seeds
                 </Nav.Link>
               </Nav.Item>
+              <LanguageSelect className="ms-auto" align="end" />
             </Nav>
           </Navbar.Collapse>
         </Container>

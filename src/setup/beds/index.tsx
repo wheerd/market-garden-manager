@@ -139,7 +139,7 @@ const Beds: React.FC = () => {
                 bedGroup={bedGroup}
                 onSave={onSave}
                 onCancel={onCancel}
-                saveButtonText={adding ? t('add_button') : t('save_button')}
+                saveButtonText={adding ? t('add_button_do') : t('save_button')}
                 cancelButtonText={
                   adding ? t('cancel_button') : t('reset_button')
                 }
