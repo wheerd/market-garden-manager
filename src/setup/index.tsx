@@ -1,19 +1,20 @@
 import React, {Suspense, lazy} from 'react';
-import {NavLink, Route, Routes} from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
+import {useTranslation} from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
+import {NavLink, Route, Routes} from 'react-router-dom';
 
 const Location = lazy(() => import('./location'));
 const Beds = lazy(() => import('./beds'));
 const Basic = lazy(() => import('./basic'));
+
 import './index.css';
-import {useTranslation} from 'react-i18next';
 
 const Setup: React.FC = () => {
   const {t} = useTranslation();
   return (
     <div>
-      <Nav variant="tabs" className="justify-content-center">
+      <Nav variant="tabs" className="settings-tabs">
         <Nav.Item>
           <Nav.Link as={NavLink} to="." end>
             {t('nav_setup_basic')}

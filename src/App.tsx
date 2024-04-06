@@ -1,15 +1,16 @@
 import {Suspense} from 'react';
-import {Routes, Route, NavLink, Link} from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Container from 'react-bootstrap/Container';
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
-
-import Setup from './setup';
-import ReloadPrompt from './ReloadPrompt';
 import {useTranslation} from 'react-i18next';
+import Skeleton from 'react-loading-skeleton';
+import {Link, NavLink, Route, Routes} from 'react-router-dom';
+
 import LanguageSelect from './LanguageSelect';
+import ReloadPrompt from './ReloadPrompt';
+import Setup from './setup';
+
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function App() {
   const {t} = useTranslation();

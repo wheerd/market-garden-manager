@@ -1,9 +1,9 @@
-import i18n from 'i18next';
-import {initReactI18next} from 'react-i18next';
-import Backend from 'i18next-http-backend';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import {format, Locale} from 'date-fns';
+import {Locale, format} from 'date-fns';
 import {de, enUS} from 'date-fns/locale';
+import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import Backend from 'i18next-http-backend';
+import {initReactI18next} from 'react-i18next';
 
 export const supportedLanguages = ['en', 'de'] as const;
 export type SupportedLanguage = (typeof supportedLanguages)[number];

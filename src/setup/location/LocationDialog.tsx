@@ -1,23 +1,22 @@
 import React, {useEffect, useState} from 'react';
-
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+import Row from 'react-bootstrap/Row';
+import {useTranslation} from 'react-i18next';
+import {ZoomControl} from 'react-leaflet';
 import {MapContainer} from 'react-leaflet/MapContainer';
 import {TileLayer} from 'react-leaflet/TileLayer';
 
-import 'leaflet/dist/leaflet.css';
-
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-
 import {type GeoPosition, MAPBOX_ACCESS_TOKEN} from '@/lib/geo';
-import {TrackPosition} from './TrackPosition';
-import {LocateControl} from './LocateControl';
+
 import {GeocoderControl} from './GeocoderControl';
-import {useTranslation} from 'react-i18next';
-import {ZoomControl} from 'react-leaflet';
+import {LocateControl} from './LocateControl';
+import {TrackPosition} from './TrackPosition';
+
+import 'leaflet/dist/leaflet.css';
 
 interface LocationDialogParams {
   initialLocation?: GeoPosition | null;
@@ -91,8 +90,15 @@ const LocationDialog: React.FC<LocationDialogParams> = ({
                   zoomControl={false}
                 >
                   <TileLayer
+                    tileSize={512}
+                    maxZoom={20}
+                    zoomOffset={-1}
+                    id="mapbox/satellite-v9"
+                    accessToken={MAPBOX_ACCESS_TOKEN}
                     attribution='&copy; <a href="https://www.mapbox.com/">Mapbox</a>'
-                    url={`https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_ACCESS_TOKEN}`}
+                    url={
+                      'https://api.mapbox.com/styles/v1/{id}/tiles/512/{z}/{x}/{y}?access_token={accessToken}'
+                    }
                   />
                   <TrackPosition onMove={setPosition} onZoom={setZoom} />
                   <LocateControl autoStart={open && initialLocation === null} />

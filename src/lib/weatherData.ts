@@ -1,4 +1,5 @@
 import {format} from 'date-fns';
+
 import {Stats, getStats} from './statistics';
 
 type Opaque<K, T> = T & {__TYPE__: K};

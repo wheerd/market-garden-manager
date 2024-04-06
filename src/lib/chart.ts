@@ -1,11 +1,11 @@
 import {
   Chart,
+  Filler,
   LineController,
-  TimeScale,
+  LineElement,
   LinearScale,
   PointElement,
-  LineElement,
-  Filler,
+  TimeScale,
   Tooltip,
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';

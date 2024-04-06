@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import {useTranslation} from 'react-i18next';
 
 import {usePersistedState} from '@/lib/usePersistedState';
 import {BedGroup, DEFAULT_BED_GROUP} from '@/model/beds';
@@ -73,7 +73,6 @@ const Beds: React.FC = () => {
       setSelectedBedId('');
     }
   }, [selectedBedId, bedGroups]);
-
   return (
     <>
       <Container fluid className="setup-beds">

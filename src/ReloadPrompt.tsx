@@ -1,9 +1,8 @@
-import Toast from 'react-bootstrap/Toast';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
-
-import {useRegisterSW} from 'virtual:pwa-register/react';
+import Toast from 'react-bootstrap/Toast';
 import {useTranslation} from 'react-i18next';
+import {useRegisterSW} from 'virtual:pwa-register/react';
 
 function ReloadPrompt() {
   const {t} = useTranslation();

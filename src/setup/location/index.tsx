@@ -1,5 +1,17 @@
 import React, {lazy, useEffect, useMemo, useState} from 'react';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 import {useTranslation} from 'react-i18next';
+import Skeleton from 'react-loading-skeleton';
+
+import {
+  GeoPosition,
+  getElevation,
+  getSatelliteImageAsDataUri,
+  getTimeZone,
+  metersPerPixel,
+} from '@/lib/geo';
 import {usePersistedState} from '@/lib/usePersistedState';
 import {
   DayOfYear,
@@ -8,21 +20,10 @@ import {
   getMinTemperatureProbabilities,
 } from '@/lib/weatherData';
 
+import './index.scss';
+
 const LocationDialog = lazy(() => import('./LocationDialog'));
 const WeatherChart = lazy(() => import('./WeatherChart'));
-
-import './index.scss';
-import {
-  GeoPosition,
-  getElevation,
-  getSatelliteImageAsDataUri,
-  getTimeZone,
-  metersPerPixel,
-} from '@/lib/geo';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Skeleton from 'react-loading-skeleton';
 
 interface LocationData {
   longitude: number;
