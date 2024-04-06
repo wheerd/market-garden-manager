@@ -1,5 +1,10 @@
+.bed-overlay {
+  touch-action: none;
+}
+
 .bed {
   fill: url(#bedGradient);
+  cursor: move;
 }
 
 .group-outline {
@@ -7,5 +12,6 @@
   stroke-opacity: 0.5;
   stroke-width: 0.1;
   stroke-dasharray: 0.2;
-  fill: none;
+  fill: rgba($color: #000000, $alpha: 0.1);
+  cursor: move;
 }

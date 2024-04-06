@@ -1,4 +1,4 @@
-import React, {MouseEvent, TouchEvent, useMemo, useState} from 'react';
+import React, {PointerEvent, useMemo, useState} from 'react';
 
 import './BedOverlay.scss';
 
@@ -11,16 +11,9 @@ interface BedGroupOptions {
   spacing: number;
 }
 
-type SvgDragEvent =
-  | MouseEvent<SVGGraphicsElement>
-  | TouchEvent<SVGGraphicsElement>;
-
-function getMousePosition(evt: SvgDragEvent) {
+function getMousePosition(evt: PointerEvent<SVGGraphicsElement>) {
   const CTM = evt.currentTarget.ownerSVGElement!.getScreenCTM()!;
-  const point =
-    'touches' in evt
-      ? new DOMPoint(evt.touches[0].clientX, evt.touches[0].clientY)
-      : new DOMPoint(evt.clientX, evt.clientY);
+  const point = new DOMPoint(evt.clientX, evt.clientY);
   return point.matrixTransform(CTM.inverse());
 }
 
@@ -47,14 +40,15 @@ const BedGroup: React.FC<BedGroupOptions> = ({
   );
   const totalHeight = useMemo(() => length + 2 * spacing, [length, spacing]);
 
-  function onDragStart(evt: SvgDragEvent) {
+  function onDragStart(evt: PointerEvent<SVGGraphicsElement>) {
     setDragging(true);
+    evt.currentTarget.setPointerCapture(evt.pointerId);
     const mousePosition = getMousePosition(evt);
     setInitialMouse({x: mousePosition.x, y: mousePosition.y});
     setOffset({x: 0, y: 0});
   }
 
-  function onDrag(evt: SvgDragEvent) {
+  function onDrag(evt: PointerEvent<SVGGraphicsElement>) {
     if (dragging) {
       evt.preventDefault();
       const mousePosition = getMousePosition(evt);
@@ -65,7 +59,8 @@ const BedGroup: React.FC<BedGroupOptions> = ({
     }
   }
 
-  function onDragEnd() {
+  function onDragEnd(evt: PointerEvent<SVGGraphicsElement>) {
+    evt.currentTarget.releasePointerCapture(evt.pointerId);
     if (dragging) {
       setCoordinates({
         x: offset.x + coordinates.x,
@@ -80,15 +75,9 @@ const BedGroup: React.FC<BedGroupOptions> = ({
     <g>
       <g
         transform={`translate(${offset.x}, ${offset.y}) translate(${coordinates.x}, ${coordinates.y})`}
-        onMouseMove={onDrag}
-        onMouseDown={onDragStart}
-        onMouseUp={onDragEnd}
-        onMouseLeave={onDragEnd}
-        onTouchStart={onDrag}
-        onTouchMove={onDrag}
-        onTouchEnd={onDragEnd}
-        onTouchCancel={onDragEnd}
-        className="draggable-group"
+        onPointerMove={onDrag}
+        onPointerDown={onDragStart}
+        onPointerUp={onDragEnd}
       >
         <rect
           x={0}
@@ -122,6 +111,7 @@ export const BedOverlay: React.FC<BedOverlayOptions> = ({sizeInMeters}) => {
       width="100%"
       height="100%"
       viewBox={`0 0 ${sizeInMeters} ${sizeInMeters}`}
+      className="bed-overlay"
     >
       <defs>
         <linearGradient id="bedGradient">
