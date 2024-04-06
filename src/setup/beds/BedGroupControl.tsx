@@ -23,6 +23,7 @@ function getMousePositionInSvgElement(evt: PointerEvent<SVGGraphicsElement>) {
 export interface BedGroupControlOptions {
   x: number;
   y: number;
+  rotation: number;
   length: number;
   width: number;
   count: number;
@@ -30,11 +31,13 @@ export interface BedGroupControlOptions {
   active: boolean;
   onClick(): void;
   onMoved(x: number, y: number): void;
+  onRotated(rotation: number): void;
 }
 
 export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
   x,
   y,
+  rotation: inputRotation,
   length,
   width,
   count,
@@ -42,9 +45,10 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
   active,
   onClick,
   onMoved,
+  onRotated,
 }) => {
   const [position, setPosition] = useState({x, y});
-  const [rotation, setRotation] = useState(0);
+  const [rotation, setRotation] = useState(inputRotation);
   const [rotating, setRotating] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [dragStartMousePosition, setDragStartMousePosition] = useState({
@@ -53,6 +57,7 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
   });
   const [dragOffset, setDragOffset] = useState({x: 0, y: 0});
   const [dragOffsetBBox, setDragOffsetBBox] = useState(new DOMRect(0, 0, 0, 0));
+  const [dragRotation, setDragRotation] = useState(0);
 
   const bedXs = useMemo(
     () => [...Array(count).keys()].map(i => spacing + (width + spacing) * i),
@@ -63,6 +68,10 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
     [count, width, spacing]
   );
   const totalHeight = useMemo(() => length + 2 * spacing, [length, spacing]);
+  const center = useMemo(
+    () => ({x: position.x + totalWidth / 2, y: position.y + totalHeight / 2}),
+    [position, totalWidth, totalHeight]
+  );
 
   function onDragStart(evt: PointerEvent<SVGGraphicsElement>) {
     const element = evt.currentTarget;
@@ -86,34 +95,51 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
     if (dragging) {
       evt.preventDefault();
       const mousePosition = getMousePositionInSvg(evt);
-      const newOffset = new DOMPoint(
-        mousePosition.x - dragStartMousePosition.x,
-        mousePosition.y - dragStartMousePosition.y
-      );
-      const constrainedOffset = constrainToBox(newOffset, dragOffsetBBox);
-      setDragOffset({
-        x: constrainedOffset.x,
-        y: constrainedOffset.y,
-      });
+      if (rotating) {
+        const angle =
+          Math.atan2(
+            dragStartMousePosition.x - center.x,
+            dragStartMousePosition.y - center.y
+          ) -
+          Math.atan2(mousePosition.x - center.x, mousePosition.y - center.y);
+        setDragRotation((angle * 180) / Math.PI);
+      } else {
+        const newOffset = new DOMPoint(
+          mousePosition.x - dragStartMousePosition.x,
+          mousePosition.y - dragStartMousePosition.y
+        );
+        const constrainedOffset = constrainToBox(newOffset, dragOffsetBBox);
+        setDragOffset({
+          x: constrainedOffset.x,
+          y: constrainedOffset.y,
+        });
+      }
     } else {
       const mousePosition = getMousePositionInSvgElement(evt);
       const xp = mousePosition.x / totalWidth;
       const yp = mousePosition.y / totalHeight;
-      setRotating(xp < 0.2 || xp > 0.8 || yp < 0.2 || yp > 0.8);
+      setRotating(xp < 0.1 || xp > 0.9 || yp < 0.2 || yp > 0.8);
     }
   }
 
   function onDragEnd(evt: PointerEvent<SVGGraphicsElement>) {
     evt.currentTarget.releasePointerCapture(evt.pointerId);
     if (dragging) {
-      const newPosition = {
-        x: dragOffset.x + position.x,
-        y: dragOffset.y + position.y,
-      };
-      setPosition(newPosition);
-      setDragOffset({x: 0, y: 0});
+      if (rotating) {
+        const newRotation = (rotation + dragRotation) % 360;
+        setRotation(newRotation);
+        setDragRotation(0);
+        onRotated(newRotation);
+      } else {
+        const newPosition = {
+          x: dragOffset.x + position.x,
+          y: dragOffset.y + position.y,
+        };
+        setPosition(newPosition);
+        setDragOffset({x: 0, y: 0});
+        onMoved(newPosition.x, newPosition.y);
+      }
       setDragging(false);
-      onMoved(newPosition.x, newPosition.y);
     }
   }
 
@@ -122,7 +148,9 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
       transform={
         `translate(${dragOffset.x}, ${dragOffset.y}) ` +
         `translate(${position.x}, ${position.y}) ` +
-        `rotate(${rotation} ${totalWidth / 2} ${totalHeight / 2})`
+        `rotate(${rotation + dragRotation} ${totalWidth / 2} ${
+          totalHeight / 2
+        })`
       }
       onPointerMove={onDrag}
       onPointerDown={onDragStart}

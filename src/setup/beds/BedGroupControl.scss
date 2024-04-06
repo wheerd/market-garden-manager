@@ -22,6 +22,6 @@
 
   &.rotating .bed,
   &.rotating .group-outline {
-    cursor: grab;
+    cursor: grab; // TODO: Better cursor
   }
 }

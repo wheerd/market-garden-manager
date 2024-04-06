@@ -24,7 +24,7 @@ export const BedOverlay: React.FC<BedOverlayOptions> = ({
     Record<string, BedGroupGuiPosition>
   >('bedGroupsGui', {});
 
-  function onBedMoved(id: string, x: number, y: number): void {
+  function updateGroupPosition(id: string, pos: Partial<BedGroupGuiPosition>) {
     const allIds = bedGroups.map(g => g.id);
     const guiPositionsWithExistingIds = Object.fromEntries(
       Object.entries(guiPositions ?? {}).filter(([id]) => allIds.includes(id))
@@ -32,11 +32,17 @@ export const BedOverlay: React.FC<BedOverlayOptions> = ({
     setGuiPositions({
       ...guiPositionsWithExistingIds,
       [id]: {
-        ...(guiPositions?.[id] ?? {rotation: 0}),
-        x,
-        y,
+        ...(guiPositions?.[id] ?? {x: 0, y: 0, rotation: 0}),
+        ...pos,
       },
     });
+  }
+
+  function onBedMoved(id: string, x: number, y: number): void {
+    updateGroupPosition(id, {x, y});
+  }
+  function onBedRotated(id: string, rotation: number): void {
+    updateGroupPosition(id, {rotation});
   }
 
   return (
@@ -60,12 +66,14 @@ export const BedOverlay: React.FC<BedOverlayOptions> = ({
           key={g.id}
           x={guiPositions?.[g.id]?.x ?? 0}
           y={guiPositions?.[g.id]?.y ?? 0}
+          rotation={guiPositions?.[g.id]?.rotation ?? 0}
           width={g.widthInCentimeters / 100}
           length={g.lengthInMeters}
           count={g.count}
           spacing={g.spacingInCentimeters / 100}
           onClick={() => onSelectBed(g.id)}
           onMoved={(x, y) => onBedMoved(g.id, x, y)}
+          onRotated={r => onBedRotated(g.id, r)}
         />
       ))}
     </svg>
