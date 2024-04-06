@@ -1,5 +1,7 @@
 import React, {PointerEvent, useMemo, useState} from 'react';
 
+import {BedGroup} from '@/model/beds';
+
 import './BedOverlay.scss';
 
 interface BedGroupOptions {
@@ -9,6 +11,7 @@ interface BedGroupOptions {
   width: number;
   count: number;
   spacing: number;
+  active: boolean;
 }
 
 function transformRect(rect: DOMRect, svg: SVGSVGElement): DOMRect {
@@ -57,6 +60,7 @@ const BedGroup: React.FC<BedGroupOptions> = ({
   width,
   count,
   spacing,
+  active,
 }) => {
   const [dragging, setDragging] = useState(false);
   const [coordinates, setCoordinates] = useState({x, y});
@@ -125,6 +129,7 @@ const BedGroup: React.FC<BedGroupOptions> = ({
       onPointerMove={onDrag}
       onPointerDown={onDragStart}
       onPointerUp={onDragEnd}
+      className={active ? 'active' : ''}
     >
       <rect
         x={0}
@@ -149,8 +154,14 @@ const BedGroup: React.FC<BedGroupOptions> = ({
 
 interface BedOverlayOptions {
   sizeInMeters: number;
+  bedGroups: BedGroup[];
+  selectedBedId: string;
 }
-export const BedOverlay: React.FC<BedOverlayOptions> = ({sizeInMeters}) => {
+export const BedOverlay: React.FC<BedOverlayOptions> = ({
+  sizeInMeters,
+  bedGroups,
+  selectedBedId,
+}) => {
   return (
     <svg
       version="1.1"
@@ -166,7 +177,18 @@ export const BedOverlay: React.FC<BedOverlayOptions> = ({sizeInMeters}) => {
           <stop offset="100%" stopColor="#3f2915" />
         </linearGradient>
       </defs>
-      <BedGroup x={10} y={10} width={0.6} length={10} count={8} spacing={0.3} />
+      {bedGroups.map(g => (
+        <BedGroup
+          active={g.id === selectedBedId}
+          key={g.id}
+          x={0}
+          y={0}
+          width={g.widthInCentimeters / 100}
+          length={g.lengthInMeters}
+          count={g.count}
+          spacing={g.spacingInCentimeters / 100}
+        />
+      ))}
     </svg>
   );
 };

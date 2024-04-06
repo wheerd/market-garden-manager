@@ -92,7 +92,11 @@ const Beds: React.FC = () => {
                     : undefined,
                 }}
               >
-                <BedOverlay sizeInMeters={location?.totalSizeInMeters ?? 100} />
+                <BedOverlay
+                  sizeInMeters={location?.totalSizeInMeters ?? 100}
+                  bedGroups={bedGroups ?? []}
+                  selectedBedId={selectedBedId}
+                />
               </div>
             </div>
           </Col>
