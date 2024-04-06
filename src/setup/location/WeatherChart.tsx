@@ -1,14 +1,13 @@
-import React, {lazy, useMemo} from 'react';
-
-const LineChart = lazy(() => import('@/lib/chart'));
-
-import {parseISO} from 'date-fns';
 import {type BoxAnnotationOptions} from 'chartjs-plugin-annotation';
+import {parseISO} from 'date-fns';
+import React, {lazy, useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
 
+import {SupportedLanguage, localeMap} from '@/i18n';
 import {Stats} from '@/lib/statistics';
 import {type DayOfYear, getFrostWindows} from '@/lib/weatherData';
-import {useTranslation} from 'react-i18next';
-import {SupportedLanguage, localeMap} from '@/i18n';
+
+const LineChart = lazy(() => import('@/lib/chart'));
 
 const WeatherChart: React.FC<{
   temperatureStats: Record<DayOfYear, Stats> | undefined;

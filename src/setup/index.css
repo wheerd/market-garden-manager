@@ -1,3 +1,7 @@
 .content-wrapper {
   padding: 10px;
 }
+
+.nav.settings-tabs {
+  padding-left: 0.3em;
+}

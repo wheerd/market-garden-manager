@@ -1,9 +1,10 @@
+import {GeoSearchControl, MapBoxProvider} from 'leaflet-geosearch';
 import React, {useEffect} from 'react';
-import {useMap} from 'react-leaflet/hooks';
 import {useTranslation} from 'react-i18next';
+import {useMap} from 'react-leaflet/hooks';
+
 import {MAPBOX_ACCESS_TOKEN} from '@/lib/geo';
 
-import {GeoSearchControl, MapBoxProvider} from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
 
 export const GeocoderControl: React.FC = () => {

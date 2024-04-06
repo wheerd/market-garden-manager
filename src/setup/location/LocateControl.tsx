@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {useMap} from 'react-leaflet/hooks';
 import L from 'leaflet';
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useMap} from 'react-leaflet/hooks';
 
 import {getGeoPositionByIp} from '@/lib/geo';
 
 import 'leaflet.locatecontrol';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
-import {useTranslation} from 'react-i18next';
 
 export const LocateControl: React.FC<{autoStart?: boolean}> = ({
   autoStart = false,

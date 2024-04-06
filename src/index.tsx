@@ -1,12 +1,13 @@
 import React, {Suspense} from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import Skeleton from 'react-loading-skeleton';
 import {BrowserRouter} from 'react-router-dom';
+
+import App from './App';
 
 import './i18n';
 
 import './index.scss';
-import Skeleton from 'react-loading-skeleton';
 
 const root = document.getElementById('root');
 

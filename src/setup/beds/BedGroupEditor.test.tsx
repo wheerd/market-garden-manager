@@ -1,7 +1,10 @@
-import {describe, test, expect, vi} from 'vitest';
-import {render, screen, fireEvent} from '@testing-library/react';
-import {BedGroupEditor, BedGroupEditorOptions} from './BedGroupEditor';
+import {fireEvent, render, screen} from '@testing-library/react';
+import {describe, expect, test, vi} from 'vitest';
+
 import {BedGroup, DEFAULT_BED_GROUP} from '@/model/beds';
+
+import {BedGroupEditor, BedGroupEditorOptions} from './BedGroupEditor';
+
 import '@/i18nForTests';
 
 describe('Button Group Editor', () => {

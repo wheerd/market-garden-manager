@@ -1,5 +1,6 @@
 import React from 'react';
 import {useMapEvents} from 'react-leaflet/hooks';
+
 import {GeoPosition} from '@/lib/geo';
 
 export interface TrackPositionOptions {

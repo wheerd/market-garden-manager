@@ -1,10 +1,11 @@
 import React, {FormEvent, useEffect, useRef, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import Row from 'react-bootstrap/Row';
+import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import {useTranslation} from 'react-i18next';
+
 import {BedGroup} from '@/model/beds';
 
 export interface BedGroupEditorOptions {
