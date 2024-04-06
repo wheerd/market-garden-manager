@@ -5,7 +5,7 @@
   }
 
   .group-outline {
-    stroke: white;
+    stroke: #ffffff;
     stroke-opacity: 0.5;
     stroke-width: 0.1;
     stroke-dasharray: 0.2;
@@ -18,5 +18,10 @@
     stroke-opacity: 1;
     stroke-width: 0.2;
     fill: rgba($color: #ffffff, $alpha: 0.2);
+  }
+
+  &.rotating .bed,
+  &.rotating .group-outline {
+    cursor: grab;
   }
 }
