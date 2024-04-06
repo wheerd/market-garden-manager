@@ -7,13 +7,10 @@ export interface BedGroup {
   lengthInMeters: number;
 }
 
-export interface BedGroupPosition {
-  id: string;
-  latitude: number;
-  longitude: number;
+export interface BedGroupGuiPosition {
   x: number;
   y: number;
-  bearing: number;
+  rotation: number;
 }
 
 export const DEFAULT_BED_GROUP: BedGroup = {

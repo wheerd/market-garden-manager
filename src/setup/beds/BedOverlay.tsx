@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {BedGroup} from '@/model/beds';
+import {usePersistedState} from '@/lib/usePersistedState';
+import {BedGroup, BedGroupGuiPosition} from '@/model/beds';
 
 import {BedGroupControl} from './BedGroupControl';
 
@@ -19,6 +20,25 @@ export const BedOverlay: React.FC<BedOverlayOptions> = ({
   selectedBedId,
   onSelectBed,
 }) => {
+  const [guiPositions, setGuiPositions] = usePersistedState<
+    Record<string, BedGroupGuiPosition>
+  >('bedGroupsGui', {});
+
+  function onBedMoved(id: string, x: number, y: number): void {
+    const allIds = bedGroups.map(g => g.id);
+    const guiPositionsWithExistingIds = Object.fromEntries(
+      Object.entries(guiPositions ?? {}).filter(([id]) => allIds.includes(id))
+    );
+    setGuiPositions({
+      ...guiPositionsWithExistingIds,
+      [id]: {
+        ...(guiPositions?.[id] ?? {rotation: 0}),
+        x,
+        y,
+      },
+    });
+  }
+
   return (
     <svg
       version="1.1"
@@ -38,13 +58,14 @@ export const BedOverlay: React.FC<BedOverlayOptions> = ({
         <BedGroupControl
           active={g.id === selectedBedId}
           key={g.id}
-          x={0}
-          y={0}
+          x={guiPositions?.[g.id]?.x ?? 0}
+          y={guiPositions?.[g.id]?.y ?? 0}
           width={g.widthInCentimeters / 100}
           length={g.lengthInMeters}
           count={g.count}
           spacing={g.spacingInCentimeters / 100}
           onClick={() => onSelectBed(g.id)}
+          onMoved={(x, y) => onBedMoved(g.id, x, y)}
         />
       ))}
     </svg>

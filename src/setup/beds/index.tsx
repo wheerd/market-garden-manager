@@ -80,6 +80,7 @@ const Beds: React.FC = () => {
       setSelectedBedId('');
     }
   }, [selectedBedId, bedGroups]);
+
   return (
     <>
       <Container fluid className="setup-beds">

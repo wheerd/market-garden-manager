@@ -22,7 +22,8 @@ export interface BedGroupControlOptions {
   count: number;
   spacing: number;
   active: boolean;
-  onClick?(): void;
+  onClick(): void;
+  onMoved(x: number, y: number): void;
 }
 
 export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
@@ -34,6 +35,7 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
   spacing,
   active,
   onClick,
+  onMoved,
 }) => {
   const [position, setPosition] = useState({x, y});
   const [dragging, setDragging] = useState(false);
@@ -91,12 +93,14 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
   function onDragEnd(evt: PointerEvent<SVGGraphicsElement>) {
     evt.currentTarget.releasePointerCapture(evt.pointerId);
     if (dragging) {
-      setPosition({
+      const newPosition = {
         x: dragOffset.x + position.x,
         y: dragOffset.y + position.y,
-      });
+      };
+      setPosition(newPosition);
       setDragOffset({x: 0, y: 0});
       setDragging(false);
+      onMoved(newPosition.x, newPosition.y);
     }
   }
 
