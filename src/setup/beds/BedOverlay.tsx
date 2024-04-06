@@ -1,4 +1,4 @@
-import React, {TouchEvent, MouseEvent, useMemo, useState} from 'react';
+import React, {MouseEvent, TouchEvent, useMemo, useState} from 'react';
 
 import './BedOverlay.scss';
 
@@ -16,7 +16,7 @@ type SvgDragEvent =
   | TouchEvent<SVGGraphicsElement>;
 
 function getMousePosition(evt: SvgDragEvent) {
-  var CTM = evt.currentTarget.ownerSVGElement!.getScreenCTM()!;
+  const CTM = evt.currentTarget.ownerSVGElement!.getScreenCTM()!;
   const point =
     'touches' in evt
       ? new DOMPoint(evt.touches[0].clientX, evt.touches[0].clientY)
@@ -57,7 +57,7 @@ const BedGroup: React.FC<BedGroupOptions> = ({
   function onDrag(evt: SvgDragEvent) {
     if (dragging) {
       evt.preventDefault();
-      var mousePosition = getMousePosition(evt);
+      const mousePosition = getMousePosition(evt);
       setOffset({
         x: mousePosition.x - initialMouse.x,
         y: mousePosition.y - initialMouse.y,
