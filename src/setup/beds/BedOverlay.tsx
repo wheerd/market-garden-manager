@@ -10,12 +10,14 @@ export interface BedOverlayOptions {
   sizeInMeters: number;
   bedGroups: BedGroupModel[];
   selectedBedId: string;
+  onSelectBed(id: string): void;
 }
 
 export const BedOverlay: React.FC<BedOverlayOptions> = ({
   sizeInMeters,
   bedGroups,
   selectedBedId,
+  onSelectBed,
 }) => {
   return (
     <svg
@@ -42,6 +44,7 @@ export const BedOverlay: React.FC<BedOverlayOptions> = ({
           length={g.lengthInMeters}
           count={g.count}
           spacing={g.spacingInCentimeters / 100}
+          onClick={() => onSelectBed(g.id)}
         />
       ))}
     </svg>

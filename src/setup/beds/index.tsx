@@ -96,6 +96,7 @@ const Beds: React.FC = () => {
                   sizeInMeters={location?.totalSizeInMeters ?? 100}
                   bedGroups={bedGroups ?? []}
                   selectedBedId={selectedBedId}
+                  onSelectBed={setSelectedBedId}
                 />
               </div>
             </div>

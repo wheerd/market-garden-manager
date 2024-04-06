@@ -22,6 +22,7 @@ export interface BedGroupOptions {
   count: number;
   spacing: number;
   active: boolean;
+  onClick?(): void;
 }
 
 export const BedGroup: React.FC<BedGroupOptions> = ({
@@ -32,6 +33,7 @@ export const BedGroup: React.FC<BedGroupOptions> = ({
   count,
   spacing,
   active,
+  onClick,
 }) => {
   const [position, setPosition] = useState({x, y});
   const [dragging, setDragging] = useState(false);
@@ -107,6 +109,7 @@ export const BedGroup: React.FC<BedGroupOptions> = ({
       onPointerMove={onDrag}
       onPointerDown={onDragStart}
       onPointerUp={onDragEnd}
+      onClick={onClick}
       className={`bed-group-ctrl ${active ? 'active' : ''}`}
     >
       <rect
