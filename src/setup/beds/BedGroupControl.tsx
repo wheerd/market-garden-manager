@@ -6,7 +6,7 @@ import {
   transformRect,
 } from '@/lib/domGeometryUtils';
 
-import './BedGroup.scss';
+import './BedGroupControl.scss';
 
 function getMousePosition(evt: PointerEvent<SVGElement>) {
   const CTM = evt.currentTarget.ownerSVGElement!.getScreenCTM()!;
@@ -14,7 +14,7 @@ function getMousePosition(evt: PointerEvent<SVGElement>) {
   return point.matrixTransform(CTM.inverse());
 }
 
-export interface BedGroupOptions {
+export interface BedGroupControlOptions {
   x: number;
   y: number;
   length: number;
@@ -25,7 +25,7 @@ export interface BedGroupOptions {
   onClick?(): void;
 }
 
-export const BedGroup: React.FC<BedGroupOptions> = ({
+export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
   x,
   y,
   length,

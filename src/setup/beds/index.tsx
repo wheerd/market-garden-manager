@@ -9,9 +9,10 @@ import {useTranslation} from 'react-i18next';
 import {usePersistedState} from '@/lib/usePersistedState';
 import {BedGroup, DEFAULT_BED_GROUP} from '@/model/beds';
 
-import './index.scss';
 import {BedGroupEditor} from './BedGroupEditor';
 import {BedOverlay} from './BedOverlay';
+
+import './index.scss';
 
 interface LocationData {
   totalSizeInMeters?: number;

@@ -1,14 +1,14 @@
 import React from 'react';
 
-import {BedGroup as BedGroupModel} from '@/model/beds';
+import {BedGroup} from '@/model/beds';
 
-import {BedGroup} from './BedGroup';
+import {BedGroupControl} from './BedGroupControl';
 
 import './BedOverlay.scss';
 
 export interface BedOverlayOptions {
   sizeInMeters: number;
-  bedGroups: BedGroupModel[];
+  bedGroups: BedGroup[];
   selectedBedId: string;
   onSelectBed(id: string): void;
 }
@@ -35,7 +35,7 @@ export const BedOverlay: React.FC<BedOverlayOptions> = ({
         </linearGradient>
       </defs>
       {bedGroups.map(g => (
-        <BedGroup
+        <BedGroupControl
           active={g.id === selectedBedId}
           key={g.id}
           x={0}
