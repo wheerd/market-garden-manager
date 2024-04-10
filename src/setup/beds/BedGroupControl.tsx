@@ -145,6 +145,7 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
 
   return (
     <g
+      data-testid="bed-group"
       transform={
         `translate(${dragOffset.x}, ${dragOffset.y}) ` +
         `translate(${position.x}, ${position.y}) ` +
@@ -161,6 +162,7 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
       }`}
     >
       <rect
+        data-testid="outline"
         x={0}
         y={0}
         width={totalWidth}
@@ -170,6 +172,7 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
       {bedXs.map((xOff, i) => (
         <rect
           key={`bed${i}`}
+          data-testid={`bed${i}`}
           x={xOff}
           y={spacing}
           width={width}
