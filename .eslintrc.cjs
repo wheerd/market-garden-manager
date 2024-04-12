@@ -29,7 +29,7 @@ module.exports = {
     'node/no-unpublished-import': [
       'error',
       {
-        allowModules: ['vitest', '@testing-library/react'],
+        allowModules: ['vitest', '@testing-library/react', '@testing-library/user-event'],
       },
     ],
     'sort-imports': [

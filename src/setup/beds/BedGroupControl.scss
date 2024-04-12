@@ -20,8 +20,8 @@
     fill: rgba($color: #ffffff, $alpha: 0.2);
   }
 
-  &.rotating .bed,
-  &.rotating .group-outline {
+  &.mode-rotation .bed,
+  &.mode-rotation .group-outline {
     cursor: grab; // TODO: Better cursor
   }
 }

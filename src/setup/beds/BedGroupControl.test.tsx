@@ -1,7 +1,15 @@
 import {render, screen} from '@testing-library/react';
-import {describe, expect, test, vi} from 'vitest';
+import {UserEvent, userEvent} from '@testing-library/user-event';
+import {beforeEach, describe, expect, test, vi} from 'vitest';
+
+import {getMousePositionInSvgElement} from '@/lib/svgHelpers';
 
 import {BedGroupControl, BedGroupControlOptions} from './BedGroupControl';
+
+vi.mock('@/lib/svgHelpers', () => ({
+  getMousePositionInSvg: vi.fn(),
+  getMousePositionInSvgElement: vi.fn(),
+}));
 
 describe('Button Group Editor', () => {
   const onClick = vi.fn();
@@ -88,6 +96,59 @@ describe('Button Group Editor', () => {
       expect(bed1.getAttribute('x')).toEqual('5');
       expect(bed2.getAttribute('x')).toEqual('23'); // 5 + 13 + 5
       expect(bed3.getAttribute('x')).toEqual('41'); // 5 + 13 + 5 + 13 + 5
+    });
+  });
+
+  describe('Initial setup', () => {
+    test('Group is positioned based on x and y', () => {
+      render(control({x: 12, y: 23}));
+      const group = screen.getByTestId('bed-group');
+
+      expect(group.getAttribute('transform')).toContain('translate(12, 23)');
+    });
+
+    test('Group is rotated around the center', () => {
+      render(
+        control({rotation: 90, width: 5, length: 3, spacing: 1, count: 1})
+      );
+      const group = screen.getByTestId('bed-group');
+
+      expect(group.getAttribute('transform')).toContain('rotate(90 3.5 2.5)');
+    });
+  });
+
+  describe('Mode', () => {
+    let user: UserEvent;
+    let group: HTMLElement;
+
+    beforeEach(() => {
+      user = userEvent.setup();
+      render(control({width: 10, length: 20}));
+      group = screen.getByTestId('bed-group');
+    });
+
+    test('If mouse over top edge then mode is "rotation"', async () => {
+      vi.mocked(getMousePositionInSvgElement).mockReturnValue({x: 5, y: 2});
+
+      await user.hover(group);
+
+      expect(group.classList).toContain('mode-rotation');
+    });
+
+    test('If mouse over bottom edge then mode is "rotation"', async () => {
+      vi.mocked(getMousePositionInSvgElement).mockReturnValue({x: 5, y: 18});
+
+      await user.hover(group);
+
+      expect(group.classList).toContain('mode-rotation');
+    });
+
+    test('If mouse over middle then mode is "movement"', async () => {
+      vi.mocked(getMousePositionInSvgElement).mockReturnValue({x: 5, y: 10});
+
+      await user.hover(group);
+
+      expect(group.classList).toContain('mode-movement');
     });
   });
 });

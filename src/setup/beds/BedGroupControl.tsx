@@ -5,20 +5,12 @@ import {
   getOffsetBBox,
   transformRect,
 } from '@/lib/domGeometryUtils';
+import {
+  getMousePositionInSvg,
+  getMousePositionInSvgElement,
+} from '@/lib/svgHelpers';
 
 import './BedGroupControl.scss';
-
-function getMousePositionInSvg(evt: PointerEvent<SVGElement>) {
-  const CTM = evt.currentTarget.ownerSVGElement!.getScreenCTM()!;
-  const point = new DOMPoint(evt.clientX, evt.clientY);
-  return point.matrixTransform(CTM.inverse());
-}
-
-function getMousePositionInSvgElement(evt: PointerEvent<SVGGraphicsElement>) {
-  const CTM = evt.currentTarget.getScreenCTM()!;
-  const point = new DOMPoint(evt.clientX, evt.clientY);
-  return point.matrixTransform(CTM.inverse());
-}
 
 export interface BedGroupControlOptions {
   x: number;
@@ -158,7 +150,7 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
       onPointerUp={onDragEnd}
       onClick={onClick}
       className={`bed-group-ctrl${active ? ' active' : ''}${
-        rotating ? ' rotating' : ''
+        rotating ? ' mode-rotation' : ' mode-movement'
       }`}
     >
       <rect
