@@ -2,13 +2,20 @@ import {render, screen} from '@testing-library/react';
 import {UserEvent, userEvent} from '@testing-library/user-event';
 import {beforeEach, describe, expect, test, vi} from 'vitest';
 
-import {getMousePositionInSvgElement} from '@/lib/svgHelpers';
+import {
+  getBoundingBoxInSvg,
+  getMousePositionInSvg,
+  getMousePositionInSvgElement,
+  getSvgViewBox,
+} from '@/lib/svgHelpers';
 
 import {BedGroupControl, BedGroupControlOptions} from './BedGroupControl';
 
 vi.mock('@/lib/svgHelpers', () => ({
   getMousePositionInSvg: vi.fn(),
   getMousePositionInSvgElement: vi.fn(),
+  getBoundingBoxInSvg: vi.fn(),
+  getSvgViewBox: vi.fn(),
 }));
 
 describe('Button Group Editor', () => {
@@ -143,12 +150,63 @@ describe('Button Group Editor', () => {
       expect(group.classList).toContain('mode-rotation');
     });
 
+    test('If mouse over left edge then mode is "rotation"', async () => {
+      vi.mocked(getMousePositionInSvgElement).mockReturnValue({x: 1, y: 10});
+
+      await user.hover(group);
+
+      expect(group.classList).toContain('mode-rotation');
+    });
+
+    test('If mouse over right edge then mode is "rotation"', async () => {
+      vi.mocked(getMousePositionInSvgElement).mockReturnValue({x: 11, y: 10});
+
+      await user.hover(group);
+
+      expect(group.classList).toContain('mode-rotation');
+    });
+
     test('If mouse over middle then mode is "movement"', async () => {
       vi.mocked(getMousePositionInSvgElement).mockReturnValue({x: 5, y: 10});
 
       await user.hover(group);
 
       expect(group.classList).toContain('mode-movement');
+    });
+  });
+
+  describe('Dragging', () => {
+    let user: UserEvent;
+    let group: HTMLElement;
+
+    beforeEach(() => {
+      user = userEvent.setup();
+      render(control({width: 10, length: 10}));
+      group = screen.getByTestId('bed-group');
+    });
+
+    test('If group is dragged it is displayed in new position afterwards', async () => {
+      vi.mocked(getMousePositionInSvg)
+        .mockReturnValueOnce({x: 5, y: 2})
+        .mockReturnValueOnce({x: 15, y: 22});
+
+      vi.mocked(getBoundingBoxInSvg).mockReturnValue(
+        new DOMRect(30, 30, 20, 20)
+      );
+
+      vi.mocked(getSvgViewBox).mockReturnValue(new DOMRect(0, 0, 100, 100));
+
+      await user.pointer([
+        {
+          keys: '[TouchA>]',
+          target: group,
+          coords: {x: 100, y: 50},
+        },
+        {pointerName: 'TouchA', coords: {x: 150, y: 50}},
+        '[/TouchA]',
+      ]);
+
+      expect(group.getAttribute('transform')).toContain('translate(10, 20)');
     });
   });
 });

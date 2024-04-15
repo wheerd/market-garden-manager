@@ -66,5 +66,6 @@ export default defineConfig({
       provider: 'v8',
       include: ['src/**'],
     },
+    setupFiles: ['src/__mocks__/dom.setup.ts'],
   },
 });

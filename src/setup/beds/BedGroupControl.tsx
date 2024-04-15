@@ -1,13 +1,11 @@
 import React, {PointerEvent, useMemo, useState} from 'react';
 
+import {constrainToBox, getOffsetBBox} from '@/lib/domGeometryUtils';
 import {
-  constrainToBox,
-  getOffsetBBox,
-  transformRect,
-} from '@/lib/domGeometryUtils';
-import {
+  getBoundingBoxInSvg,
   getMousePositionInSvg,
   getMousePositionInSvgElement,
+  getSvgViewBox,
 } from '@/lib/svgHelpers';
 
 import './BedGroupControl.scss';
@@ -76,10 +74,8 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
   }
 
   function initOffsetBBox(element: SVGGraphicsElement) {
-    const svg = element.ownerSVGElement!;
-    const clientBBox = element.getBoundingClientRect();
-    const svgBBox = transformRect(clientBBox, svg.getScreenCTM()!.inverse());
-    const viewBox = DOMRect.fromRect(svg.viewBox.baseVal!);
+    const svgBBox = getBoundingBoxInSvg(element);
+    const viewBox = getSvgViewBox(element);
     setDragOffsetBBox(getOffsetBBox(svgBBox, viewBox));
   }
 
