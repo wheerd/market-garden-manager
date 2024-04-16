@@ -332,7 +332,7 @@ describe('Button Group Editor', () => {
     let user: UserEvent;
     let group: HTMLElement;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       user = userEvent.setup();
       render(
         control({
@@ -351,7 +351,7 @@ describe('Button Group Editor', () => {
         x: 45,
         y: 41,
       });
-      user.hover(group); // Activate rotation mode
+      await user.hover(group); // Activate rotation mode
 
       vi.mocked(getMousePositionInSvg).mockImplementation(e => ({
         x: e.clientX,
