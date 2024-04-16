@@ -62,6 +62,10 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
     () => ({x: position.x + totalWidth / 2, y: position.y + totalHeight / 2}),
     [position, totalWidth, totalHeight]
   );
+  const combinedRotation = useMemo(
+    () => (rotation + dragRotation + 360) % 360,
+    [rotation, dragRotation]
+  );
 
   function onDragStart(evt: PointerEvent<SVGGraphicsElement>) {
     const element = evt.currentTarget;
@@ -70,7 +74,7 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
     setDragging(true);
     setDragOffset({x: 0, y: 0});
     setDragStartMousePosition({x: mousePosition.x, y: mousePosition.y});
-    initOffsetBBox(element);
+    if (!rotating) initOffsetBBox(element);
   }
 
   function initOffsetBBox(element: SVGGraphicsElement) {
@@ -114,7 +118,7 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
     evt.currentTarget.releasePointerCapture(evt.pointerId);
     if (dragging) {
       if (rotating) {
-        const newRotation = (rotation + dragRotation) % 360;
+        const newRotation = (rotation + dragRotation + 360) % 360;
         setRotation(newRotation);
         setDragRotation(0);
         onRotated(newRotation);
@@ -137,9 +141,7 @@ export const BedGroupControl: React.FC<BedGroupControlOptions> = ({
       transform={
         `translate(${dragOffset.x}, ${dragOffset.y}) ` +
         `translate(${position.x}, ${position.y}) ` +
-        `rotate(${rotation + dragRotation} ${totalWidth / 2} ${
-          totalHeight / 2
-        })`
+        `rotate(${combinedRotation} ${totalWidth / 2} ${totalHeight / 2})`
       }
       onPointerMove={onDrag}
       onPointerDown={onDragStart}

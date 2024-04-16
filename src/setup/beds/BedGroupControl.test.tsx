@@ -13,7 +13,7 @@ import {BedGroupControl, BedGroupControlOptions} from './BedGroupControl';
 
 vi.mock('@/lib/svgHelpers', () => ({
   getMousePositionInSvg: vi.fn(),
-  getMousePositionInSvgElement: vi.fn(),
+  getMousePositionInSvgElement: vi.fn(() => ({x: 0, y: 0})),
   getBoundingBoxInSvg: vi.fn(),
   getSvgViewBox: vi.fn(),
 }));
@@ -181,32 +181,238 @@ describe('Button Group Editor', () => {
 
     beforeEach(() => {
       user = userEvent.setup();
-      render(control({width: 10, length: 10}));
+      render(control({x: 30, y: 30}));
       group = screen.getByTestId('bed-group');
-    });
-
-    test('If group is dragged it is displayed in new position afterwards', async () => {
-      vi.mocked(getMousePositionInSvg)
-        .mockReturnValueOnce({x: 5, y: 2})
-        .mockReturnValueOnce({x: 15, y: 22});
 
       vi.mocked(getBoundingBoxInSvg).mockReturnValue(
         new DOMRect(30, 30, 20, 20)
       );
-
       vi.mocked(getSvgViewBox).mockReturnValue(new DOMRect(0, 0, 100, 100));
+      vi.mocked(getMousePositionInSvg).mockImplementation(e => ({
+        x: e.clientX,
+        y: e.clientY,
+      }));
+    });
 
+    test('Group is displayed in new position after dragging', async () => {
       await user.pointer([
         {
-          keys: '[TouchA>]',
+          keys: '[MouseLeft>]',
           target: group,
-          coords: {x: 100, y: 50},
+          coords: {x: 35, y: 32},
         },
-        {pointerName: 'TouchA', coords: {x: 150, y: 50}},
-        '[/TouchA]',
+        {pointerName: 'mouse', coords: {x: 45, y: 52}},
+        '[/MouseLeft]',
       ]);
 
-      expect(group.getAttribute('transform')).toContain('translate(10, 20)');
+      expect(group.getAttribute('transform')).toContain('translate(40, 50)');
+    });
+
+    test('After dragging onMoved callback is called with new position', async () => {
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: group,
+          coords: {x: 35, y: 32},
+        },
+        {pointerName: 'mouse', coords: {x: 45, y: 52}},
+        '[/MouseLeft]',
+      ]);
+
+      expect(onMoved).toHaveBeenCalledWith(40, 50);
+    });
+
+    test('Only the last mouse position is relevant for the resulting position', async () => {
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: group,
+          coords: {x: 35, y: 32},
+        },
+        {pointerName: 'mouse', coords: {x: 45, y: 52}},
+        {pointerName: 'mouse', coords: {x: 25, y: 22}},
+        '[/MouseLeft]',
+      ]);
+
+      expect(group.getAttribute('transform')).toContain('translate(20, 20)');
+    });
+
+    describe('Dragging is constrained by the SVG bounds', () => {
+      test('On the left', async () => {
+        await user.pointer([
+          {
+            keys: '[MouseLeft>]',
+            target: group,
+            coords: {x: 35, y: 32},
+          },
+          {pointerName: 'mouse', coords: {x: -1, y: 32}},
+          '[/MouseLeft]',
+        ]);
+
+        expect(group.getAttribute('transform')).toContain('translate(0, 30)');
+      });
+
+      test('On the right', async () => {
+        await user.pointer([
+          {
+            keys: '[MouseLeft>]',
+            target: group,
+            coords: {x: 35, y: 32},
+          },
+          {pointerName: 'mouse', coords: {x: 100, y: 32}},
+          '[/MouseLeft]',
+        ]);
+
+        expect(group.getAttribute('transform')).toContain('translate(80, 30)');
+      });
+
+      test('On the top', async () => {
+        await user.pointer([
+          {
+            keys: '[MouseLeft>]',
+            target: group,
+            coords: {x: 35, y: 32},
+          },
+          {pointerName: 'mouse', coords: {x: 35, y: -1}},
+          '[/MouseLeft]',
+        ]);
+
+        expect(group.getAttribute('transform')).toContain('translate(30, 0)');
+      });
+
+      test('On the bottom', async () => {
+        await user.pointer([
+          {
+            keys: '[MouseLeft>]',
+            target: group,
+            coords: {x: 35, y: 32},
+          },
+          {pointerName: 'mouse', coords: {x: 35, y: 100}},
+          '[/MouseLeft]',
+        ]);
+
+        expect(group.getAttribute('transform')).toContain('translate(30, 80)');
+      });
+    });
+
+    test('While dragging the group moves with the mouse', async () => {
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: group,
+          coords: {x: 40, y: 40},
+        },
+        {pointerName: 'mouse', coords: {x: 30, y: 50}},
+      ]);
+
+      expect(group.getAttribute('transform')).toContain(
+        'translate(-10, 10) translate(30, 30)'
+      );
+    });
+
+    test('After dragging the group is not moving with the mouse anymore', async () => {
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: group,
+          coords: {x: 40, y: 40},
+        },
+        {pointerName: 'mouse', coords: {x: 30, y: 50}},
+        '[/MouseLeft]',
+        {pointerName: 'mouse', coords: {x: 50, y: 30}},
+      ]);
+
+      expect(group.getAttribute('transform')).toContain(
+        'translate(0, 0) translate(20, 40)'
+      );
+    });
+  });
+
+  describe('Rotating', () => {
+    let user: UserEvent;
+    let group: HTMLElement;
+
+    beforeEach(() => {
+      user = userEvent.setup();
+      render(
+        control({
+          x: 40,
+          y: 40,
+          width: 20,
+          length: 20,
+          spacing: 0,
+          count: 1,
+          rotation: 45,
+        })
+      );
+      group = screen.getByTestId('bed-group');
+
+      vi.mocked(getMousePositionInSvgElement).mockReturnValueOnce({
+        x: 45,
+        y: 41,
+      });
+      user.hover(group); // Activate rotation mode
+
+      vi.mocked(getMousePositionInSvg).mockImplementation(e => ({
+        x: e.clientX,
+        y: e.clientY,
+      }));
+    });
+
+    test('Group is displayed in new rotation after rotating', async () => {
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: group,
+          coords: {x: 0, y: 50},
+        },
+        {pointerName: 'mouse', coords: {x: 50, y: 0}},
+        '[/MouseLeft]',
+      ]);
+
+      expect(group.getAttribute('transform')).toContain('rotate(135 10 10)'); // 45° + 90°
+    });
+
+    test('After rotating onRotated callback is called with new rotation', async () => {
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: group,
+          coords: {x: 0, y: 50},
+        },
+        {pointerName: 'mouse', coords: {x: 50, y: 0}},
+        '[/MouseLeft]',
+      ]);
+
+      expect(onRotated).toHaveBeenCalledWith(135); // 45° + 90°
+    });
+
+    test('While the button is pressed group rotates with mouse', async () => {
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: group,
+          coords: {x: 0, y: 50},
+        },
+        {pointerName: 'mouse', coords: {x: 50, y: 100}},
+      ]);
+
+      expect(group.getAttribute('transform')).toContain('rotate(315 10 10)'); // 45° + 270°
+    });
+
+    test('After button is released group is not rotating with mouse anymore', async () => {
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: group,
+          coords: {x: 0, y: 50},
+        },
+        {pointerName: 'mouse', coords: {x: 50, y: 100}},
+        '[/MouseLeft]',
+        {pointerName: 'mouse', coords: {x: 50, y: 0}},
+      ]);
+
+      expect(group.getAttribute('transform')).toContain('rotate(315 10 10)'); // 45° + 270°
     });
   });
 });
