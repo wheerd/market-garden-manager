@@ -7,6 +7,7 @@ import {NavLink, Route, Routes} from 'react-router-dom';
 const Location = lazy(() => import('./location'));
 const Beds = lazy(() => import('./beds'));
 const Basic = lazy(() => import('./basic'));
+const Crops = lazy(() => import('./crops'));
 
 import './index.css';
 
@@ -70,7 +71,14 @@ const Setup: React.FC = () => {
               </Suspense>
             }
           />
-          <Route path="crops" element={'Crops'} />
+          <Route
+            path="crops"
+            element={
+              <Suspense fallback={<Skeleton />}>
+                <Crops />
+              </Suspense>
+            }
+          />
           <Route path="plan" element={'Plan'} />
           <Route path="csa" element={'CSA'} />
           <Route path="tasks" element={'Tasks'} />

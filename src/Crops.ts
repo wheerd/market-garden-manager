@@ -35,7 +35,7 @@ export interface Plant {
   daysOfGrowingToHarvestMax?: number;
 }
 
-type CultivationGroup =
+export type CultivationGroup =
   | 'Allium'
   | 'Brassica'
   | 'Chenopodiaceae'
