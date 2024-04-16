@@ -9,8 +9,14 @@ import {useTranslation} from 'react-i18next';
 import {usePersistedState} from '@/lib/usePersistedState';
 import {BedGroup, DEFAULT_BED_GROUP} from '@/model/beds';
 
-import './index.scss';
 import {BedGroupEditor} from './BedGroupEditor';
+import {BedOverlay} from './BedOverlay';
+
+import './index.scss';
+
+interface LocationData {
+  totalSizeInMeters?: number;
+}
 
 const Beds: React.FC = () => {
   const {t} = useTranslation();
@@ -20,6 +26,7 @@ const Beds: React.FC = () => {
     []
   );
   const [locationImage] = usePersistedState<string>('locationImage', '');
+  const [location] = usePersistedState<LocationData | null>('location', null);
 
   const [bedGroup, setBedGroup] = useState<BedGroup>({...DEFAULT_BED_GROUP});
   const [adding, setAdding] = useState(false);
@@ -73,6 +80,7 @@ const Beds: React.FC = () => {
       setSelectedBedId('');
     }
   }, [selectedBedId, bedGroups]);
+
   return (
     <>
       <Container fluid className="setup-beds">
@@ -85,7 +93,14 @@ const Beds: React.FC = () => {
                     ? `url(${locationImage})`
                     : undefined,
                 }}
-              ></div>
+              >
+                <BedOverlay
+                  sizeInMeters={location?.totalSizeInMeters ?? 100}
+                  bedGroups={bedGroups ?? []}
+                  selectedBedId={selectedBedId}
+                  onSelectBed={setSelectedBedId}
+                />
+              </div>
             </div>
           </Col>
           <Col>

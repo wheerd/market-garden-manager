@@ -1,0 +1,27 @@
+.bed-group-ctrl {
+  .bed {
+    fill: url(#bedGradient);
+    cursor: move;
+  }
+
+  .group-outline {
+    stroke: #ffffff;
+    stroke-opacity: 0.5;
+    stroke-width: 0.1;
+    stroke-dasharray: 0.2;
+    fill: rgba($color: #000000, $alpha: 0.1);
+    cursor: move;
+  }
+
+  &.active .group-outline {
+    stroke: red;
+    stroke-opacity: 1;
+    stroke-width: 0.2;
+    fill: rgba($color: #ffffff, $alpha: 0.2);
+  }
+
+  &.mode-rotation .bed,
+  &.mode-rotation .group-outline {
+    cursor: grab; // TODO: Better cursor
+  }
+}
