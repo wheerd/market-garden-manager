@@ -33,6 +33,7 @@ export interface Plant {
   plantGrowingIdealTemperatureMax?: number;
   daysOfGrowingToHarvestMin?: number;
   daysOfGrowingToHarvestMax?: number;
+  imageId?: string;
 }
 
 export type CultivationGroup =
@@ -363,6 +364,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 24,
     daysOfGrowingToHarvestMin: 55,
     daysOfGrowingToHarvestMax: 75,
+    imageId: 'peas',
   },
   {
     id: '2',
@@ -397,6 +399,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 65,
     daysOfGrowingToHarvestMax: 85,
+    imageId: 'beans',
   },
   {
     id: '3',
@@ -431,6 +434,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 40,
     daysOfGrowingToHarvestMax: 55,
+    imageId: 'beans',
   },
   {
     id: '4',
@@ -465,6 +469,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 15,
     daysOfGrowingToHarvestMin: 85,
     daysOfGrowingToHarvestMax: 115,
+    imageId: 'beans',
   },
   {
     id: '5',
@@ -500,6 +505,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 55,
     daysOfGrowingToHarvestMax: 85,
+    imageId: 'cabbage',
   },
   {
     id: '7',
@@ -534,6 +540,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 55,
     daysOfGrowingToHarvestMax: 85,
+    imageId: 'broccoli',
   },
   {
     id: '8',
@@ -569,6 +576,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 180,
     daysOfGrowingToHarvestMax: 180,
+    imageId: 'brussel-sprouts',
   },
   {
     id: '9',
@@ -602,6 +610,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 20,
     daysOfGrowingToHarvestMin: 55,
     daysOfGrowingToHarvestMax: 110,
+    imageId: 'cauliflower',
   },
   {
     id: '10',

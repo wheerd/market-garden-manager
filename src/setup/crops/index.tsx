@@ -8,6 +8,8 @@ import Skeleton from 'react-loading-skeleton';
 
 import {type CultivationGroup} from '@/Crops';
 
+import testSvg from '/crops/icons/crops.svg';
+
 import './index.scss';
 
 interface CropInfo {
@@ -16,6 +18,7 @@ interface CropInfo {
   taxonomicName: string;
   description: string;
   cultivationGroup: CultivationGroup;
+  image?: string;
 }
 
 const colors: Record<CultivationGroup, string> = {
@@ -47,6 +50,7 @@ const Crops: React.FC = () => {
               description: c.description,
               id: c.id,
               cultivationGroup: c.cultivationGroup,
+              image: c.imageId,
             }) as CropInfo
         )
       );
@@ -67,7 +71,11 @@ const Crops: React.FC = () => {
                     : 'white'
                 }
               >
-                <Card.Img variant="top" src="holder.js/100px180" />
+                {crop.image && (
+                  <Card.Img variant="top" as="svg" className="crop-img">
+                    <use xlinkHref={`${testSvg}#${crop.image}`}></use>
+                  </Card.Img>
+                )}
                 <Card.Body>
                   <Card.Title>{crop.name}</Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">
