@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import Button from 'react-bootstrap/Button';
+import React, {useEffect, useMemo, useState} from 'react';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import {useTranslation} from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
 
 import {type CultivationGroup} from '@/Crops';
 
-import testSvg from '/crops/icons/crops.svg';
+import testSvg from './crops.svg';
 
 import './index.scss';
 
@@ -37,7 +37,18 @@ const colors: Record<CultivationGroup, string> = {
 const Crops: React.FC = () => {
   const {t} = useTranslation();
 
+  const [filter, setFilter] = useState('');
+
   const [crops, setCrops] = useState<CropInfo[]>([]);
+
+  const filteredCrops = useMemo(() => {
+    const f = filter.toLowerCase();
+    return crops.filter(
+      c =>
+        c.name.toLowerCase().indexOf(f) !== -1 ||
+        c.taxonomicName.toLowerCase().indexOf(f) !== -1
+    );
+  }, [filter, crops]);
 
   useEffect(() => {
     import('@/Crops').then(cm => {
@@ -59,18 +70,52 @@ const Crops: React.FC = () => {
 
   return (
     <>
+      <Form>
+        <Form.Group
+          as={Row}
+          className="mb-3 position-relative"
+          controlId="formLabel"
+        >
+          <Form.Label column sm={2}>
+            {t('filter_crops_label')}
+          </Form.Label>
+          <Col sm={8}>
+            <Form.Control
+              type="text"
+              placeholder={t('filter_crops_placeholder')}
+              value={filter}
+              onChange={e => setFilter(e.target.value)}
+            />
+          </Col>
+          <Col sm={2}>
+            <p>
+              {t('total_crops_count', 'Showing {{count}}/{{total}} crops', {
+                count: filteredCrops.length,
+                total: crops.length,
+              })}
+            </p>
+          </Col>
+        </Form.Group>
+      </Form>
       {crops.length > 0 ? (
         <Row xs={1} md={4} className="g-4">
-          {crops.map(crop => (
+          {filteredCrops.map(crop => (
             <Col key={crop.id}>
-              <Card
-                bg={colors[crop.cultivationGroup]}
-                text={
-                  (colors[crop.cultivationGroup] ?? 'light') === 'light'
-                    ? 'dark'
-                    : 'white'
-                }
-              >
+              <Card border={colors[crop.cultivationGroup]}>
+                {crop.cultivationGroup && (
+                  <Card.Header
+                    className={
+                      'bg-' +
+                      colors[crop.cultivationGroup] +
+                      ' text-' +
+                      ((colors[crop.cultivationGroup] ?? 'light') === 'light'
+                        ? 'dark'
+                        : 'white')
+                    }
+                  >
+                    {crop.cultivationGroup}
+                  </Card.Header>
+                )}
                 {crop.image && (
                   <Card.Img variant="top" as="svg" className="crop-img">
                     <use xlinkHref={`${testSvg}#${crop.image}`}></use>
@@ -82,7 +127,6 @@ const Crops: React.FC = () => {
                     {crop.taxonomicName}
                   </Card.Subtitle>
                   <Card.Text>{crop.description}</Card.Text>
-                  <Button variant="primary">Go somewhere</Button>
                 </Card.Body>
               </Card>
             </Col>

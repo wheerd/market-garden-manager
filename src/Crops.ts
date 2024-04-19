@@ -645,6 +645,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 20,
     daysOfGrowingToHarvestMin: 65,
     daysOfGrowingToHarvestMax: 75,
+    imageId: 'chard',
   },
   {
     id: '11',
@@ -679,6 +680,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 24,
     daysOfGrowingToHarvestMin: 45,
     daysOfGrowingToHarvestMax: 70,
+    imageId: 'turnip',
   },
   {
     id: '13',
@@ -712,6 +714,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 35,
     daysOfGrowingToHarvestMin: 50,
     daysOfGrowingToHarvestMax: 60,
+    imageId: undefined,
   },
   {
     id: '14',
@@ -745,6 +748,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 35,
     daysOfGrowingToHarvestMin: 90,
     daysOfGrowingToHarvestMax: 120,
+    imageId: 'cucumber',
   },
   {
     id: '15',
@@ -811,6 +815,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 35,
     daysOfGrowingToHarvestMin: 90,
     daysOfGrowingToHarvestMax: 120,
+    imageId: 'pumpkin',
   },
   {
     id: '17',
@@ -877,6 +882,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 27,
     daysOfGrowingToHarvestMin: 45,
     daysOfGrowingToHarvestMax: 100,
+    imageId: undefined,
   },
   {
     id: '20',
@@ -909,6 +915,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 13,
     daysOfGrowingToHarvestMin: 90,
     daysOfGrowingToHarvestMax: 140,
+    imageId: undefined,
   },
   {
     id: '21',
@@ -1003,6 +1010,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 24,
     daysOfGrowingToHarvestMin: 100,
     daysOfGrowingToHarvestMax: 150,
+    imageId: 'artichoke',
   },
   {
     id: '24',
@@ -1034,6 +1042,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 32,
     daysOfGrowingToHarvestMin: 110,
     daysOfGrowingToHarvestMax: 150,
+    imageId: 'artichoke',
   },
   {
     id: '25',
@@ -1063,6 +1072,7 @@ export const crops_infos: Plant[] = [
     daysToGerminationAtOptimumTemperatureMax: 10,
     plantGrowingIdealTemperatureMin: 20,
     plantGrowingIdealTemperatureMax: 20,
+    imageId: 'aspargus',
   },
   {
     id: '26',
@@ -1095,6 +1105,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 32,
     daysOfGrowingToHarvestMin: 65,
     daysOfGrowingToHarvestMax: 80,
+    imageId: 'eggplant',
   },
   {
     id: '27',
@@ -1126,6 +1137,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 55,
     daysOfGrowingToHarvestMax: 80,
+    imageId: 'beans',
   },
   {
     id: '28',
@@ -1158,6 +1170,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 55,
     daysOfGrowingToHarvestMax: 80,
+    imageId: 'beetroot',
   },
   {
     id: '29',
@@ -1190,6 +1203,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 24,
     daysOfGrowingToHarvestMin: 45,
     daysOfGrowingToHarvestMax: 60,
+    imageId: undefined,
   },
   {
     id: '30',
@@ -1223,6 +1237,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 60,
     daysOfGrowingToHarvestMax: 110,
+    imageId: 'red-cabbage',
   },
   {
     id: '31',
@@ -1256,6 +1271,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 60,
     daysOfGrowingToHarvestMax: 110,
+    imageId: 'cabbage',
   },
   {
     id: '32',
@@ -1288,6 +1304,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 24,
     daysOfGrowingToHarvestMin: 45,
     daysOfGrowingToHarvestMax: 60,
+    imageId: 'cabbage',
   },
   {
     id: '33',
@@ -1321,6 +1338,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 60,
     daysOfGrowingToHarvestMax: 110,
+    imageId: 'red-cabbage',
   },
   {
     id: '34',
@@ -1354,6 +1372,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 60,
     daysOfGrowingToHarvestMax: 110,
+    imageId: 'red-cabbage',
   },
   {
     id: '35',
@@ -1387,6 +1406,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 60,
     daysOfGrowingToHarvestMax: 110,
+    imageId: 'cabbage',
   },
   {
     id: '36',
@@ -1419,6 +1439,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 55,
     daysOfGrowingToHarvestMax: 85,
+    imageId: 'broccoli',
   },
   {
     id: '37',
@@ -1452,6 +1473,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 60,
     daysOfGrowingToHarvestMax: 80,
+    imageId: 'carrot',
   },
   {
     id: '38',
@@ -1508,6 +1530,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 17,
     daysOfGrowingToHarvestMin: 60,
     daysOfGrowingToHarvestMax: 90,
+    imageId: 'chili',
   },
   {
     id: '40',
@@ -1538,6 +1561,7 @@ export const crops_infos: Plant[] = [
     daysToGerminationAtOptimumTemperatureMax: 10,
     plantGrowingIdealTemperatureMin: 4,
     plantGrowingIdealTemperatureMax: 30,
+    imageId: 'chives',
   },
   {
     id: '42',
@@ -1608,6 +1632,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 80,
     daysOfGrowingToHarvestMax: 80,
+    imageId: 'fennel',
   },
   {
     id: '45',
@@ -1634,6 +1659,7 @@ export const crops_infos: Plant[] = [
     },
     daysOfGrowingToHarvestMin: 70,
     daysOfGrowingToHarvestMax: 70,
+    imageId: 'garlic',
   },
   {
     id: '46',
@@ -1651,6 +1677,7 @@ export const crops_infos: Plant[] = [
       'In warm climates it can be grown outdoors, chooses deep, enriched, sandy loam soil with part-day shade. In cooler climates, grow ginger in containers placed in sun, and move to partial shade during summer heat waves.',
     daysOfGrowingToHarvestMin: 240,
     daysOfGrowingToHarvestMax: 240,
+    imageId: 'ginger',
   },
   {
     id: '47',
@@ -1673,6 +1700,7 @@ export const crops_infos: Plant[] = [
     daysToGerminationAtOptimumTemperatureMax: 4,
     daysOfGrowingToHarvestMin: 70,
     daysOfGrowingToHarvestMax: 80,
+    imageId: 'kohlrabi',
   },
   {
     id: '48',
@@ -1695,6 +1723,7 @@ export const crops_infos: Plant[] = [
     daysToGerminationAtOptimumTemperatureMax: 7,
     daysOfGrowingToHarvestMin: 85,
     daysOfGrowingToHarvestMax: 150,
+    imageId: undefined,
   },
   {
     id: '49',
@@ -1726,6 +1755,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 27,
     daysOfGrowingToHarvestMin: 30,
     daysOfGrowingToHarvestMax: 60,
+    imageId: undefined,
   },
   {
     id: '50',
@@ -1808,6 +1838,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 24,
     daysOfGrowingToHarvestMin: 50,
     daysOfGrowingToHarvestMax: 170,
+    imageId: 'peas',
   },
   {
     id: '53',
@@ -1926,6 +1957,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 35,
     daysOfGrowingToHarvestMin: 90,
     daysOfGrowingToHarvestMax: 130,
+    imageId: 'onion',
   },
   {
     id: '58',
@@ -1956,6 +1988,7 @@ export const crops_infos: Plant[] = [
     daysToGerminationAtOptimumTemperatureMax: 6,
     daysOfGrowingToHarvestMin: 90,
     daysOfGrowingToHarvestMax: 130,
+    imageId: 'onion',
   },
   {
     id: '59',
@@ -1986,6 +2019,7 @@ export const crops_infos: Plant[] = [
     daysToGerminationAtOptimumTemperatureMax: 6,
     daysOfGrowingToHarvestMin: 60,
     daysOfGrowingToHarvestMax: 60,
+    imageId: 'onion',
   },
   {
     id: '60',
@@ -2016,6 +2050,7 @@ export const crops_infos: Plant[] = [
     daysToGerminationAtOptimumTemperatureMax: 6,
     daysOfGrowingToHarvestMin: 90,
     daysOfGrowingToHarvestMax: 130,
+    imageId: 'onion',
   },
   {
     id: '62',
@@ -2040,6 +2075,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 21,
     daysOfGrowingToHarvestMin: 80,
     daysOfGrowingToHarvestMax: 120,
+    imageId: 'turnip2',
   },
   {
     id: '63',
@@ -2072,6 +2108,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 35,
     daysOfGrowingToHarvestMin: 60,
     daysOfGrowingToHarvestMax: 80,
+    imageId: 'bell-pepper',
   },
   {
     id: '64',
@@ -2100,6 +2137,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 26,
     daysOfGrowingToHarvestMin: 90,
     daysOfGrowingToHarvestMax: 115,
+    imageId: 'potato',
   },
   {
     id: '65',
@@ -2128,6 +2166,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 26,
     daysOfGrowingToHarvestMin: 100,
     daysOfGrowingToHarvestMax: 115,
+    imageId: 'potato',
   },
   {
     id: '66',
@@ -2396,6 +2435,7 @@ export const crops_infos: Plant[] = [
     optimumGerminationTemperatureMax: 24,
     daysOfGrowingToHarvestMin: 90,
     daysOfGrowingToHarvestMax: 100,
+    imageId: 'beans',
   },
   {
     id: '76',
@@ -2426,6 +2466,7 @@ export const crops_infos: Plant[] = [
     daysToGerminationAtOptimumTemperatureMax: 5,
     daysOfGrowingToHarvestMin: 50,
     daysOfGrowingToHarvestMax: 65,
+    imageId: 'spinach',
   },
   {
     id: '77',
@@ -2446,6 +2487,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 24,
     daysOfGrowingToHarvestMin: 55,
     daysOfGrowingToHarvestMax: 65,
+    imageId: 'spinach',
   },
   {
     id: '78',
@@ -2468,6 +2510,7 @@ export const crops_infos: Plant[] = [
     daysToGerminationAtOptimumTemperatureMax: 4,
     daysOfGrowingToHarvestMin: 30,
     daysOfGrowingToHarvestMax: 45,
+    imageId: 'spinach',
   },
   {
     id: '79',
@@ -2549,7 +2592,7 @@ export const crops_infos: Plant[] = [
   },
   {
     id: '82',
-    taxonomicName: ' \tBrassica napus',
+    taxonomicName: 'Brassica napus',
     commonName: 'Swede / Rutabaga',
     description:
       'The yellow flesh of the swede is sweeter and milder than the turnip and is traditionally served mashed with potato and haggis in Scotland.',
@@ -2598,7 +2641,7 @@ export const crops_infos: Plant[] = [
   },
   {
     id: '84',
-    taxonomicName: ' \tZea mayvar. Saccharata',
+    taxonomicName: 'Zea mayvar. Saccharata',
     commonName: 'Sweetcorn',
     description:
       'Sweet corn is a variety of maize which is high in sugar and harvested while immature, at this stage it is considered a vegetable and used cooked.  At this stage of maturity it does not store well so should be eaten fresh.',
@@ -2626,10 +2669,11 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 35,
     daysOfGrowingToHarvestMin: 70,
     daysOfGrowingToHarvestMax: 100,
+    imageId: 'corn',
   },
   {
     id: '85',
-    taxonomicName: ' \tBeta vulgari (subsp. vulgaris)',
+    taxonomicName: 'Beta vulgari (subsp. vulgaris)',
     commonName: 'Swiss Chard',
     description:
       'Swiss chard is leafy green vegetable.  Often the stalk is separated from the leaf and prepared separately.',
@@ -2656,6 +2700,7 @@ export const crops_infos: Plant[] = [
     daysToGerminationAtOptimumTemperatureMax: 4,
     daysOfGrowingToHarvestMin: 50,
     daysOfGrowingToHarvestMax: 60,
+    imageId: 'chard',
   },
   {
     id: '86',
@@ -2684,6 +2729,7 @@ export const crops_infos: Plant[] = [
     daysToGerminationAtOptimumTemperatureMax: 4,
     daysOfGrowingToHarvestMin: 45,
     daysOfGrowingToHarvestMax: 60,
+    imageId: 'spinach',
   },
   {
     id: '87',
@@ -2716,6 +2762,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 65,
     daysOfGrowingToHarvestMax: 85,
+    imageId: 'tomato',
   },
   {
     id: '88',
@@ -2748,6 +2795,7 @@ export const crops_infos: Plant[] = [
     plantGrowingIdealTemperatureMax: 30,
     daysOfGrowingToHarvestMin: 65,
     daysOfGrowingToHarvestMax: 85,
+    imageId: 'tomato',
   },
   {
     id: '89',
@@ -2768,6 +2816,7 @@ export const crops_infos: Plant[] = [
     optimumGerminationTemperatureMax: 10,
     daysOfGrowingToHarvestMin: 90,
     daysOfGrowingToHarvestMax: 180,
+    imageId: 'beans',
   },
   {
     id: '90',
@@ -2784,6 +2833,7 @@ export const crops_infos: Plant[] = [
     waterRequirements: 'Low',
     plantRequirements:
       ' Sown in autumn they can also limit the effect of rain on otherwise bare soil. A cool-season annual, that can tolerate heavy frost.',
+    imageId: 'peas',
   },
   {
     id: '92',
@@ -2873,6 +2923,7 @@ export const crops_infos: Plant[] = [
       peat: true,
       chalk: false,
     },
+    imageId: 'chili',
   },
   {
     id: '96',
@@ -3113,6 +3164,7 @@ export const crops_infos: Plant[] = [
       peat: false,
       chalk: true,
     },
+    imageId: 'turnip2',
   },
   {
     id: '106',
@@ -3378,538 +3430,6 @@ export const crops_infos: Plant[] = [
       peat: false,
       chalk: true,
     },
-  },
-  {
-    id: '117',
-    taxonomicName: 'Prunus dulcis',
-    commonName: 'Almond',
-    description:
-      "Almond trees have been cultivated for 1000's of years, their fruits are used for making baked goods, confectionary and oil.",
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Tender',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.0,
-    preferredPHMax: 7.0,
-    sensitivities: 'Suseptable to spring frosts.',
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Few varieties are self fertile, so require two or more trees for cross pollination and fruit production.  They prefer dry hot summers and mild wet winters. Can take up to 8 years to fruit, and will live over 50 years.',
-    lifetimeType: 'Perennial',
-    soilRequirements: {
-      clay: false,
-      silt: false,
-      loam: true,
-      sand: true,
-      peat: false,
-      chalk: false,
-    },
-  },
-  {
-    id: '118',
-    taxonomicName: 'Malus',
-    commonName: 'Apple',
-    description:
-      'A sweet edible fruit which is eaten raw, cooked or juiced.  The most widely cultivated fruit tree world wide, with a vast range of tree sizes.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.0,
-    preferredPHMax: 7.5,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'There are thousands of difference varieties that generally fall in to either cooking apples, or dessert apples (for eating).  Require little care, but "chill hours" are required to set fruit. More than one tree is needed to allow cross pollination.',
-    lifetimeType: 'Perennial',
-    soilRequirements: {
-      clay: false,
-      silt: false,
-      loam: true,
-      sand: false,
-      peat: false,
-      chalk: false,
-    },
-  },
-  {
-    id: '119',
-    taxonomicName: 'Prunus armeniaca',
-    commonName: 'Apricot',
-    description:
-      'A relative of the plum, nectarine and peach. The fruit from these trees range in colour from pale yellow to dark orange.  They have a soft velvety skin, and soft flesh covering a large kernel.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.5,
-    preferredPHMax: 8.0,
-    sensitivities:
-      'New varieties can be grown in cooler climates, but the blossem must be protected from frost over night.',
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'In warmer climates trees can be freestanding. In cooler climates they are best grown on a warm, sheltered, south facing wall.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '120',
-    taxonomicName: 'Rubus fruticosus agg.',
-    commonName: 'Blackberry',
-    description:
-      'Also known as a bramble, the dark almost black fruits comprise of juice filled sweet drouplets.  They are traditionally grown along wires, but can also be trained to cover arches and trellis.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'VeryHardy',
-    nutrientRequirements: 'Low',
-    preferredPHMin: 6.0,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Blackberries are vigorous growers and require regular pruning.  However as the fruit is produced on last years growth, only prune back the canes once fruiting is finished, then tie back the new canes for next year.',
-    lifetimeType: 'Perennial',
-    soilRequirements: {
-      clay: false,
-      silt: false,
-      loam: false,
-      sand: true,
-      peat: false,
-      chalk: false,
-    },
-  },
-  {
-    id: '121',
-    taxonomicName: 'Ribes nigrum',
-    commonName: 'Blackcurrant',
-    description:
-      'Blackcurrants are woody shrubs that produce fruits high in vitamin C.  They can  be eaten raw, but are normally used for jams, or as an ingredient in both sweet and savoury dishes.  Most blackcurrsts grown commetially are used for making juice.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'VeryHardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.0,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Fruit is produced on new growth, so old wood or weak shoots should be removed during dormancy.  They are easy to grow, but prefer well drained soil in full sun.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '122',
-    taxonomicName: 'Vaccinium corymbosum',
-    commonName: 'Blueberry',
-    description:
-      'Regarded as a super fruit, these ornamental shrubs produce large quantities of fruit once established.  The fruit is sweet and varies in size from 5mm to 16mm.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 5.0,
-    preferredPHMax: 6.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Requires a soil pH of 5.5 or lower.  These shrubs require an acidic soil, and will not grow well in the wrong type of soil.  They also crop better when planted with another variety.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '123',
-    taxonomicName: 'Prunus avium',
-    commonName: 'Cherry',
-    description:
-      'As a member of the genus Prunus, it is a fleshy stoned fruit. Cherries range in colour from a light red to deep purple. The sweet varieties are used fresh, cooked, and for juice, while the smaller sour varieties tend to be used for preserves.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.0,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Most varieties are not self fertilising, so you will require 2 or 3 trees.  They will take about 4 years to bear fruit and require deep, well drained soil.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '124',
-    taxonomicName: 'Vaccinium corymbosum',
-    commonName: 'Cranberry',
-    description:
-      'These evergreen dwarf shrubs, or trailing vines, have slender wiry stems.  The fruit are larger than the leaves, and are red when ripe.  Used for making juice, sauce and jam due to the acidic taste.  Cranberry sauce is traditionally served with turkey.',
-    sunlightRequirements: 'FullSunOrPartialShade',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 5.0,
-    preferredPHMax: 6.0,
-    waterRequirements: 'High',
-    plantRequirements:
-      'Requires a soil pH of 5.5 or lower to thrive, and prefers to be very moist, boggy soil.  Can take up to 3 years to fruit, but can last for decades.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '125',
-    taxonomicName: 'Ficus carica',
-    commonName: 'Fig',
-    description:
-      'A small tree/large shrub that produces soft sweet fruit that can be used fresh, dried and preserved.',
-    sunlightRequirements: 'FullSunOrPartialShade',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'High',
-    preferredPHMin: 6.0,
-    preferredPHMax: 6.5,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Requires warmth and sun. They thrive in long hot summers, but can also be grown in containers allowing them to be moved indoors over winter.',
-    lifetimeType: 'Perennial',
-    soilRequirements: {
-      clay: true,
-      silt: true,
-      loam: true,
-      sand: true,
-      peat: true,
-      chalk: true,
-    },
-  },
-  {
-    id: '126',
-    taxonomicName: 'Ribes grossularia',
-    commonName: 'Gooseberry',
-    description:
-      'An easy to grow soft fruit.  The sometimes spiny, translucent fruits grow on small thorny bushes.  The varieties range in colour from yellow through to black.  Some are quite tart and more suited to cooking and preserving.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.0,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Gooseberries thrive in cold winters and warm summers, and can tolerate a shaded space. They prefer a well drained soil containing plenty natural nutrients in the form of well rotted organic matter.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '127',
-    taxonomicName: 'Vitis vinifera',
-    commonName: 'Grape',
-    description:
-      'This sweet versatile fruit grows in large clusters on a vine.  They are predominantly grown for eating fresh and making wine.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.0,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'The vines like deep free draining soil, and plenty summer sunshine for the fruits to ripen.  They require support to grow upwards.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '128',
-    taxonomicName: 'Corylus avellana',
-    commonName: 'Hazel',
-    description:
-      "A small tree or shrub grown for it's hard shelled nuts.  Is suited to growing in a garden, producing pretty catkins in the spring  and nuts in the autumn.",
-    sunlightRequirements: 'FullSunOrPartialShade',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.5,
-    preferredPHMax: 7.5,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Are best grown in temperate climates, as hazel trees cannot tolerate long dry seasons or high heat.  In the correct climate they are an easy nut to grow, not taking up too much space.  As they are wind pollinated, they prefer an open site.',
-    lifetimeType: 'Perennial',
-    soilRequirements: {
-      clay: false,
-      silt: false,
-      loam: true,
-      sand: true,
-      peat: false,
-      chalk: false,
-    },
-  },
-  {
-    id: '129',
-    taxonomicName: 'Humulus lupulus',
-    commonName: 'Hops',
-    description:
-      'Hops are the flowers, or seed cones used to flavour beer.  Hey are ready for harvest when the cones feel papery and leave a yellow powder when touched.  Different varieties taste different, allowing brewers to create particular flavours and aromas.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'High',
-    preferredPHMin: 6.5,
-    preferredPHMax: 8.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Although hops are easy to grow, they are day length sensitive and best grown between 35 and 55 degree latitudes.  They require a period of winter chilling. Prune all growth in late autumn to early winter.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '130',
-    taxonomicName: 'Actinidia callosa',
-    commonName: 'Kiwi',
-    description:
-      "A deciduous climbing plant that's vigorous growth requires plenty of room.  The fruits have a light brown textured skin, with lime green flesh on the inside. They are high in vitamin C and generally eaten raw.",
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 5.5,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Young shoots are extremely vulnerable to frost damage and will require protection in the spring.  In mild climates these can be grown in the open, in cooler climates they are best grown on a sheltered west or south facing wall.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '131',
-    taxonomicName: 'Citrus limon',
-    commonName: 'Lemon',
-    description:
-      'The lemon is an acidic fruit produced by a small evergreen tree.  The yellow citrus fruits are native to Asia, and are grown predominantly for their juice, and the rind (which the aromatic oils are extracted from).',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Tender',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 5.5,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'All citrus trees require a mild climate and plenty of sun.  At temperatures below13\u00b0C they will go into dormancy.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '132',
-    taxonomicName: 'Citrus aurantiifolia',
-    commonName: 'Lime',
-    description:
-      'A citrus fruit ideal for adding flavour to drinks.  It is a hybrid fruit consisting of several species: Persian Lime, Desert Lime, Kaffier Lime and Key Lime (C. aurantifolia).',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Tender',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 5.5,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Ensure that it is planted in well draining soil, as limes will not tolerate standing water, nor will they tolerate temperatures below 10\u00b0C.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '133',
-    taxonomicName: 'Rubus loganobaccus',
-    commonName: 'Loganberry',
-    description:
-      'A cross between a raspberry and a blackberry, producing a larger and darker fruit than the raspberry.  A very sweet fruit which is ideal for eating raw , using in baking and preserving.',
-    sunlightRequirements: 'FullSunOrPartialShade',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 5.5,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'A vigorous plant that requires maintenance.  The fruit is produced on last years growth. Only prune back the canes once fruiting is finished, then tie back the new canes for next years fruit.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '134',
-    taxonomicName: 'Prunus persica var. nucipersica',
-    commonName: 'Nectarine',
-    description:
-      'A smoothed skinned subspecies of the peach. The nectarine has soft sweet flesh that easily bruises. Eaten fresh, cooked or preserved.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 5.5,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Peach and nectarine trees require warmth and sun, as well as a chill period of 600-900 hours at less than 7\u00b0C.  They are a semi-hardy, surviving in climates where temperatures drop to -20\u00b0C, but require warm summers to produce fruit.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '135',
-    taxonomicName: 'Citrus reticulata',
-    commonName: 'Orange',
-    description:
-      "A sweet citrus fruit grown for eating fresh, processing, and it's fragrant peel.  A hybrid between a pomelo and a mandarin, it the most widely grown fruit tree in the world.",
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Tender',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 5.5,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'All citrus trees require a mild climate and plenty of sun.  At temperatures of under 13 degrees celcius they will go into dormancy.  They can take a few years to bear fruit, and during this time will require regular fertiliser to encourage growth.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '136',
-    taxonomicName: 'Prunus persica',
-    commonName: 'Peach',
-    description:
-      'A native tree of China, grown for its soft fleshed fruit which contains a singe hard stone in the centre and thin fuzzy skin.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.0,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Peach and nectarine trees require warmth and sun, as well as a chill period of 600-900 hours at less than 7\u00b0C.  They are a semi-hardy, surviving in climates where temperatures drop to -20\u00b0C, but require warm summers to produce fruit.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '137',
-    taxonomicName: 'Pyrus communis',
-    commonName: 'Pear',
-    description:
-      "A deciduous tree grown for it's soft sweet fruit.  The fruit are tear drop in shape, and usually have yellow to green skin and white flesh.",
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.0,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Prefer a cold wet climate with a chill period of between 400 and 800 hours at less that 7 \u00b0C , and temperatures rarely going above 32\u00b0C. New varieties can withstand hotter climates, so choosing your variety for your climate in important.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '138',
-    taxonomicName: 'Diospyros chinensis',
-    commonName: 'Persimmon',
-    description:
-      'Also know as the Sharon fruit. These  glossy yellow to orange fruits look like tomatoes and grow on trees that can reach 18 meters high.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Low',
-    preferredPHMin: 5.5,
-    preferredPHMax: 6.5,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'An easy to grow tree that, depending on variety, can be grown where temperatures drop to -12\u00b0C in winter.  American varieties are best for colder climates, where as the Japanese varieties are better suited to milder climates.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '139',
-    taxonomicName: 'Prunus domestica',
-    commonName: 'Plum',
-    description:
-      'A sweet fruit that contains a single stone in the centre. Has many uses, from eating raw to preserving and cooking. There are many varieties which also include damsons and greengages.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.0,
-    preferredPHMax: 8.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Choosing the correct variety for your climate and plot size is essential. The plum tree can vary from being less than 2m high and 0.5m wide to over 5m high.  Care is not difficult, but pruning and removing dead wood will ensure successful crop.',
-    lifetimeType: 'Perennial',
-    soilRequirements: {
-      clay: true,
-      silt: false,
-      loam: true,
-      sand: false,
-      peat: false,
-      chalk: false,
-    },
-  },
-  {
-    id: '140',
-    taxonomicName: 'Punica granatum',
-    commonName: 'Pomagranate',
-    description:
-      'A deciduous fruit producing shrub or tree. Fruits have a tough skin filled with many jewel like seeds covered in red gelatinous flesh.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 5.0,
-    preferredPHMax: 6.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Can tolerate temperatures down to -12\u00b0C, but require lots of heat to ripen the fruit.  They can take up to 5 years to produce fruit.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '141',
-    taxonomicName: 'Rubus idaeus',
-    commonName: 'Raspberry',
-    description:
-      'A small soft red fruit containing many seed containing drouplets.  Native to many parts of Europe, it is  a high value fresh fruit.  Other uses include processing for juice, jams and confectionary.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Low',
-    preferredPHMin: 5.5,
-    preferredPHMax: 6.5,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Most varieties are biennial (fruiting on last years canes).  In Autumn the old dead canes are removed, excessive new canes are also removed leaving sufficient canes for next years crop.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '142',
-    taxonomicName: 'Ribes rubrum',
-    commonName: 'Redcurrant',
-    description:
-      'Small shiny berries produced on low bushes.  They are quite tart when eaten fresh, but their high pectin content make them ideal for making jellies.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.0,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Are strong growing plants that will tolerate most conditions, including poor soil and shade.  They do however like plenty moisture.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '143',
-    taxonomicName: 'Juglans',
-    commonName: 'Walnut',
-    description:
-      'The wrinkled edible seed of a deciduous tree.  They can be eaten once fully ripe, or pickled when picked green.',
-    sunlightRequirements: 'FullSunOrPartialShade',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 5.5,
-    preferredPHMax: 7.5,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Trees can be damaged by by spring frosts and wind.  Older varieties will take as much as 10 years to produce nuts, but modern varieties can bear nuts in as little as 4 years.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '144',
-    taxonomicName: 'Ribes rubrum',
-    commonName: 'White currant',
-    description:
-      'Small shiny berries produced on low bushes.  They are quite tart when eaten fresh, but their high pectin content make them ideal for making jellies..',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 6.0,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Are strong growing plants that will tolerate most conditions, including poor soil and shade.  They do however like plenty of moisture.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '145',
-    taxonomicName: 'Castanea sativa',
-    commonName: 'Chestnut',
-    description:
-      'Some species of chestnut trees can grow to over 60m high, whereas others are more shrubby in nature.  The fruit, contained in a spiny capule, has 2 skins. The first is hard and shiny, the second a thinner skin attached to the seed.',
-    sunlightRequirements: 'FullSun',
-    temperatureClass: 'Hardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 5.5,
-    preferredPHMax: 6.0,
-    sensitivities: 'Will not produce fruit if not grown in full sun.',
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'Trees can take upto 20 years before producing fruit.   Grafted trees will start fruiting sooner.  They require deep, well drained, fertile soil.',
-    lifetimeType: 'Perennial',
-  },
-  {
-    id: '146',
-    taxonomicName: 'Lonicera caerulea',
-    commonName: 'Honey Berry',
-    description:
-      'A fruit bearing member of the honeysuckle family and related to the blueberry. The fruits are used in the same way as most soft fruits.  The sweet juicy fruits taste similar to rapberries and blueberries when eaten fresh.',
-    sunlightRequirements: 'PartialShade',
-    temperatureClass: 'VeryHardy',
-    nutrientRequirements: 'Medium',
-    preferredPHMin: 5.0,
-    preferredPHMax: 7.0,
-    waterRequirements: 'Medium',
-    plantRequirements:
-      'These plants are frost hardy and grow in a range of soil.  They are best grouwn in groups to aid polination rate and resulting fruits.',
-    lifetimeType: 'Perennial',
   },
 ];
 
