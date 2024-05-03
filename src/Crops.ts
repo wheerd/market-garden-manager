@@ -3436,7 +3436,6 @@ export const crops_infos: Plant[] = [
 export interface Yield {
   amount: number;
   unit: 'head' | 'stalk' | 'fruit' | 'lb' | 'gram' | 'kg';
-  pricePerUnit: number;
 }
 
 export interface CropSeedInfo {
@@ -3452,7 +3451,65 @@ export interface CropSeedInfo {
   yieldPer100Foot?: string;
 }
 
+export type Range = [number, number];
+
+export interface PlantingInfo {
+  rowDistance: number;
+  plantSpacing: number;
+}
+
+export interface SeedInfo {
+  germinationRate: number;
+  seedRate: number;
+  seedsPerGram: number;
+}
+
+export interface HarvestInfo {
+  harvestWindowInDays: Range;
+  harvestEveryNDays: number;
+  yieldPerPlantAndHarvest: Yield;
+}
+
+export interface DirectSeedInfo {
+  directSeed: true;
+  daysFromSowingToMaturity: Range;
+}
+
+export interface TransplantSeedInfo {
+  transplant: true;
+  daysFromSowingToTransplanting: Range;
+  daysFromTransplantingToMaturity: Range;
+}
+
+export type CropInfo = PlantingInfo &
+  SeedInfo &
+  HarvestInfo &
+  (DirectSeedInfo | {}) &
+  (TransplantSeedInfo | {});
+
 export type CropId = string;
+
+export const beetroot: CropInfo = {
+  germinationRate: 0.75,
+  harvestEveryNDays: 0,
+  harvestWindowInDays: [20, 30],
+  plantSpacing: 10,
+  rowDistance: 20,
+  seedRate: 2,
+  seedsPerGram: 15,
+  transplant: true,
+  daysFromSowingToTransplanting: [35, 42],
+  daysFromTransplantingToMaturity: [35, 45],
+  yieldPerPlantAndHarvest: {
+    amount: 300,
+    unit: 'gram',
+  },
+
+  optimumGerminationTemperature: [30, 30],
+  daysToGerminationAtOptimumTemperature: [4, 4],
+  plantGrowingIdealTemperature: [10, 30],
+  daysOfGrowingToHarvest: [55, 80],
+};
 
 export const seed_infos: Record<CropId, CropSeedInfo> = {
   ARTICHOKES: {

@@ -20,6 +20,8 @@ import {
   getMinTemperatureProbabilities,
 } from '@/lib/weatherData';
 
+import TemperatureTable from './TemperatureTable';
+
 import './index.scss';
 
 const LocationDialog = lazy(() => import('./LocationDialog'));
@@ -53,6 +55,11 @@ const Location: React.FC = () => {
   const [elevation, setElevation] = usePersistedState<number>('elevation', 0);
   const [rawTemperatureData, setRawTemperatureData] =
     usePersistedState<RawWeatherDataCache | null>('rawTemperatureData', null);
+  const [rawSoilTemperatureData, setRawSoilTemperatureData] =
+    usePersistedState<RawWeatherDataCache | null>(
+      'rawSoilTemperatureData',
+      null
+    );
 
   const temperatureStats = useMemo(() => {
     const data = rawTemperatureData?.data ?? {};
@@ -63,6 +70,16 @@ const Location: React.FC = () => {
     const data = rawTemperatureData?.data ?? {};
     return getMinTemperatureProbabilities(data, 0);
   }, [rawTemperatureData]);
+
+  const soilTemperatureStats = useMemo(() => {
+    const data = rawSoilTemperatureData?.data ?? {};
+    return getGroupedStats(data);
+  }, [rawSoilTemperatureData]);
+
+  const soilFrostProbabilities = useMemo(() => {
+    const data = rawSoilTemperatureData?.data ?? {};
+    return getMinTemperatureProbabilities(data, 0);
+  }, [rawSoilTemperatureData]);
 
   const [pickerOpen, setPickerOpen] = useState(false);
 
@@ -99,6 +116,32 @@ const Location: React.FC = () => {
           timezone,
           hourly: 'temperature_2m',
         }).then(data => setRawTemperatureData({cacheKey, data}), console.error);
+      }
+    }
+    if (
+      location &&
+      elevation &&
+      timezone &&
+      rawSoilTemperatureData !== undefined
+    ) {
+      const cacheKey = `${location.latitude.toFixed(
+        6
+      )},${location.longitude.toFixed(6)}`;
+      if (cacheKey !== rawSoilTemperatureData?.cacheKey) {
+        setRawTemperatureData(null);
+
+        fetchWeatherData({
+          latitude: location.latitude,
+          longitude: location.longitude,
+          start_date: '2000-01-01',
+          end_date: '2023-12-31',
+          elevation,
+          timezone,
+          hourly: 'soil_temperature_0_to_7cm',
+        }).then(
+          data => setRawSoilTemperatureData({cacheKey, data}),
+          console.error
+        );
       }
     }
   }, [location, elevation, timezone]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -152,10 +195,25 @@ const Location: React.FC = () => {
                 : t('timezone_unknown')}
             </p>
             {rawTemperatureData ? (
+              <>
+                <div>
+                  <WeatherChart
+                    temperatureStats={temperatureStats}
+                    frostProbabilities={frostProbabilities}
+                  />
+                </div>
+                <div>
+                  <TemperatureTable temperatureStats={temperatureStats} />
+                </div>
+              </>
+            ) : (
+              <Skeleton height={400} />
+            )}
+            {rawSoilTemperatureData ? (
               <div>
                 <WeatherChart
-                  temperatureStats={temperatureStats}
-                  frostProbabilities={frostProbabilities}
+                  temperatureStats={soilTemperatureStats}
+                  frostProbabilities={soilFrostProbabilities}
                 />
               </div>
             ) : (
