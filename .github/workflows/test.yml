@@ -34,7 +34,7 @@ jobs:
       - name: Test
         run: pnpm coverage:ci
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.3.0
+        uses: codecov/codecov-action@v4.4.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: wheerd/market-garden-manager
