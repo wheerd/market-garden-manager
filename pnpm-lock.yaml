@@ -95,8 +95,8 @@ devDependencies:
     specifier: ^5.0.0
     version: 5.0.0
   '@types/node':
-    specifier: 20.12.4
-    version: 20.12.4
+    specifier: 20.14.0
+    version: 20.14.0
   '@types/react':
     specifier: ^18.2.74
     version: 18.2.74
@@ -162,13 +162,13 @@ devDependencies:
     version: 0.1.0
   vite:
     specifier: ^5.2.0
-    version: 5.2.7(@types/node@20.12.4)(sass@1.72.0)
+    version: 5.2.7(@types/node@20.14.0)(sass@1.72.0)
   vite-plugin-pwa:
     specifier: ^0.19.7
     version: 0.19.7(vite@5.2.7)(workbox-build@7.0.0)(workbox-window@7.0.0)
   vitest:
     specifier: ^1.5.0
-    version: 1.5.0(@types/node@20.12.4)(@vitest/ui@1.5.0)(happy-dom@14.4.0)(sass@1.72.0)
+    version: 1.5.0(@types/node@20.14.0)(@vitest/ui@1.5.0)(happy-dom@14.4.0)(sass@1.72.0)
   workbox-window:
     specifier: ^7.0.0
     version: 7.0.0
@@ -1688,7 +1688,7 @@ packages:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 20.12.4
+      '@types/node': 20.14.0
       '@types/yargs': 17.0.32
       chalk: 4.1.2
     dev: true
@@ -2271,6 +2271,12 @@ packages:
       undici-types: 5.26.5
     dev: true
 
+  /@types/node@20.14.0:
+    resolution: {integrity: sha512-5cHBxFGJx6L4s56Bubp4fglrEpmyJypsqI6RgzMfBHWUJQGWAAi8cWcgetEbZXHYXo9C2Fa4EEds/uSyS4cxmA==}
+    dependencies:
+      undici-types: 5.26.5
+    dev: true
+
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
     dev: true
@@ -2604,7 +2610,7 @@ packages:
       vite: ^4 || ^5
     dependencies:
       '@swc/core': 1.4.11
-      vite: 5.2.7(@types/node@20.12.4)(sass@1.72.0)
+      vite: 5.2.7(@types/node@20.14.0)(sass@1.72.0)
     transitivePeerDependencies:
       - '@swc/helpers'
     dev: true
@@ -2627,7 +2633,7 @@ packages:
       std-env: 3.7.0
       strip-literal: 2.1.0
       test-exclude: 6.0.0
-      vitest: 1.5.0(@types/node@20.12.4)(@vitest/ui@1.5.0)(happy-dom@14.4.0)(sass@1.72.0)
+      vitest: 1.5.0(@types/node@20.14.0)(@vitest/ui@1.5.0)(happy-dom@14.4.0)(sass@1.72.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2674,7 +2680,7 @@ packages:
       pathe: 1.1.2
       picocolors: 1.0.0
       sirv: 2.0.4
-      vitest: 1.5.0(@types/node@20.12.4)(@vitest/ui@1.5.0)(happy-dom@14.4.0)(sass@1.72.0)
+      vitest: 1.5.0(@types/node@20.14.0)(@vitest/ui@1.5.0)(happy-dom@14.4.0)(sass@1.72.0)
     dev: true
 
   /@vitest/utils@1.5.0:
@@ -5232,7 +5238,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.12.4
+      '@types/node': 20.14.0
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -7407,7 +7413,7 @@ packages:
       teex: 1.0.1
     dev: true
 
-  /vite-node@1.5.0(@types/node@20.12.4)(sass@1.72.0):
+  /vite-node@1.5.0(@types/node@20.14.0)(sass@1.72.0):
     resolution: {integrity: sha512-tV8h6gMj6vPzVCa7l+VGq9lwoJjW8Y79vst8QZZGiuRAfijU+EEWuc0kFpmndQrWhMMhet1jdSF+40KSZUqIIw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -7416,7 +7422,7 @@ packages:
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.7(@types/node@20.12.4)(sass@1.72.0)
+      vite: 5.2.7(@types/node@20.14.0)(sass@1.72.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -7443,14 +7449,14 @@ packages:
       debug: 4.3.4
       fast-glob: 3.3.2
       pretty-bytes: 6.1.1
-      vite: 5.2.7(@types/node@20.12.4)(sass@1.72.0)
+      vite: 5.2.7(@types/node@20.14.0)(sass@1.72.0)
       workbox-build: 7.0.0
       workbox-window: 7.0.0
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /vite@5.2.7(@types/node@20.12.4)(sass@1.72.0):
+  /vite@5.2.7(@types/node@20.14.0)(sass@1.72.0):
     resolution: {integrity: sha512-k14PWOKLI6pMaSzAuGtT+Cf0YmIx12z9YGon39onaJNy8DLBfBJrzg9FQEmkAM5lpHBZs9wksWAsyF/HkpEwJA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -7478,7 +7484,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 20.12.4
+      '@types/node': 20.14.0
       esbuild: 0.20.2
       postcss: 8.4.38
       rollup: 4.13.2
@@ -7487,7 +7493,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitest@1.5.0(@types/node@20.12.4)(@vitest/ui@1.5.0)(happy-dom@14.4.0)(sass@1.72.0):
+  /vitest@1.5.0(@types/node@20.14.0)(@vitest/ui@1.5.0)(happy-dom@14.4.0)(sass@1.72.0):
     resolution: {integrity: sha512-d8UKgR0m2kjdxDWX6911uwxout6GHS0XaGH1cksSIVVG8kRlE7G7aBw7myKQCvDI5dT4j7ZMa+l706BIORMDLw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -7512,7 +7518,7 @@ packages:
       jsdom:
         optional: true
     dependencies:
-      '@types/node': 20.12.4
+      '@types/node': 20.14.0
       '@vitest/expect': 1.5.0
       '@vitest/runner': 1.5.0
       '@vitest/snapshot': 1.5.0
@@ -7532,8 +7538,8 @@ packages:
       strip-literal: 2.1.0
       tinybench: 2.6.0
       tinypool: 0.8.3
-      vite: 5.2.7(@types/node@20.12.4)(sass@1.72.0)
-      vite-node: 1.5.0(@types/node@20.12.4)(sass@1.72.0)
+      vite: 5.2.7(@types/node@20.14.0)(sass@1.72.0)
+      vite-node: 1.5.0(@types/node@20.14.0)(sass@1.72.0)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
